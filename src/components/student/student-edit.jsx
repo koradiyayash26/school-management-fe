@@ -1,7 +1,7 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import FormCard from "./form-card";
+import FormCard from ".";
 
 const StudentEdit = () => {
   const [initialData, setInitialData] = useState({});

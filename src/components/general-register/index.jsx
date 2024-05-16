@@ -31,7 +31,7 @@ import {
   AlertDialogTrigger,
 } from "../ui/alert-dialog";
 import toast, { Toaster } from "react-hot-toast";
-import ActionsPopup from "../dashboard/data-table-row-actions";
+import ActionsPopup from "../ui/data-table-row-actions";
 
 const headers = [
   { label: "ID", value: "id" },

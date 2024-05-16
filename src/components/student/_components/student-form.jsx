@@ -23,7 +23,7 @@ import {
 import { CalendarIcon, Trash } from "lucide-react";
 import { useState } from "react";
 import { format } from "date-fns";
-import { Calendar } from "../ui/calendar";
+import { Calendar } from "../../ui/calendar";
 
 export const EmployeeForm = ({ form, categories }) => {
   const [loading, setLoading] = useState(false);

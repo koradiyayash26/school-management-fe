@@ -1,5 +1,5 @@
 import React from "react";
-import FormCard from "./form-card";
+import FormCard from ".";
 
 const StudentAddFrom = () => {
   const defaultValues = {

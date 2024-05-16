@@ -12,7 +12,7 @@ import {
 } from "../ui/table";
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
-import ActionsPopup from "./data-table-row-actions";
+import ActionsPopup from "../ui/data-table-row-actions";
 import {
   DropdownMenu,
   DropdownMenuContent,

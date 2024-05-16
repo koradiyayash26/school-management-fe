@@ -7,9 +7,9 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { EmployeeForm } from "./student-form";
+import { EmployeeForm } from "./_components/student-form";
 import { BankForm } from "./bank-form";
-import { SchoolLeaveForm } from "./schoolLeave-form";
+import { SchoolLeaveForm } from "./school-leave-form";
 import { useForm } from "react-hook-form";
 import { Form } from "../ui/form";
 import { z } from "zod";

@@ -8,7 +8,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Ellipsis, SquarePen, Trash2 } from "lucide-react";
-import { Button } from "../ui/button";
+import { Button } from "./button";
 import { useNavigate } from "react-router-dom";
 
 const ActionsPopup = ({ id, openAlertDeleteBox }) => {

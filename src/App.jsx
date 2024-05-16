@@ -6,12 +6,11 @@ import ProtectedRoutes from "./components/ProtectedRoutes";
 import Notfound from "./components/dashboard/Notfound";
 import Home from "./components/dashboard/home";
 import DashboardLayout from "./components/layouts";
-import FormCard from "./components/dashboard/form-card";
-import StudentEdit from "./components/dashboard/student-edit";
-import StudentAddFrom from "./components/dashboard/student-add";
-import Standard from "./components/dashboard/standard";
-import StandardInfo from "./components/dashboard/standard-info";
+import StudentEdit from "./components/student/student-edit";
+import StudentAddFrom from "./components/student/student-add";
+import StandardInfo from "./components/standard/standard-info";
 import GeneralRegister from "./components/general-register";
+import Standard from "./components/standard";
 
 const App = () => {
   return (

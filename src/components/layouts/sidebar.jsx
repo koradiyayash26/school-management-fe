@@ -3,54 +3,8 @@ import React from 'react'
 import { NavLink } from 'react-router-dom'
 import { Button } from '../ui/button'
 import Logout from './logout'
-const menu = [
-    {
-        lable: "Home",
-        path: '/',
-        icon: () => <Home className="h-4 w-4" />
+import { MENU } from '@/constant'
 
-    },
-    {
-        lable: "STANDARD",
-        path: '/standard',
-        icon: () => <Users className="h-4 w-4" />
-    },
-    {
-        lable: "GENERAL REGISTER",
-        path: '/student',
-        icon: () => <ClipboardList className="h-4 w-4" />
-    },
-    {
-        lable: "STUDENT",
-        path: '/update',
-        icon: () => <UsersRound className="h-4 w-4" />
-    },
-    {
-        lable: "STUDENT HISTORICAL",
-        path: '/history',
-        icon: () => <NotebookPen className="h-4 w-4" />
-    },
-    {
-        lable: "FEES",
-        path: '/fee-type',
-        icon: () => <Calculator className="h-4 w-4" />
-    },
-    {
-        lable: "PAYMENT",
-        path: '/payment',
-        icon: () => <IndianRupee className="h-4 w-4" />
-    },
-    {
-        lable: "REPORT",
-        path: '/report',
-        icon: () => <StickyNote className="h-4 w-4" />
-    },
-    {
-        lable: "EXAM",
-        path: '/exam',
-        icon: () => <Medal className="h-4 w-4" />
-    }
-]
 function Sidebar() {
     return (
         <div className="hidden border-r bg-muted/40 md:block">
@@ -66,10 +20,10 @@ function Sidebar() {
                     </Button>
                 </div>
                 <div className="flex-1 mt-[10px]">
-                    <nav className="grid items-start px-2 text-sm font-medium lg:px-4">
+                    <nav className="grid gap-2 items-start px-2 text-sm  font-medium lg:px-4">
                         {/* className={cn("flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary", pathname == item.path ? "bg-muted text-foreground" : "")} */}
 
-                        {menu.map((item, index) => (
+                        {MENU.map((item, index) => (
                             <NavLink
                                 key={index}
                                 to={item.path}

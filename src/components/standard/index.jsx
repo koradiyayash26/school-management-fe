@@ -61,7 +61,7 @@ const Standard = () => {
               <span className="text-sm text-muted-foreground">
                 <FaMale className="inline h-5 w-5 mr-1" />
                 <Label htmlFor="Boys">Total Male</Label> -&nbsp;
-                {standardDataCount ? standardDataCount.total_boys : "-"}
+                {standardDataCount ? standardDataCount.total_boys : "0"}
               </span>
               <Progress
                 value={

@@ -2,7 +2,6 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import toast, { Toaster } from "react-hot-toast";
 import axios from "axios";
 import { useState } from "react";
 import { useNavigate } from 'react-router-dom';
@@ -19,45 +18,16 @@ export function LoginForm() {
       password: password
     })
       .then(function (response) {
-        console.log(response);
         localStorage.setItem("Token", response.data.token);
-        toast.success('Login Successfully');
         navigate('/');
       })
       .catch(function (error) {
         console.log(error);
-        toast.error('Failed To Login!');
       });
-    console.log(email, password)
   }
   return (
 
     <div className="flex justify-center items-center h-screen">
-      <Toaster
-        position="top-center"
-        reverseOrder={false}
-        gutter={8}
-        containerClassName=""
-        containerStyle={{}}
-        toastOptions={{
-          // Define default options
-          className: '',
-          duration: 5000,
-          style: {
-            background: '#363636',
-            color: '#fff',
-          },
-
-          // Default options for specific types
-          success: {
-            duration: 3000,
-            theme: {
-              primary: 'green',
-              secondary: 'black',
-            },
-          },
-        }}
-      />
       <Card className="max-w-sm">
         <CardHeader>
           <CardTitle className="text-2xl">Login</CardTitle>

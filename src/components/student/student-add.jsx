@@ -34,7 +34,7 @@ const StudentAddFrom = () => {
     reason: "",
     progress: "1",
     assesment: "1",
-    left_school_date: "",
+    left_school_date: "2005-04-26",
     bank_address: "",
   };
 

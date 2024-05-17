@@ -53,7 +53,11 @@ export const SchoolLeaveForm = ({ form }) => {
                   <Calendar
                     mode="single"
                     selected={field.value}
-                    onSelect={field.onChange}
+                    // onSelect={field.onChange}
+                    onSelect={(date) => {
+                      field.onChange(format(date, "y-M-d"));
+                      console.log(field.onChange(format(date, "y-M-d")));
+                    }}
                     disabled={(date) =>
                       date > new Date() || date < new Date("1900-01-01")
                     }

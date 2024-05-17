@@ -530,7 +530,7 @@ export const EmployeeForm = ({ form, categories }) => {
                       }
                     >
                       {field.value ? (
-                        format(field.value, "y-M-d")
+                        format((field.value), "y-M-d")
                       ) : (
                         <span>Pick a Date</span>
                       )}
@@ -542,7 +542,10 @@ export const EmployeeForm = ({ form, categories }) => {
                   <Calendar
                     mode="single"
                     selected={field.value}
-                    onSelect={field.onChange}
+                    // onSelect={field.onChange}
+                    onSelect={(date) => {
+                      field.onChange(format(date, "y-M-d"));
+                    }}
                     disabled={(date) =>
                       date > new Date() || date < new Date("1900-01-01")
                     }

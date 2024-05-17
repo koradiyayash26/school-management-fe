@@ -31,7 +31,7 @@ function FormCard({ defaultValues, mode, id }) {
       .string()
       .min(3, { message: "Middle Name must be at least 3 characters" }),
     mother_name: z.string(),
-    birth_date: z.date(),
+    birth_date: z.string().nonempty('Date of birth is required'),
     birth_place: z.string().optional(),
     religion: z.string().min(1, { message: "Please select a religion" }),
     category: z.string().min(1, { message: "Please select a category" }),
@@ -54,7 +54,7 @@ function FormCard({ defaultValues, mode, id }) {
     assesment: z.coerce.number().optional(),
     progress: z.coerce.number().optional(),
     reason: z.string().optional(),
-    left_school_date: z.date(),
+    left_school_date: z.string().optional(),
     left_school_std: z.string().optional(),
     account_no: z.string().optional(),
     name_on_passbook: z.string().optional(),

@@ -1,10 +1,11 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
-import { Outlet, Navigate } from "react-router-dom";
+import { Outlet, Navigate, useLocation } from "react-router-dom";
 
 function ProtectedRoutes() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
+  const location = useLocation();
 
   const getStudentCount = async () => {
     try {
@@ -26,13 +27,12 @@ function ProtectedRoutes() {
 
   useEffect(() => {
     getStudentCount();
-  }, []);
+  }, [location]);
 
   if (isLoading) {
     return <div>Loading...</div>;
   }
 
-  console.log(isAuthenticated);
   return isAuthenticated ? <Outlet /> : <Navigate to="/login" />;
 }
 

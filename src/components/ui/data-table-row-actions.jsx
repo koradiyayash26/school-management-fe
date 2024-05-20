@@ -7,11 +7,18 @@ import {
   DropdownMenuShortcut,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Ellipsis, SquarePen, Trash2 } from "lucide-react";
+import {
+  Cake,
+  Ellipsis,
+  NotepadText,
+  Square,
+  SquarePen,
+  Trash2,
+} from "lucide-react";
 import { Button } from "./button";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
-const ActionsPopup = ({ id, openAlertDeleteBox }) => {
+const ActionsPopup = ({ id, openAlertDeleteBox, Birth, Bonafide }) => {
   const navigate = useNavigate();
   const editStudent = (id) => {
     navigate(`/student/edit/${id}`);
@@ -30,18 +37,40 @@ const ActionsPopup = ({ id, openAlertDeleteBox }) => {
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end" className="w-[160px]">
-          <DropdownMenuItem onClick={() => editStudent(id)}>
-            Edit
-            <DropdownMenuShortcut>
-              <SquarePen className="h-4 w-4" />
-            </DropdownMenuShortcut>
-          </DropdownMenuItem>
-          <DropdownMenuItem onClick={() => openAlertDeleteBox(id)}>
-            Delete
-            <DropdownMenuShortcut>
-              <Trash2 className="h-4 w-4" />
-            </DropdownMenuShortcut>
-          </DropdownMenuItem>
+          {Bonafide ? (
+            <Link to={`/bonafide/${id}/`}>
+              <DropdownMenuItem>
+                Bonafide
+                <DropdownMenuShortcut>
+                  <NotepadText className="h-4 w-4" />
+                </DropdownMenuShortcut>
+              </DropdownMenuItem>
+            </Link>
+          ) : (
+            <DropdownMenuItem onClick={() => editStudent(id)}>
+              Edit
+              <DropdownMenuShortcut>
+                <SquarePen className="h-4 w-4" />
+              </DropdownMenuShortcut>
+            </DropdownMenuItem>
+          )}
+          {Birth ? (
+            <Link to={`/birth/${id}/`}>
+              <DropdownMenuItem>
+                Birth Certificate
+                <DropdownMenuShortcut>
+                  <Cake className="h-4 w-4" />
+                </DropdownMenuShortcut>
+              </DropdownMenuItem>
+            </Link>
+          ) : (
+            <DropdownMenuItem onClick={() => openAlertDeleteBox(id)}>
+              Delete
+              <DropdownMenuShortcut>
+                <Trash2 className="h-4 w-4" />
+              </DropdownMenuShortcut>
+            </DropdownMenuItem>
+          )}
         </DropdownMenuContent>
       </DropdownMenu>
     </>

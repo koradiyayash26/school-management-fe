@@ -11,6 +11,10 @@ import StudentAddFrom from "./components/student/student-add";
 import StandardInfo from "./components/standard/standard-info";
 import GeneralRegister from "./components/general-register";
 import Standard from "./components/standard";
+import BonafideCertificate from "./components/school";
+import Bonafide from "./components/school/bonafide";
+import BirthCertificate from "./components/school/birth-certificate";
+import MyDocument from "./components/pdf";
 
 const App = () => {
   return (
@@ -27,6 +31,10 @@ const App = () => {
                   <Route element={<StudentEdit />} path="/student/edit/:id" />
                   <Route element={<Standard />} path="/standard" />
                   <Route element={<StandardInfo />} path="/standard/:id" />
+                  <Route element={<BonafideCertificate />} path="/certificate/" />
+                  <Route element={<Bonafide />} path="/bonafide/:id" />
+                  <Route element={<BirthCertificate />} path="/birth/:id" />
+                  <Route element={<MyDocument />} path="/pdf" />
                   <Route element={<Notfound />} path="*" />
                 </Route>
               </Route>

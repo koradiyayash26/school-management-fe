@@ -18,8 +18,18 @@ import {
   DropdownMenuRadioGroup,
   DropdownMenuRadioItem,
 } from "../ui/dropdown-menu";
-import ActionsPopup from "../ui/data-table-row-actions";
 import { Link } from "react-router-dom";
+import ActionsPopupPayment from "./data-table-row-actions";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "../ui/alert-dialog";
 
 const headers = [
   { label: "ID", value: "id" },
@@ -34,6 +44,8 @@ function FeesType() {
   const [page, setPage] = useState(0);
   const [pageSize, setPageSize] = useState(10);
   const [search, setSearch] = useState("");
+  const [openAlert, setOpenAlert] = useState(false);
+  const [feeTypeId, setFeeTypeId] = useState();
 
   const getFeeTypeData = () => {
     const token = localStorage.getItem("Token");
@@ -46,7 +58,6 @@ function FeesType() {
       .get("http://127.0.0.1:8000/fee-types/search/", config)
       .then(function (response) {
         setStudents(response.data.data);
-        console.log(response.data.data);
       })
       .catch(function (error) {
         console.log(error);
@@ -61,8 +72,57 @@ function FeesType() {
 
   const visibleStudents = students.slice(startIndex, endIndex);
 
+  const openAlertDeleteBox = (id) => {
+    setFeeTypeId(id);
+    setOpenAlert(true);
+  };
+
+  const handleDeleteStudent = async (feeTypeId) => {
+    alert(feeTypeId);
+    // try {
+    //   const token = localStorage.getItem("Token");
+    //   const config = {
+    //     headers: {
+    //       Authorization: `Token ${token}`,
+    //     },
+    //   };
+    //   await axios.delete(
+    //     `http://127.0.0.1:8000/students/${studentId}/delete/`,
+    //     config
+    //   );
+    //   setOpenAlert(false);
+    //   getData();
+    //   toast.success("Student Delete Successfully");
+    // } catch (error) {
+    //   console.log(error);
+    //   toast.error("Failed To Delete Student!");
+    // }
+  };
+
   return (
     <>
+      <AlertDialog open={openAlert}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Are you sure?</AlertDialogTitle>
+            <AlertDialogDescription>
+              This will permanently delete and remove your data from our
+              servers.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel onClick={() => setOpenAlert(false)}>
+              Cancel
+            </AlertDialogCancel>
+            <AlertDialogAction
+              onClick={() => handleDeleteStudent(feeTypeId)}
+              className="bg-[red] text-white hover:bg-red-500"
+            >
+              Delete
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
       <h1>FEE TYPE</h1>
       <div className="flex flex-col md:flex-row items-center justify-between mb-4">
         <Input
@@ -129,7 +189,10 @@ function FeesType() {
                     </TableCell>
                   ))}
                   <TableCell className="">
-                    <ActionsPopup />
+                    <ActionsPopupPayment
+                      id={fee.id}
+                      openAlertDeleteBox={openAlertDeleteBox}
+                    />
                   </TableCell>
                 </TableRow>
               ))}

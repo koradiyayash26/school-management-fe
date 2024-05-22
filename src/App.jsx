@@ -15,6 +15,8 @@ import BonafideCertificate from "./components/school";
 import Bonafide from "./components/school/bonafide";
 import BirthCertificate from "./components/school/birth-certificate";
 import MyDocument from "./components/pdf";
+import FeesType from "./components/payment";
+import FeeTypesAdd from "./components/payment/feetype-add";
 
 const App = () => {
   return (
@@ -35,6 +37,8 @@ const App = () => {
                   <Route element={<Bonafide />} path="/bonafide/:id" />
                   <Route element={<BirthCertificate />} path="/birth/:id" />
                   <Route element={<MyDocument />} path="/pdf" />
+                  <Route element={<FeesType />} path="/fee-type" />
+                  <Route element={<FeeTypesAdd />} path="/fee-type/add" />
                   <Route element={<Notfound />} path="*" />
                 </Route>
               </Route>

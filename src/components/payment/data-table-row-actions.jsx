@@ -31,14 +31,14 @@ const ActionsPopupPayment = ({ id, openAlertDeleteBox }) => {
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end" className="w-[160px]">
           <DropdownMenuItem onClick={() => editFeeType(id)}>
-            Edit{id}
+            Edit
             <DropdownMenuShortcut>
               <SquarePen className="h-4 w-4" />
             </DropdownMenuShortcut>
           </DropdownMenuItem>
 
           <DropdownMenuItem onClick={() => openAlertDeleteBox(id)}>
-            Delete{id}
+            Delete
             <DropdownMenuShortcut>
               <Trash2 className="h-4 w-4" />
             </DropdownMenuShortcut>

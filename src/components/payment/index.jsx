@@ -30,6 +30,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "../ui/alert-dialog";
+import { useQuery } from "@tanstack/react-query";
 
 const headers = [
   { label: "ID", value: "id" },
@@ -39,38 +40,38 @@ const headers = [
   { label: "Amount", value: "amount" },
 ];
 
+const getFeeTypeData = async () => {
+  const token = localStorage.getItem("Token");
+
+  const config = {
+    headers: {
+      Authorization: `Token ${token}`,
+    },
+  };
+  const res = await axios.get(
+    "http://127.0.0.1:8000/fee-types/search/",
+    config
+  );
+  return res.data;
+};
+
 function FeesType() {
-  const [students, setStudents] = useState([]);
+
   const [page, setPage] = useState(0);
   const [pageSize, setPageSize] = useState(10);
   const [search, setSearch] = useState("");
   const [openAlert, setOpenAlert] = useState(false);
   const [feeTypeId, setFeeTypeId] = useState();
 
-  const getFeeTypeData = () => {
-    const token = localStorage.getItem("Token");
-    const config = {
-      headers: {
-        Authorization: `Token ${token}`,
-      },
-    };
-    return axios
-      .get("http://127.0.0.1:8000/fee-types/search/", config)
-      .then(function (response) {
-        setStudents(response.data.data);
-      })
-      .catch(function (error) {
-        console.log(error);
-      });
-  };
-  useEffect(() => {
-    getFeeTypeData();
-  }, []);
-
+  const { data, isLoading } = useQuery({
+    queryKey: ["feetypes"],
+    queryFn: getFeeTypeData,
+  });
+  const students = data?.data;
   const startIndex = page * pageSize;
   const endIndex = (page + 1) * pageSize;
 
-  const visibleStudents = students.slice(startIndex, endIndex);
+  const visibleStudents = students?.slice(startIndex, endIndex);
 
   const openAlertDeleteBox = (id) => {
     setFeeTypeId(id);
@@ -98,7 +99,9 @@ function FeesType() {
     //   toast.error("Failed To Delete Student!");
     // }
   };
-
+  if (isLoading) {
+    return <>Loading...</>;
+  }
   return (
     <>
       <AlertDialog open={openAlert}>

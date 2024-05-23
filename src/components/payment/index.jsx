@@ -30,7 +30,8 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "../ui/alert-dialog";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import toast, { Toaster } from "react-hot-toast";
 
 const headers = [
   { label: "ID", value: "id" },
@@ -55,8 +56,23 @@ const getFeeTypeData = async () => {
   return res.data;
 };
 
-function FeesType() {
+const deleteFeeType = async (feeTypeId) => {
+  const token = localStorage.getItem("Token");
 
+  const config = {
+    headers: {
+      Authorization: `Token ${token}`,
+    },
+  };
+  const res = await axios.delete(
+    `http://127.0.0.1:8000/fee-types/${feeTypeId}/delete/`,
+    config
+  );
+  return res.data;
+};
+
+function FeesType() {
+  const queryClient = useQueryClient();
   const [page, setPage] = useState(0);
   const [pageSize, setPageSize] = useState(10);
   const [search, setSearch] = useState("");
@@ -67,6 +83,7 @@ function FeesType() {
     queryKey: ["feetypes"],
     queryFn: getFeeTypeData,
   });
+
   const students = data?.data;
   const startIndex = page * pageSize;
   const endIndex = (page + 1) * pageSize;
@@ -78,32 +95,46 @@ function FeesType() {
     setOpenAlert(true);
   };
 
-  const handleDeleteStudent = async (feeTypeId) => {
-    alert(feeTypeId);
-    // try {
-    //   const token = localStorage.getItem("Token");
-    //   const config = {
-    //     headers: {
-    //       Authorization: `Token ${token}`,
-    //     },
-    //   };
-    //   await axios.delete(
-    //     `http://127.0.0.1:8000/students/${studentId}/delete/`,
-    //     config
-    //   );
-    //   setOpenAlert(false);
-    //   getData();
-    //   toast.success("Student Delete Successfully");
-    // } catch (error) {
-    //   console.log(error);
-    //   toast.error("Failed To Delete Student!");
-    // }
+  const mutation = useMutation({
+    mutationFn: deleteFeeType,
+    onSuccess: () => {
+      queryClient.invalidateQueries("feetypes");
+      setOpenAlert(false);
+      toast.success("FeeType Delete Successfully");
+    },
+  });
+
+  const handleDeleteStudent = () => {
+    mutation.mutate(feeTypeId);
   };
+
   if (isLoading) {
     return <>Loading...</>;
   }
   return (
     <>
+      <Toaster
+        position="top-center"
+        reverseOrder={false}
+        gutter={8}
+        containerClassName=""
+        containerStyle={{}}
+        toastOptions={{
+          className: "",
+          duration: 5000,
+          style: {
+            background: "#363636",
+            color: "#fff",
+          },
+          success: {
+            duration: 3000,
+            theme: {
+              primary: "green",
+              secondary: "black",
+            },
+          },
+        }}
+      />
       <AlertDialog open={openAlert}>
         <AlertDialogContent>
           <AlertDialogHeader>

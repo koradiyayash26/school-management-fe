@@ -202,7 +202,7 @@ function ExamMarks() {
         </DropdownMenu>
       </div>
       <div>
-        <Link to="/fee-type/add">
+        <Link to="/exam/add">
           <Button>Add</Button>
         </Link>
       </div>

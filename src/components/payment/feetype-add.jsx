@@ -142,20 +142,20 @@ const FeeTypesAdd = () => {
     <>
       <h1>ADD FEE TYPE</h1>
       <Card className="">
-        <CardHeader>
-          <CardTitle>ADD FEE TYPE</CardTitle>
-          <CardDescription>
-            All Fields Are Required in This Form.
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <div>
-            <Form {...form}>
-              <form
-                onSubmit={form.handleSubmit(onSubmit)}
-                onReset={form.reset}
-                className="space-y-2 w-full"
-              >
+        <div>
+          <Form {...form}>
+            <form
+              onSubmit={form.handleSubmit(onSubmit)}
+              onReset={form.reset}
+              className="space-y-2 w-full"
+            >
+              <CardHeader>
+                <CardTitle>ADD FEE TYPE</CardTitle>
+                <CardDescription>
+                  All Fields Are Required in This Form.
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
                 <div className="md:grid md:grid-cols-3 gap-8">
                   <FormField
                     className=""
@@ -275,13 +275,13 @@ const FeeTypesAdd = () => {
                     )}
                   />
                 </div>
-              </form>
-            </Form>
-          </div>
-        </CardContent>
-        <CardFooter className="mt-4">
-          <Button>Save</Button>
-        </CardFooter>
+              </CardContent>
+              <CardFooter className="mt-4">
+                <Button type="submit">Save</Button>
+              </CardFooter>
+            </form>
+          </Form>
+        </div>
       </Card>
     </>
   );

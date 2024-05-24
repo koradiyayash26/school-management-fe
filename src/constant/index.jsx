@@ -25,7 +25,7 @@ export const MENU = [
     },
     {
         lable: "STUDENT HISTORICAL",
-        path: '/history',
+        path: '/historical-fee',
         icon: () => <NotebookPen className="h-4 w-4" />
     },
     {

@@ -21,6 +21,8 @@ import FeetypeUpdate from "./components/payment/feetype-update";
 import ExamMarks from "./components/student/exam";
 import ExamUpdate from "./components/student/exam/exam-update";
 import ExamMarksAdd from "./components/student/exam/exam-add";
+import HistoricalFees from "./components/payment/historical-fees";
+import HistoricalFeesAdd from "./components/payment/historical-fees/historical-fee-add";
 
 const App = () => {
   return (
@@ -53,6 +55,11 @@ const App = () => {
                   <Route element={<ExamMarks />} path="/exam" />
                   <Route element={<ExamMarksAdd />} path="/exam/add" />
                   <Route element={<ExamUpdate />} path="/exam/edit/:id" />
+                  <Route element={<HistoricalFees />} path="/historical-fee" />
+                  <Route
+                    element={<HistoricalFeesAdd />}
+                    path="/historical-fee/add"
+                  />
                   <Route element={<Notfound />} path="*" />
                 </Route>
               </Route>

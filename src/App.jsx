@@ -18,6 +18,8 @@ import MyDocument from "./components/pdf";
 import FeesType from "./components/payment";
 import FeeTypesAdd from "./components/payment/feetype-add";
 import FeetypeUpdate from "./components/payment/feetype-update";
+import ExamMarks from "./components/student/exam";
+import ExamUpdate from "./components/student/exam/exam-update";
 
 const App = () => {
   return (
@@ -47,6 +49,8 @@ const App = () => {
                     element={<FeetypeUpdate />}
                     path="/fee-type/edit/:id"
                   />
+                  <Route element={<ExamMarks />} path="/exam" />
+                  <Route element={<ExamUpdate />} path="/exam/edit/:id" />
                   <Route element={<Notfound />} path="*" />
                 </Route>
               </Route>

@@ -66,7 +66,7 @@ const ExamMarksAdd = () => {
   const [loading, setLoading] = useState(false);
 
   const [standards] = useState([
-    "Balvatika",
+    "13",
     "1",
     "2",
     "3",
@@ -210,7 +210,7 @@ const ExamMarksAdd = () => {
                           <SelectContent>
                             {standards.map((std) => (
                               <SelectItem key={std} value={std}>
-                                {std}
+                                {std == 13 ? "Balvatika" : std}
                               </SelectItem>
                             ))}
                           </SelectContent>

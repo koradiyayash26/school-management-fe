@@ -114,9 +114,13 @@ const Standard = () => {
           standardDataCount.standards.map((standard, index) => (
             <Card className="" key={index}>
               <CardHeader>
-                <CardTitle>{standard.standard}</CardTitle>
+                <CardTitle>
+                  {standard.standard == 13 ? "Balvatika" : standard.standard}
+                </CardTitle>
                 <CardDescription>
-                  The Display Data Of {standard.standard}&nbsp;Students.
+                  The Display Data Of{" "}
+                  {standard.standard == 13 ? "Balvatika" : standard.standard}
+                  &nbsp;Students.
                 </CardDescription>
               </CardHeader>
               <CardContent>

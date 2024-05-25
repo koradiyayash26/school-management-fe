@@ -94,7 +94,7 @@ function FeesType() {
     setPageSize(parseInt(value));
     setPage(0);
   };
-  
+
   const openAlertDeleteBox = (id) => {
     setFeeTypeId(id);
     setOpenAlert(true);
@@ -224,6 +224,8 @@ function FeesType() {
                     <TableCell key={header.value} className="capitalize">
                       {header.value === "fee_master"
                         ? fee.fee_master?.name || "None"
+                        : fee[header.value] == 13
+                        ? "Balvatika"
                         : fee[header.value] || "None"}
                     </TableCell>
                   ))}

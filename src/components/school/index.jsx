@@ -107,10 +107,8 @@ function BonafideCertificate() {
     setPage(0);
   };
 
-
   return (
     <>
-      
       <h1 className="uppercase">certificate</h1>
       <div className="flex flex-col md:flex-row items-center justify-between mb-4">
         <Input
@@ -168,9 +166,14 @@ function BonafideCertificate() {
                 <TableRow key={student.id}>
                   {headers.map((header) => (
                     <TableCell key={header.value}>
-                      {student[header.value] || "None"}
+                      {(header.value === "standard" ||
+                        header.value === "admission_std") &&
+                      student[header.value] == 13
+                        ? "Balvatika"
+                        : student[header.value] || "None"}
                     </TableCell>
                   ))}
+
                   <TableCell className="">
                     <ActionsPopup
                       Bonafide="Bonafide"

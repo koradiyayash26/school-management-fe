@@ -37,7 +37,7 @@ export const EmployeeForm = ({ form, categories }) => {
   ];
 
   const standard = [
-    { _id: "Balvatika", name: "Balvatika" },
+    { _id: "13", name: "13" },
     { _id: "1", name: "1" },
     { _id: "2", name: "2" },
     { _id: "3", name: "3" },
@@ -281,7 +281,7 @@ export const EmployeeForm = ({ form, categories }) => {
                 <SelectContent>
                   {standard.map((std) => (
                     <SelectItem key={std._id} value={std._id}>
-                      {std.name}
+                      {std.name == 13 ? "Balvatika" : std.name}
                     </SelectItem>
                   ))}
                 </SelectContent>
@@ -313,7 +313,7 @@ export const EmployeeForm = ({ form, categories }) => {
                 <SelectContent>
                   {standard.map((std) => (
                     <SelectItem key={std._id} value={std._id}>
-                      {std.name}
+                      {std.name == 13 ? "Balvatika" : std.name}
                     </SelectItem>
                   ))}
                 </SelectContent>
@@ -530,7 +530,7 @@ export const EmployeeForm = ({ form, categories }) => {
                       }
                     >
                       {field.value ? (
-                        format((field.value), "y-M-d")
+                        format(field.value, "y-M-d")
                       ) : (
                         <span>Pick a Date</span>
                       )}

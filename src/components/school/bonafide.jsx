@@ -100,7 +100,11 @@ const Bonafide = () => {
                     {studentData.last_name}
                   </span>
                   &nbsp; is studying in this school in present standard -&nbsp;
-                  <span className="underline">{studentData.admission_std}</span>
+                  <span className="underline">
+                    {studentData.standard == 13
+                      ? "Balvatika"
+                      : studentData.standard}
+                  </span>
                   . As per GR No -{" "}
                   <span className="underline">{studentData.grno} </span>
                   of our school his date is&nbsp;

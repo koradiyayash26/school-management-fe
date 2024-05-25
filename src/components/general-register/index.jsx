@@ -241,9 +241,14 @@ function GeneralRegister() {
                 <TableRow key={student.id}>
                   {headers.map((header) => (
                     <TableCell key={header.value}>
-                      {student[header.value] || "None"}
+                      {(header.value === "standard" ||
+                        header.value === "admission_std") &&
+                      student[header.value] == 13
+                        ? "Balvatika"
+                        : student[header.value] || "None"}
                     </TableCell>
                   ))}
+
                   <TableCell className="">
                     <ActionsPopup
                       id={student.id}

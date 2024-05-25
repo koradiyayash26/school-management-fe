@@ -214,7 +214,7 @@ const FeeTypesAdd = () => {
                           <SelectContent>
                             {standard.map((std) => (
                               <SelectItem key={std.id} value={std.name}>
-                                {std.name}
+                                {std.name == 13 ? "Balvatika" : std.name}
                               </SelectItem>
                             ))}
                           </SelectContent>

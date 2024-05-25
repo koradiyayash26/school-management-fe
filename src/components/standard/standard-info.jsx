@@ -247,7 +247,7 @@ const StandardInfo = () => {
                   <TableRow key={student.id}>
                     {headers.map((header) => (
                       <TableCell key={header.value}>
-                        {student[header.value] || "None"}
+                        {student[header.value] == 13 ? "Balvatika" :student[header.value] || "None"}
                       </TableCell>
                     ))}
                     <TableCell className="">

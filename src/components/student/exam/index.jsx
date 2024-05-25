@@ -234,6 +234,10 @@ function ExamMarks() {
                         ? (exam.student?.first_name || "None") +
                           " " +
                           (exam.student?.last_name || "None")
+                        : header.value === "std"
+                        ? exam[header.value] === "13"
+                          ? "Balvatika"
+                          : exam[header.value] || "None"
                         : exam[header.value] || "None"}
                     </TableCell>
                   ))}

@@ -8,9 +8,9 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Input } from "../ui/input";
-import { Button } from "../ui/button";
-import { ScrollArea, ScrollBar } from "../ui/scroll-area";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 // import ActionsPopup from "./data-table-row-actions";
 import {
   DropdownMenu,
@@ -18,20 +18,9 @@ import {
   DropdownMenuContent,
   DropdownMenuRadioGroup,
   DropdownMenuRadioItem,
-} from "../ui/dropdown-menu";
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-  AlertDialogTrigger,
-} from "../ui/alert-dialog";
-import toast, { Toaster } from "react-hot-toast";
-import ActionsPopup from "../ui/data-table-row-actions";
+} from "@/components/ui/dropdown-menu";
+
+import ActionsPopup from "@/components/ui/data-table-row-actions";
 
 const headers = [
   { label: "ID", value: "id" },
@@ -71,7 +60,7 @@ const headers = [
   { label: "Status", value: "status" },
 ];
 
-function BonafideCertificate() {
+function CertificatePage() {
   const [students, setStudents] = useState([]);
   const [page, setPage] = useState(0);
   const [pageSize, setPageSize] = useState(10);
@@ -107,10 +96,8 @@ function BonafideCertificate() {
     setPage(0);
   };
 
-
   return (
     <>
-      
       <h1 className="uppercase">certificate</h1>
       <div className="flex flex-col md:flex-row items-center justify-between mb-4">
         <Input
@@ -209,4 +196,4 @@ function BonafideCertificate() {
   );
 }
 
-export default BonafideCertificate;
+export default CertificatePage;

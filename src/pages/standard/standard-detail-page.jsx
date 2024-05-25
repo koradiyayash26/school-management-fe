@@ -1,7 +1,7 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { ScrollArea, ScrollBar } from "../ui/scroll-area";
+import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import {
   Table,
   TableBody,
@@ -9,17 +9,17 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "../ui/table";
-import { Button } from "../ui/button";
-import { Input } from "../ui/input";
-import ActionsPopup from "../ui/data-table-row-actions";
+} from "@/components/ui/table";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import ActionsPopup from "@/components/ui/data-table-row-actions";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuRadioGroup,
   DropdownMenuRadioItem,
   DropdownMenuTrigger,
-} from "../ui/dropdown-menu";
+} from "@/components/ui/dropdown-menu";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -29,7 +29,7 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-} from "../ui/alert-dialog";
+} from "@/components/ui/alert-dialog";
 import toast, { Toaster } from "react-hot-toast";
 
 const headers = [
@@ -70,7 +70,7 @@ const headers = [
   //   { label: "Status", value: "status" },
 ];
 
-const StandardInfo = () => {
+const StandardDetailPage = () => {
   const { id } = useParams();
   const [students, setStudents] = useState([]);
   const [search, setSearch] = useState("");
@@ -290,4 +290,4 @@ const StandardInfo = () => {
   );
 };
 
-export default StandardInfo;
+export default StandardDetailPage;

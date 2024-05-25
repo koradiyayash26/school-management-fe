@@ -1,8 +1,4 @@
-import React, { useEffect, useState } from "react";
-import { Button } from "../ui/button";
-import axios from "axios";
-import { FaFemale, FaMale } from "react-icons/fa";
-import { Link } from "react-router-dom";
+import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
@@ -10,12 +6,16 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from "../ui/card";
-import { Label } from "../ui/label";
-import { Progress } from "../ui/progress";
+} from "@/components/ui/card";
+import { Label } from "@/components/ui/label";
+import { Progress } from "@/components/ui/progress";
+import axios from "axios";
 import { ClipboardList } from "lucide-react";
+import { useEffect, useState } from "react";
+import { FaFemale, FaMale } from "react-icons/fa";
+import { Link } from "react-router-dom";
 
-const Standard = () => {
+const StandardPage = () => {
   const [standardDataCount, setStandardDataCount] = useState();
   const getStudentCount = async () => {
     try {
@@ -48,7 +48,7 @@ const Standard = () => {
 
   return (
     <>
-      <h1 className="uppercase">STANDARD'S INFORMATION</h1>
+      <h1 className="uppercase">{"STANDARD'S INFORMATION"}</h1>
       {/* Total Student COunt */}
       <Card className="">
         <CardHeader>
@@ -92,7 +92,7 @@ const Standard = () => {
               />
             </div>
             <div className="flex flex-col space-y-1.5">
-              <Label htmlFor="Total">Total Student's</Label>
+              <Label htmlFor="Total">{"Total Student's"}</Label>
               <span>
                 {standardDataCount ? standardDataCount.total_students : "0"}
               </span>
@@ -166,4 +166,4 @@ const Standard = () => {
   );
 };
 
-export default Standard;
+export default StandardPage;

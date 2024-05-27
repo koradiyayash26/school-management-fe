@@ -96,7 +96,7 @@ const BirthCertificate = () => {
                     {/* <h3>Date - {todayDate}</h3> */}
                   </div>
                 </h3>
-                <p className="my-4">
+                <p className="my-4 break-all">
                   This is to certify that&nbsp;
                   <span className="underline">
                     {studentData.gender === "કન્યા" ? "Miss." : "Mrs."}

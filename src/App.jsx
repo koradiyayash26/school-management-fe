@@ -24,6 +24,7 @@ import ExamMarksAdd from "./components/student/exam/exam-add";
 import HistoricalFees from "./components/payment/historical-fees";
 import HistoricalFeesAdd from "./components/payment/historical-fees/historical-fee-add";
 import Reports from "./components/school/reports";
+import ReportDetails from "./components/school/reports/report-details";
 
 const App = () => {
   return (
@@ -62,6 +63,7 @@ const App = () => {
                     path="/historical-fee/add"
                   />
                   <Route element={<Reports />} path="/report" />
+                  <Route element={<ReportDetails />} path="/report/standard/:id" />
                   <Route element={<Notfound />} path="*" />
                 </Route>
               </Route>

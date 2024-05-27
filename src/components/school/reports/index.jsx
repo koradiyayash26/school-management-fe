@@ -119,7 +119,6 @@
 
 // export default Reports;
 
-
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import {
   Table,
@@ -196,7 +195,8 @@ const Reports = () => {
         totalWaived += waived;
 
         return {
-          standard: standard.standard === "13" ? "Balvatika" : standard.standard,
+          standard:
+            standard.standard === "13" ? "Balvatika" : standard.standard,
           noOfStudents: noOfStudents,
           total: total,
           paid: paid,
@@ -216,7 +216,6 @@ const Reports = () => {
       });
 
       setCombinedData(combined);
-      console.log(combined); // Log the combined data
     }
   };
 
@@ -226,6 +225,7 @@ const Reports = () => {
 
   return (
     <>
+      <h1 className="uppercase">Report</h1>
       <div>
         <ScrollArea className="rounded-md border max-w-[1280px]">
           <Table className="relative text-center">
@@ -249,9 +249,15 @@ const Reports = () => {
                   <TableCell>{data.paid}</TableCell>
                   <TableCell>{data.pending}</TableCell>
                   <TableCell>{data.waived}</TableCell>
-                  <TableCell className="text-center">
-                    <ActionsPopupReport id={data.standard} />
-                  </TableCell>
+                  {data.standard !== "Total" ? (
+                    <TableCell className="text-center">
+                      {data.standard === "Balvatika" ? (
+                        <ActionsPopupReport id="balvatika" />
+                      ) : (
+                        <ActionsPopupReport id={data.standard} />
+                      )}
+                    </TableCell>
+                  ) : null}
                 </TableRow>
               ))}
             </TableBody>

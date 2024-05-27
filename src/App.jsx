@@ -25,6 +25,7 @@ import HistoricalFees from "./components/payment/historical-fees";
 import HistoricalFeesAdd from "./components/payment/historical-fees/historical-fee-add";
 import Reports from "./components/school/reports";
 import ReportDetails from "./components/school/reports/report-details";
+import FeesPayment from "./components/payment/fee-payment.jsx";
 
 const App = () => {
   return (
@@ -54,6 +55,7 @@ const App = () => {
                     element={<FeetypeUpdate />}
                     path="/fee-type/edit/:id"
                   />
+                  <Route element={<FeesPayment />} path="/payment" />
                   <Route element={<ExamMarks />} path="/exam" />
                   <Route element={<ExamMarksAdd />} path="/exam/add" />
                   <Route element={<ExamUpdate />} path="/exam/edit/:id" />
@@ -63,7 +65,10 @@ const App = () => {
                     path="/historical-fee/add"
                   />
                   <Route element={<Reports />} path="/report" />
-                  <Route element={<ReportDetails />} path="/report/standard/:id" />
+                  <Route
+                    element={<ReportDetails />}
+                    path="/report/standard/:id"
+                  />
                   <Route element={<Notfound />} path="*" />
                 </Route>
               </Route>

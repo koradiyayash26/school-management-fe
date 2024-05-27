@@ -1,31 +1,31 @@
-import { LoginForm } from "@/components/dashboard/login";
 import { ThemeProvider } from "@/components/theme-provider";
 import { Route, BrowserRouter as Router, Routes } from "react-router-dom";
 import "./App.css";
-import ProtectedRoutes from "./components/ProtectedRoutes";
-import Notfound from "./components/dashboard/Notfound";
-import Home from "./components/dashboard/home";
 import DashboardLayout from "./components/layouts";
-import StudentEdit from "./components/student/student-edit";
-import StudentAddFrom from "./components/student/student-add";
-import StandardInfo from "./components/standard/standard-info";
-import GeneralRegister from "./components/general-register";
-import Standard from "./components/standard";
-import BonafideCertificate from "./components/school";
-import Bonafide from "./components/school/bonafide";
-import BirthCertificate from "./components/school/birth-certificate";
+import Notfound from "./components/not-found";
+import HistoricalFeesPage from "./pages/historical-fees/historical-fees-page";
+import HistoricalFeesAddPage from "./pages/historical-fees/historical-fee-add-page";
 import MyDocument from "./components/pdf";
-import FeesType from "./components/payment";
-import FeeTypesAdd from "./components/payment/feetype-add";
-import FeetypeUpdate from "./components/payment/feetype-update";
-import ExamMarks from "./components/student/exam";
-import ExamUpdate from "./components/student/exam/exam-update";
-import ExamMarksAdd from "./components/student/exam/exam-add";
-import HistoricalFees from "./components/payment/historical-fees";
-import HistoricalFeesAdd from "./components/payment/historical-fees/historical-fee-add";
-import Reports from "./components/school/reports";
-import ReportDetails from "./components/school/reports/report-details";
-import FeesPayment from "./components/payment/fee-payment.jsx";
+import ProtectedRoutes from "./components/protected-routes";
+import BirthCertificatePage from "./pages/certificate/birth-certificate-page";
+import BonafideCertificatePage from "./pages/certificate/bonafide-certificate-page";
+import CertificatePage from "./pages/certificate/certificate-page";
+import HomePage from "./pages/home-page";
+import LoginPage from "./pages/login-page";
+import StandardDetailPage from "./pages/standard/standard-detail-page";
+import StandardPage from "./pages/standard/standard-page";
+import StudentsPage from "./pages/students/students-page";
+import StudentAddPage from "./pages/students/student-add-page";
+import StudentEditPage from "./pages/students/student-edit-page";
+import ExamMarksPage from "./pages/exam/exam-page";
+import ExamMarksAddPage from "./pages/exam/exam-add-page";
+import ExamMarksEditPage from "./pages/exam/exam-edit-page";
+import ReportsPage from "./pages/report/reports-page";
+import ReportDetailsPage from "./pages/report/report-detail-page";
+import PaymentsPage from "./pages/payment/payments-page";
+import FeesTypePage from "./pages/fee/fees-page";
+import FeetypeUpdatePage from "./pages/fee/fee-update-page";
+import FeeTypesAddPage from "./pages/fee/fee-add-page";
 
 const App = () => {
   return (
@@ -36,43 +36,55 @@ const App = () => {
             <Routes>
               <Route element={<ProtectedRoutes />}>
                 <Route path="/" element={<DashboardLayout />}>
-                  <Route index element={<Home />} />
-                  <Route element={<GeneralRegister />} path="/student/" />
-                  <Route element={<StudentAddFrom />} path="/student/add" />
-                  <Route element={<StudentEdit />} path="/student/edit/:id" />
-                  <Route element={<Standard />} path="/standard" />
-                  <Route element={<StandardInfo />} path="/standard/:id" />
+                  <Route index element={<HomePage />} />
+                  <Route element={<StudentsPage />} path="/student/" />
+                  <Route element={<StudentAddPage />} path="/student/add" />
                   <Route
-                    element={<BonafideCertificate />}
-                    path="/certificate/"
+                    element={<StudentEditPage />}
+                    path="/student/edit/:id"
                   />
-                  <Route element={<Bonafide />} path="/bonafide/:id" />
-                  <Route element={<BirthCertificate />} path="/birth/:id" />
-                  <Route element={<MyDocument />} path="/pdf" />
-                  <Route element={<FeesType />} path="/fee-type" />
-                  <Route element={<FeeTypesAdd />} path="/fee-type/add" />
+                  <Route element={<StandardPage />} path="/standard" />
                   <Route
-                    element={<FeetypeUpdate />}
+                    element={<StandardDetailPage />}
+                    path="/standard/:id"
+                  />
+                  <Route element={<CertificatePage />} path="/certificate/" />
+                  <Route
+                    element={<BonafideCertificatePage />}
+                    path="/bonafide/:id"
+                  />
+                  <Route element={<BirthCertificatePage />} path="/birth/:id" />
+                  <Route element={<MyDocument />} path="/pdf" />
+                  <Route element={<FeesTypePage />} path="/fee-type" />
+                  <Route element={<FeeTypesAddPage />} path="/fee-type/add" />
+                  <Route
+                    element={<FeetypeUpdatePage />}
                     path="/fee-type/edit/:id"
                   />
-                  <Route element={<FeesPayment />} path="/payment" />
-                  <Route element={<ExamMarks />} path="/exam" />
-                  <Route element={<ExamMarksAdd />} path="/exam/add" />
-                  <Route element={<ExamUpdate />} path="/exam/edit/:id" />
-                  <Route element={<HistoricalFees />} path="/historical-fee" />
+                  <Route element={<ExamMarksPage />} path="/exam" />
+                  <Route element={<ExamMarksAddPage />} path="/exam/add" />
                   <Route
-                    element={<HistoricalFeesAdd />}
+                    element={<ExamMarksEditPage />}
+                    path="/exam/edit/:id"
+                  />
+                  <Route
+                    element={<HistoricalFeesPage />}
+                    path="/historical-fee"
+                  />
+                  <Route
+                    element={<HistoricalFeesAddPage />}
                     path="/historical-fee/add"
                   />
-                  <Route element={<Reports />} path="/report" />
+                  <Route element={<ReportsPage />} path="/report" />
                   <Route
-                    element={<ReportDetails />}
+                    element={<ReportDetailsPage />}
                     path="/report/standard/:id"
                   />
+                  <Route element={<PaymentsPage />} path="/payment" />
                   <Route element={<Notfound />} path="*" />
                 </Route>
               </Route>
-              <Route element={<LoginForm />} path="/login" />
+              <Route element={<LoginPage />} path="/login" />
             </Routes>
           </Router>
         </ThemeProvider>

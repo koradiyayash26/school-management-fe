@@ -1,27 +1,9 @@
-import React from "react";
 import { Sheet, SheetContent, SheetTrigger } from "../ui/sheet";
 import { Button } from "../ui/button";
 import { Link } from "react-router-dom";
-import {
-  Calculator,
-  ClipboardList,
-  Home,
-  IndianRupee,
-  LineChart,
-  Medal,
-  Menu,
-  NotebookPen,
-  Package,
-  Package2,
-  ShoppingCart,
-  StickyNote,
-  Users,
-  Users2,
-  UsersRound,
-} from "lucide-react";
-import { Badge } from "../ui/badge";
 import Logout from "./logout";
 import { MENU } from "@/constant";
+import { Menu, Package2 } from "lucide-react";
 
 export const MobileSidebar = () => {
   return (

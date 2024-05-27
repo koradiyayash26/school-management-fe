@@ -7,104 +7,59 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { EmployeeForm } from "./_components/student-form";
-import { BankForm } from "./bank-form";
-import { SchoolLeaveForm } from "./school-leave-form";
+import { GrDetails } from "./gr-details";
+import { BankDetails } from "./bank-details";
+import { SchoolLeaveDetails } from "./school-leave-details";
 import { useForm } from "react-hook-form";
 import { Form } from "../ui/form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import axios from "axios";
-import { format } from "date-fns";
-import { useNavigate } from "react-router-dom";
 
-function FormCard({ defaultValues, mode, id }) {
-  const formSchema = z.object({
-    grno: z.coerce.number(),
-    first_name: z
-      .string()
-      .min(3, { message: "First Name must be at least 3 characters" }),
-    last_name: z
-      .string()
-      .min(3, { message: "Last Name must be at least 3 characters" }),
-    middle_name: z
-      .string()
-      .min(3, { message: "Middle Name must be at least 3 characters" }),
-    mother_name: z.string(),
-    birth_date: z.string().nonempty('Date of birth is required'),
-    birth_place: z.string().optional(),
-    religion: z.string().min(1, { message: "Please select a religion" }),
-    category: z.string().min(1, { message: "Please select a category" }),
-    caste: z.string().optional(),
-    admission_std: z.string().optional(),
-    admission_date: z.string().min(1, { message: "Please select a category" }),
-    standard: z.string().optional(),
-    section: z.string().optional(),
-    last_school: z.string().optional(),
-    city: z.string().min(3, { message: "City must be at least 2 characters" }),
-    district: z
-      .string()
-      .min(3, { message: "District must be at least 2 characters" }),
-    address: z.string().optional(),
-    mobile_no: z.string().optional(),
-    status: z.string().optional(),
-    gender: z.string().optional(),
-    udise_no: z.string().optional(),
-    aadhar_no: z.string().optional(),
-    assesment: z.coerce.number().optional(),
-    progress: z.coerce.number().optional(),
-    reason: z.string().optional(),
-    left_school_date: z.string().optional(),
-    left_school_std: z.string().optional(),
-    account_no: z.string().optional(),
-    name_on_passbook: z.string().optional(),
-    bank_name: z.string().optional(),
-    ifsc_code: z.string().optional(),
-    bank_address: z.string().optional(),
-  });
-  const navigate = useNavigate();
+const formSchema = z.object({
+  grno: z.coerce.number(),
+  first_name: z
+    .string()
+    .min(3, { message: "First Name must be at least 3 characters" }),
+  last_name: z
+    .string()
+    .min(3, { message: "Last Name must be at least 3 characters" }),
+  middle_name: z
+    .string()
+    .min(3, { message: "Middle Name must be at least 3 characters" }),
+  mother_name: z.string(),
+  birth_date: z.string().nonempty("Date of birth is required"),
+  birth_place: z.string().optional(),
+  religion: z.string().min(1, { message: "Please select a religion" }),
+  category: z.string().min(1, { message: "Please select a category" }),
+  caste: z.string().optional(),
+  admission_std: z.string().optional(),
+  admission_date: z.string().min(1, { message: "Please select a category" }),
+  standard: z.string().optional(),
+  section: z.string().optional(),
+  last_school: z.string().optional(),
+  city: z.string().min(3, { message: "City must be at least 2 characters" }),
+  district: z
+    .string()
+    .min(3, { message: "District must be at least 2 characters" }),
+  address: z.string().optional(),
+  mobile_no: z.string().optional(),
+  status: z.string().optional(),
+  gender: z.string().optional(),
+  udise_no: z.string().optional(),
+  aadhar_no: z.string().optional(),
+  assesment: z.coerce.number().optional(),
+  progress: z.coerce.number().optional(),
+  reason: z.string().optional(),
+  left_school_date: z.string().optional(),
+  left_school_std: z.string().optional(),
+  account_no: z.string().optional(),
+  name_on_passbook: z.string().optional(),
+  bank_name: z.string().optional(),
+  ifsc_code: z.string().optional(),
+  bank_address: z.string().optional(),
+});
 
-  const onSubmit = (data) => {
-    const formattedData = {
-      ...data,
-      birth_date: format(new Date(data.birth_date), "yyyy-MM-dd"),
-      left_school_date: format(new Date(data.left_school_date), "yyyy-MM-dd"),
-    };
-    const token = localStorage.getItem("Token");
-    if (mode === "edit") {
-      // STudent Update Api Called Here
-
-      axios
-        .patch(`http://127.0.0.1:8000/students/${id}/edit/`, formattedData, {
-          headers: {
-            Authorization: `Token ${token}`,
-          },
-        })
-        .then(function (response) {
-          console.log(response);
-          navigate("/student");
-        })
-        .catch(function (error) {
-          console.log(error);
-        });
-    } else {
-      // STudent add Api Called Here
-
-      axios
-        .post("http://127.0.0.1:8000/students/add/", formattedData, {
-          headers: {
-            Authorization: `token ${token}`,
-          },
-        })
-        .then(function (response) {
-          console.log(response);
-          navigate("/student");
-        })
-        .catch(function (error) {
-          console.log(error);
-        });
-    }
-  };
+function StudentForm({ defaultValues, onSubmit }) {
   const form = useForm({
     resolver: zodResolver(formSchema),
     defaultValues,
@@ -140,7 +95,7 @@ function FormCard({ defaultValues, mode, id }) {
                   </CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-2">
-                  <EmployeeForm
+                  <GrDetails
                     form={form}
                     categories={[
                       { _id: "જનરલ", name: "જનરલ" },
@@ -161,7 +116,7 @@ function FormCard({ defaultValues, mode, id }) {
                   </CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-2">
-                  <BankForm form={form} />
+                  <BankDetails form={form} />
                 </CardContent>
               </Card>
             </TabsContent>
@@ -175,7 +130,7 @@ function FormCard({ defaultValues, mode, id }) {
                   </CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-2">
-                  <SchoolLeaveForm form={form} />
+                  <SchoolLeaveDetails form={form} />
                 </CardContent>
               </Card>
             </TabsContent>
@@ -196,4 +151,4 @@ function FormCard({ defaultValues, mode, id }) {
   );
 }
 
-export default FormCard;
+export default StudentForm;

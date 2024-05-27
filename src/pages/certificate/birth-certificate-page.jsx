@@ -1,7 +1,7 @@
 import axios from "axios";
-import { Printer } from "lucide-react";
+import { format } from "date-fns";
 import numWords from "num-words";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import {
   ContextMenu,
@@ -9,11 +9,13 @@ import {
   ContextMenuItem,
   ContextMenuTrigger,
 } from "@/components/ui/context-menu";
+import { Printer } from "lucide-react";
 
 const BirthCertificatePage = () => {
   const { id } = useParams();
   const [studentData, setStudentData] = useState({});
   const [isLoading, setIsLoading] = useState(true);
+  const [todayDate, setTodayDate] = useState(format(new Date(), "dd-MM-yyyy"));
 
   const dateToWords = (dateStr) => {
     const [year, month, day] = dateStr.split("-");
@@ -45,8 +47,6 @@ const BirthCertificatePage = () => {
 
   useEffect(() => {
     getData();
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id]);
 
   const handleDownloadPdf = () => {
@@ -88,7 +88,7 @@ const BirthCertificatePage = () => {
                     {/* <h3>Date - {todayDate}</h3> */}
                   </div>
                 </h3>
-                <p className="my-4">
+                <p className="my-4 break-all">
                   This is to certify that&nbsp;
                   <span className="underline">
                     {studentData.gender === "કન્યા" ? "Miss." : "Mrs."}

@@ -19,7 +19,18 @@ import {
   DropdownMenuRadioGroup,
   DropdownMenuRadioItem,
 } from "@/components/ui/dropdown-menu";
-
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
+import toast, { Toaster } from "react-hot-toast";
 import ActionsPopup from "@/components/ui/data-table-row-actions";
 
 const headers = [
@@ -155,9 +166,14 @@ function CertificatePage() {
                 <TableRow key={student.id}>
                   {headers.map((header) => (
                     <TableCell key={header.value}>
-                      {student[header.value] || "None"}
+                      {(header.value === "standard" ||
+                        header.value === "admission_std") &&
+                      student[header.value] == 13
+                        ? "Balvatika"
+                        : student[header.value] || "None"}
                     </TableCell>
                   ))}
+
                   <TableCell className="">
                     <ActionsPopup
                       Bonafide="Bonafide"

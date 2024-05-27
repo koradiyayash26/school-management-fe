@@ -3,11 +3,8 @@ import { Route, BrowserRouter as Router, Routes } from "react-router-dom";
 import "./App.css";
 import DashboardLayout from "./components/layouts";
 import Notfound from "./components/not-found";
-import FeesType from "./components/payment";
-import FeeTypesAdd from "./components/payment/feetype-add";
-import FeetypeUpdate from "./components/payment/feetype-update";
-import HistoricalFees from "./components/payment/historical-fees";
-import HistoricalFeesAdd from "./components/payment/historical-fees/historical-fee-add";
+import HistoricalFeesPage from "./pages/historical-fees/historical-fees-page";
+import HistoricalFeesAddPage from "./pages/historical-fees/historical-fee-add-page";
 import MyDocument from "./components/pdf";
 import ProtectedRoutes from "./components/protected-routes";
 import BirthCertificatePage from "./pages/certificate/birth-certificate-page";
@@ -23,6 +20,12 @@ import StudentEditPage from "./pages/students/student-edit-page";
 import ExamMarksPage from "./pages/exam/exam-page";
 import ExamMarksAddPage from "./pages/exam/exam-add-page";
 import ExamMarksEditPage from "./pages/exam/exam-edit-page";
+import ReportsPage from "./pages/report/reports-page";
+import ReportDetailsPage from "./pages/report/report-detail-page";
+import PaymentsPage from "./pages/payment/payments-page";
+import FeesTypePage from "./pages/fee/fees-page";
+import FeetypeUpdatePage from "./pages/fee/fee-update-page";
+import FeeTypesAddPage from "./pages/fee/fee-add-page";
 
 const App = () => {
   return (
@@ -52,20 +55,29 @@ const App = () => {
                   />
                   <Route element={<BirthCertificatePage />} path="/birth/:id" />
                   <Route element={<MyDocument />} path="/pdf" />
-                  <Route element={<FeesType />} path="/fee-type" />
-                  <Route element={<FeeTypesAdd />} path="/fee-type/add" />
+                  <Route element={<FeesTypePage />} path="/fee-type" />
+                  <Route element={<FeeTypesAddPage />} path="/fee-type/add" />
                   <Route
-                    element={<FeetypeUpdate />}
+                    element={<FeetypeUpdatePage />}
                     path="/fee-type/edit/:id"
                   />
                   <Route element={<ExamMarksPage />} path="/exam" />
                   <Route element={<ExamMarksAddPage />} path="/exam/add" />
-                  <Route element={<ExamMarksEditPage />} path="/exam/edit/:id" />
-                  <Route element={<HistoricalFees />} path="/historical-fee" />
                   <Route
-                    element={<HistoricalFeesAdd />}
+                    element={<ExamMarksEditPage />}
+                    path="/exam/edit/:id"
+                  />
+                  <Route element={<HistoricalFeesPage />} path="/historical-fee" />
+                  <Route
+                    element={<HistoricalFeesAddPage />}
                     path="/historical-fee/add"
                   />
+                  <Route element={<ReportsPage />} path="/report" />
+                  <Route
+                    element={<ReportDetailsPage />}
+                    path="/report/standard/:id"
+                  />
+                  <Route element={<PaymentsPage />} path="/payment" />
                   <Route element={<Notfound />} path="*" />
                 </Route>
               </Route>

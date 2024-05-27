@@ -8,18 +8,17 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Input } from "../ui/input";
-import { Button } from "../ui/button";
-import { ScrollArea, ScrollBar } from "../ui/scroll-area";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import {
   DropdownMenu,
   DropdownMenuTrigger,
   DropdownMenuContent,
   DropdownMenuRadioGroup,
   DropdownMenuRadioItem,
-} from "../ui/dropdown-menu";
+} from "@/components/ui/dropdown-menu";
 import { Link } from "react-router-dom";
-import ActionsPopupPayment from "./data-table-row-actions";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -29,9 +28,10 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-} from "../ui/alert-dialog";
+} from "@/components/ui/alert-dialog";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import toast, { Toaster } from "react-hot-toast";
+import ActionsPopupFee from "@/components/fee/data-table-row-action";
 
 const headers = [
   { label: "ID", value: "id" },
@@ -71,7 +71,7 @@ const deleteFeeType = async (feeTypeId) => {
   return res.data;
 };
 
-function FeesType() {
+function FeesTypePage() {
   const queryClient = useQueryClient();
   const [page, setPage] = useState(0);
   const [pageSize, setPageSize] = useState(10);
@@ -94,7 +94,7 @@ function FeesType() {
     setPageSize(parseInt(value));
     setPage(0);
   };
-  
+
   const openAlertDeleteBox = (id) => {
     setFeeTypeId(id);
     setOpenAlert(true);
@@ -224,11 +224,13 @@ function FeesType() {
                     <TableCell key={header.value} className="capitalize">
                       {header.value === "fee_master"
                         ? fee.fee_master?.name || "None"
+                        : fee[header.value] == 13
+                        ? "Balvatika"
                         : fee[header.value] || "None"}
                     </TableCell>
                   ))}
                   <TableCell className="">
-                    <ActionsPopupPayment
+                    <ActionsPopupFee
                       id={fee.id}
                       openAlertDeleteBox={openAlertDeleteBox}
                     />
@@ -264,4 +266,4 @@ function FeesType() {
   );
 }
 
-export default FeesType;
+export default FeesTypePage;

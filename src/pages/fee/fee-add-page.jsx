@@ -6,12 +6,16 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "../ui/form";
-import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
-import { Button } from "../ui/button";
+} from "@/components/ui/form";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import { Button } from "@/components/ui/button";
 import { CalendarIcon } from "lucide-react";
-import { Calendar } from "../ui/calendar";
-import { Input } from "../ui/input";
+import { Calendar } from "@/components/ui/calendar";
+import { Input } from "@/components/ui/input";
 import { useForm } from "react-hook-form";
 import {
   Select,
@@ -19,7 +23,7 @@ import {
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "../ui/select";
+} from "@/components/ui/select";
 import {
   Card,
   CardContent,
@@ -27,11 +31,11 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from "../ui/card";
+} from "@/components/ui/card";
 import axios from "axios";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 const years = [
   { _id: "2024", name: "2024" },
@@ -61,22 +65,13 @@ const years = [
   { _id: "2000", name: "2000" },
 ];
 
-const FeetypeUpdate = () => {
+const FeeTypesAddPage = () => {
   const formSchema = z.object({
     amount: z.coerce.number().min(1, { message: "Enter Amount" }),
     year: z.string().min(1, { message: "Please select a year" }),
     fee_master: z.string().min(1, { message: "Please select a fee type" }),
     standard: z.string().min(1, { message: "Please select a stadnard" }),
   });
-
-  const navigate = useNavigate();
-  const { id } = useParams();
-
-  const [loading, setLoading] = useState(false);
-  const [feeMaster, setFeeMaster] = useState([]);
-  const [standard, setStandard] = useState([]);
-  const [feeTypeIdData, setFeeTypeIdData] = useState({});
-  const [isLoading, setIsLoading] = useState(true);
 
   const defaultValues = {
     year: "",
@@ -85,6 +80,12 @@ const FeetypeUpdate = () => {
     amount: "",
   };
 
+  const navigate = useNavigate();
+
+  const [loading, setLoading] = useState(false);
+  const [feeMaster, setFeeMaster] = useState([]);
+  const [standard, setStandard] = useState([]);
+
   const getFeeTypeAddDetails = () => {
     const token = localStorage.getItem("Token");
     const config = {
@@ -92,56 +93,19 @@ const FeetypeUpdate = () => {
         Authorization: `Token ${token}`,
       },
     };
-    setIsLoading(true);
     return axios
       .get("http://127.0.0.1:8000/fee-types/add-search/", config)
       .then(function (response) {
         setFeeMaster(response.data.data.fee_master);
         setStandard(response.data.data.standard);
-        setIsLoading(false);
       })
       .catch(function (error) {
         console.log(error);
-        setIsLoading(true);
       });
   };
 
   useEffect(() => {
     getFeeTypeAddDetails();
-  }, []);
-  console.log(standard);
-  //  get data by id
-  const getFeeTypeIdDetails = () => {
-    const token = localStorage.getItem("Token");
-
-    const config = {
-      headers: {
-        Authorization: `Token ${token}`,
-      },
-    };
-
-    setIsLoading(true);
-
-    return axios
-      .get(`http://127.0.0.1:8000/fee-types/${id}/search`, config)
-      .then(function (response) {
-        setFeeTypeIdData(response.data.data);
-        // console.log(response.data.data);
-        setIsLoading(false);
-        form.reset({
-          year: response.data.data.year,
-          fee_master: response.data.data.fee_master.name,
-          standard: response.data.data.standard,
-          amount: response.data.data.amount,
-        });
-      })
-      .catch(function (error) {
-        console.log(error);
-      });
-  };
-
-  useEffect(() => {
-    getFeeTypeIdDetails();
   }, []);
 
   const onSubmit = (data) => {
@@ -155,35 +119,32 @@ const FeetypeUpdate = () => {
       ...data,
       fee_master: feeId,
     };
-    // console.log(formattedData);
 
     const token = localStorage.getItem("Token");
 
     axios
-      .patch(`http://127.0.0.1:8000/fee-types/${id}/edit/`, formattedData, {
+      .post("http://127.0.0.1:8000/fee-types/add/", formattedData, {
         headers: {
-          Authorization: `Token ${token}`,
+          Authorization: `token ${token}`,
         },
       })
       .then(function (response) {
+        console.log(response);
         navigate("/fee-type");
       })
       .catch(function (error) {
         console.log(error);
       });
   };
-
   const form = useForm({
     resolver: zodResolver(formSchema),
     defaultValues,
     onSubmit,
   });
-  if (isLoading) {
-    return <>Loading</>;
-  }
+
   return (
     <>
-      <h1>UPDATE FEE TYPE</h1>
+      <h1>ADD FEE TYPE</h1>
       <Card className="">
         <div>
           <Form {...form}>
@@ -193,7 +154,7 @@ const FeetypeUpdate = () => {
               className="space-y-2 w-full"
             >
               <CardHeader>
-                <CardTitle>UPDATE FEE TYPE</CardTitle>
+                <CardTitle>ADD FEE TYPE</CardTitle>
                 <CardDescription>
                   All Fields Are Required in This Form.
                 </CardDescription>
@@ -257,7 +218,7 @@ const FeetypeUpdate = () => {
                           <SelectContent>
                             {standard.map((std) => (
                               <SelectItem key={std.id} value={std.name}>
-                                {std.name}
+                                {std.name == 13 ? "Balvatika" : std.name}
                               </SelectItem>
                             ))}
                           </SelectContent>
@@ -330,4 +291,4 @@ const FeetypeUpdate = () => {
   );
 };
 
-export default FeetypeUpdate;
+export default FeeTypesAddPage;

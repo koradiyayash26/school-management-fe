@@ -7,16 +7,13 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { EmployeeForm } from "./student-form";
-import { BankForm } from "./bank-form";
-import { SchoolLeaveForm } from "./school-leave-form";
+import { GrDetails } from "./gr-details";
+import { BankDetails } from "./bank-details";
+import { SchoolLeaveDetails } from "./school-leave-details";
 import { useForm } from "react-hook-form";
 import { Form } from "../ui/form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import axios from "axios";
-import { format } from "date-fns";
-import { useNavigate } from "react-router-dom";
 
 const formSchema = z.object({
   grno: z.coerce.number(),
@@ -62,50 +59,7 @@ const formSchema = z.object({
   bank_address: z.string().optional(),
 });
 
-function FormCard({ defaultValues, mode, id }) {
-  const navigate = useNavigate();
-
-  const onSubmit = (data) => {
-    const formattedData = {
-      ...data,
-      birth_date: format(new Date(data.birth_date), "yyyy-MM-dd"),
-      left_school_date: format(new Date(data.left_school_date), "yyyy-MM-dd"),
-    };
-    const token = localStorage.getItem("Token");
-    if (mode === "edit") {
-      // STudent Update Api Called Here
-
-      axios
-        .patch(`http://127.0.0.1:8000/students/${id}/edit/`, formattedData, {
-          headers: {
-            Authorization: `Token ${token}`,
-          },
-        })
-        .then(function (response) {
-          console.log(response);
-          navigate("/student");
-        })
-        .catch(function (error) {
-          console.log(error);
-        });
-    } else {
-      // STudent add Api Called Here
-
-      axios
-        .post("http://127.0.0.1:8000/students/add/", formattedData, {
-          headers: {
-            Authorization: `token ${token}`,
-          },
-        })
-        .then(function (response) {
-          console.log(response);
-          navigate("/student");
-        })
-        .catch(function (error) {
-          console.log(error);
-        });
-    }
-  };
+function StudentForm({ defaultValues, onSubmit }) {
   const form = useForm({
     resolver: zodResolver(formSchema),
     defaultValues,
@@ -141,7 +95,7 @@ function FormCard({ defaultValues, mode, id }) {
                   </CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-2">
-                  <EmployeeForm
+                  <GrDetails
                     form={form}
                     categories={[
                       { _id: "જનરલ", name: "જનરલ" },
@@ -162,7 +116,7 @@ function FormCard({ defaultValues, mode, id }) {
                   </CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-2">
-                  <BankForm form={form} />
+                  <BankDetails form={form} />
                 </CardContent>
               </Card>
             </TabsContent>
@@ -176,7 +130,7 @@ function FormCard({ defaultValues, mode, id }) {
                   </CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-2">
-                  <SchoolLeaveForm form={form} />
+                  <SchoolLeaveDetails form={form} />
                 </CardContent>
               </Card>
             </TabsContent>
@@ -197,4 +151,4 @@ function FormCard({ defaultValues, mode, id }) {
   );
 }
 
-export default FormCard;
+export default StudentForm;

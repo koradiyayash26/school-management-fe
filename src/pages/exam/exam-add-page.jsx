@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import {
@@ -8,6 +8,7 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
+  useFormField,
 } from "@/components/ui/form";
 import {
   Select,
@@ -65,7 +66,7 @@ const ExamMarksAddPage = () => {
   const [loading, setLoading] = useState(false);
 
   const [standards] = useState([
-    "Balvatika",
+    "13",
     "1",
     "2",
     "3",
@@ -209,7 +210,7 @@ const ExamMarksAddPage = () => {
                           <SelectContent>
                             {standards.map((std) => (
                               <SelectItem key={std} value={std}>
-                                {std}
+                                {std == 13 ? "Balvatika" : std}
                               </SelectItem>
                             ))}
                           </SelectContent>

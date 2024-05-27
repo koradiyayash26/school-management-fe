@@ -1,12 +1,14 @@
-import FormCard from "@/components/student";
+import StudentForm from "@/components/student";
 import axios from "axios";
+import { format } from "date-fns";
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
-
+import { useNavigate, useParams } from "react-router-dom";
 
 const StudentEditPage = () => {
   const [initialData, setInitialData] = useState({});
   const [isLoading, setIsLoading] = useState(true);
+  const navigate = useNavigate();
+
 
   const { id } = useParams();
 
@@ -33,15 +35,43 @@ const StudentEditPage = () => {
     getData();
   }, [id]);
 
+  const onSubmit = (data) => {
+    const formattedData = {
+      ...data,
+      birth_date: format(new Date(data.birth_date), "yyyy-MM-dd"),
+      left_school_date: format(new Date(data.left_school_date), "yyyy-MM-dd"),
+    };
+    const token = localStorage.getItem("Token");
+
+    // STudent Update Api Called Here
+
+    axios
+      .patch(`http://127.0.0.1:8000/students/${id}/edit/`, formattedData, {
+        headers: {
+          Authorization: `Token ${token}`,
+        },
+      })
+      .then(function (response) {
+        console.log(response);
+        navigate("/student");
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+  };
+
   if (isLoading) {
     return <>Loading</>;
   }
 
- const cleanedData = Object.fromEntries(
-    Object.entries(initialData).map(([key, value]) => [key, value === null ? "" : value])
+  const cleanedData = Object.fromEntries(
+    Object.entries(initialData).map(([key, value]) => [
+      key,
+      value === null ? "" : value,
+    ])
   );
   console.log(cleanedData);
-  return <FormCard defaultValues={cleanedData} mode="edit" id={id}/>;
+  return <StudentForm defaultValues={cleanedData} onSubmit={onSubmit}  />;
 };
 
 export default StudentEditPage;

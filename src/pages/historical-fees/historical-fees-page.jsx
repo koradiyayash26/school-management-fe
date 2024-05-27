@@ -32,7 +32,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
-import ActionsPopupHistoricalFees from "./data-table-row-action";
+import ActionsPopupHistoricalFees from "@/components/historical-fees/data-table-row-action";
 
 const deleteHistoricalFee = async (historicalFeeId) => {
   const token = localStorage.getItem("Token");
@@ -74,7 +74,7 @@ const headers = [
   { label: "Amount", value: "amount" },
 ];
 
-function HistoricalFees() {
+function HistoricalFeesPage() {
   const queryClient = useQueryClient();
 
   const [page, setPage] = useState(0);
@@ -223,9 +223,6 @@ function HistoricalFees() {
                       historical.receipt_no
                         .toLocaleLowerCase()
                         .includes(search) ||
-                      historical.standard
-                        .toLocaleLowerCase()
-                        .includes(search) ||
                       historical.date.toLocaleLowerCase().includes(search) ||
                       historical.year.toLocaleLowerCase().includes(search) ||
                       historical.fee_type.toLocaleLowerCase().includes(search);
@@ -238,6 +235,10 @@ function HistoricalFees() {
                         ? (historical.student?.first_name || "None") +
                           " " +
                           (historical.student?.last_name || "None")
+                        : header.value === "standard"
+                        ? historical[header.value] === "13"
+                          ? "Balvatika"
+                          : historical[header.value] || "None"
                         : historical[header.value] || "None"}
                     </TableCell>
                   ))}
@@ -278,4 +279,4 @@ function HistoricalFees() {
   );
 }
 
-export default HistoricalFees;
+export default HistoricalFeesPage;

@@ -1,4 +1,8 @@
+import React, { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
+import axios from "axios";
+import { FaFemale, FaMale } from "react-icons/fa";
+import { Link } from "react-router-dom";
 import {
   Card,
   CardContent,
@@ -9,11 +13,7 @@ import {
 } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { Progress } from "@/components/ui/progress";
-import axios from "axios";
 import { ClipboardList } from "lucide-react";
-import { useEffect, useState } from "react";
-import { FaFemale, FaMale } from "react-icons/fa";
-import { Link } from "react-router-dom";
 
 const StandardPage = () => {
   const [standardDataCount, setStandardDataCount] = useState();
@@ -48,7 +48,7 @@ const StandardPage = () => {
 
   return (
     <>
-      <h1 className="uppercase">{"STANDARD'S INFORMATION"}</h1>
+      <h1 className="uppercase">STANDARD'S INFORMATION</h1>
       {/* Total Student COunt */}
       <Card className="">
         <CardHeader>
@@ -92,7 +92,7 @@ const StandardPage = () => {
               />
             </div>
             <div className="flex flex-col space-y-1.5">
-              <Label htmlFor="Total">{"Total Student's"}</Label>
+              <Label htmlFor="Total">Total Student's</Label>
               <span>
                 {standardDataCount ? standardDataCount.total_students : "0"}
               </span>
@@ -114,9 +114,13 @@ const StandardPage = () => {
           standardDataCount.standards.map((standard, index) => (
             <Card className="" key={index}>
               <CardHeader>
-                <CardTitle>{standard.standard}</CardTitle>
+                <CardTitle>
+                  {standard.standard == 13 ? "Balvatika" : standard.standard}
+                </CardTitle>
                 <CardDescription>
-                  The Display Data Of {standard.standard}&nbsp;Students.
+                  The Display Data Of{" "}
+                  {standard.standard == 13 ? "Balvatika" : standard.standard}
+                  &nbsp;Students.
                 </CardDescription>
               </CardHeader>
               <CardContent>

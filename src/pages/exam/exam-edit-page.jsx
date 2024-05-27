@@ -54,7 +54,7 @@ const ExamMarksEditPage = () => {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const [standards] = useState([
-    "Balvatika",
+    "13",
     "1",
     "2",
     "3",
@@ -246,7 +246,7 @@ const ExamMarksEditPage = () => {
                           <SelectContent>
                             {standards.map((std) => (
                               <SelectItem key={std} value={std}>
-                                {std}
+                                {std == 13 ? "Balvatika" : std}
                               </SelectItem>
                             ))}
                           </SelectContent>

@@ -9,9 +9,9 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Ellipsis, SquarePen, Trash2 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-import { Button } from "../ui/button";
+import { Button } from "@/components/ui/button";
 
-const ActionsPopupPayment = ({ id, openAlertDeleteBox }) => {
+const ActionsPopupFee = ({ id, openAlertDeleteBox }) => {
   const navigate = useNavigate();
   const editFeeType = (id) => {
     navigate(`/fee-type/edit/${id}`);
@@ -49,4 +49,4 @@ const ActionsPopupPayment = ({ id, openAlertDeleteBox }) => {
   );
 };
 
-export default ActionsPopupPayment;
+export default ActionsPopupFee;

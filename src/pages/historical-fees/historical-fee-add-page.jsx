@@ -73,7 +73,7 @@ const feetype = [
   { _id: "other", name: "other" },
 ];
 
-const HistoricalFeesAdd = () => {
+const HistoricalFeesAddPage = () => {
   const formSchema = z.object({
     year: z.string().min(1, { message: "Please select a year" }),
     amount: z.coerce.number().min(1, { message: "Please enter amount" }),
@@ -103,7 +103,7 @@ const HistoricalFeesAdd = () => {
   const [loading, setLoading] = useState(false);
 
   const [standards] = useState([
-    "Balvatika",
+    "13",
     "1",
     "2",
     "3",
@@ -285,7 +285,7 @@ const HistoricalFeesAdd = () => {
                           <SelectContent>
                             {standards.map((std) => (
                               <SelectItem key={std} value={std}>
-                                {std}
+                                {std == 13 ? "Balvatike" : std}
                               </SelectItem>
                             ))}
                           </SelectContent>
@@ -395,4 +395,4 @@ const HistoricalFeesAdd = () => {
   );
 };
 
-export default HistoricalFeesAdd;
+export default HistoricalFeesAddPage;

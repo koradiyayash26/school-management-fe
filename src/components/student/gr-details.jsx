@@ -25,7 +25,7 @@ import { useState } from "react";
 import { format } from "date-fns";
 import { Calendar } from "../ui/calendar";
 
-export const EmployeeForm = ({ form, categories }) => {
+export const GrDetails = ({ form, categories }) => {
   const [loading, setLoading] = useState(false);
 
   const religions = [
@@ -37,7 +37,7 @@ export const EmployeeForm = ({ form, categories }) => {
   ];
 
   const standard = [
-    { _id: "Balvatika", name: "Balvatika" },
+    { _id: "13", name: "Balvatika" },
     { _id: "1", name: "1" },
     { _id: "2", name: "2" },
     { _id: "3", name: "3" },
@@ -530,7 +530,7 @@ export const EmployeeForm = ({ form, categories }) => {
                       }
                     >
                       {field.value ? (
-                        format((field.value), "y-M-d")
+                        format(field.value, "y-M-d")
                       ) : (
                         <span>Pick a Date</span>
                       )}

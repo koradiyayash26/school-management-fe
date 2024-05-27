@@ -1,4 +1,4 @@
-import { useState } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
 import {
   Table,
@@ -10,7 +10,12 @@ import {
 } from "@/components/ui/table";
 import { Link } from "react-router-dom";
 
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import {
+  useMutation,
+  useMutationState,
+  useQuery,
+  useQueryClient,
+} from "@tanstack/react-query";
 import toast, { Toaster } from "react-hot-toast";
 import {
   AlertDialog,
@@ -229,6 +234,10 @@ function ExamMarksPage() {
                         ? (exam.student?.first_name || "None") +
                           " " +
                           (exam.student?.last_name || "None")
+                        : header.value === "std"
+                        ? exam[header.value] === "13"
+                          ? "Balvatika"
+                          : exam[header.value] || "None"
                         : exam[header.value] || "None"}
                     </TableCell>
                   ))}

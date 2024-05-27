@@ -17,7 +17,7 @@ import { useState } from "react";
 import { Calendar } from "../ui/calendar";
 import { format } from "date-fns";
 
-export const SchoolLeaveForm = ({ form }) => {
+export const SchoolLeaveDetails = ({ form }) => {
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
 

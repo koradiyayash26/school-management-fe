@@ -8,7 +8,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { useState } from "react";
 
-export const BankForm = ({ categories, form, defaultValues }) => {
+export const BankDetails = ({ categories, form, defaultValues }) => {
   const [loading, setLoading] = useState(false);
 
   return (

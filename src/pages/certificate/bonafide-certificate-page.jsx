@@ -1,7 +1,7 @@
 import axios from "axios";
 import { format } from "date-fns";
 import numWords from "num-words";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import {
   ContextMenu,
@@ -88,7 +88,7 @@ const BonafideCertificatePage = () => {
                     <h3>Date - {todayDate}</h3>
                   </div>
                 </h3>
-                <p className="my-4">
+                <p className="my-4 break-all">
                   Hence it is written that It is hereby written that&nbsp;
                   <span className="underline">
                     {studentData.gender === "કન્યા" ? "Miss." : "Mrs."}
@@ -100,7 +100,11 @@ const BonafideCertificatePage = () => {
                     {studentData.last_name}
                   </span>
                   &nbsp; is studying in this school in present standard -&nbsp;
-                  <span className="underline">{studentData.admission_std}</span>
+                  <span className="underline">
+                    {studentData.standard == 13
+                      ? "Balvatika"
+                      : studentData.standard}
+                  </span>
                   . As per GR No -{" "}
                   <span className="underline">{studentData.grno} </span>
                   of our school his date is&nbsp;

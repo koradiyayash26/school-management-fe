@@ -1,4 +1,4 @@
-import { useState } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
 import {
   Table,
@@ -28,25 +28,81 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
+  AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import toast, { Toaster } from "react-hot-toast";
 import ActionsPopup from "@/components/ui/data-table-row-actions";
-import { gr_columns } from "@/constant/table-columns";
-import { useStudents } from "@/hooks/use-student";
+
+const headers = [
+  { label: "ID", value: "id" },
+  { label: "GR Number", value: "grno" },
+  { label: "Last Name", value: "last_name" },
+  { label: "First Name", value: "first_name" },
+  { label: "Middle Name", value: "middle_name" },
+  { label: "Mother Name", value: "mother_name" },
+  { label: "Gender", value: "gender" },
+  { label: "Birth Date", value: "birth_date" },
+  { label: "Birth Place", value: "birth_place" },
+  { label: "Mobile Number", value: "mobile_no" },
+  { label: "Address", value: "address" },
+  { label: "City", value: "city" },
+  { label: "District", value: "district" },
+  { label: "Standard", value: "standard" },
+  { label: "Section", value: "section" },
+  { label: "Last School", value: "last_school" },
+  { label: "Admission Standard", value: "admission_std" },
+  { label: "Admission Date", value: "admission_date" },
+  { label: "Left School Standard", value: "left_school_std" },
+  { label: "Left School Date", value: "left_school_date" },
+  { label: "Religion", value: "religion" },
+  { label: "Category", value: "category" },
+  { label: "Caste", value: "caste" },
+  { label: "UDISE Number", value: "udise_no" },
+  { label: "Aadhar Number", value: "aadhar_no" },
+  { label: "Account Number", value: "account_no" },
+  { label: "Name on Passbook", value: "name_on_passbook" },
+  { label: "Bank Name", value: "bank_name" },
+  { label: "IFSC Code", value: "ifsc_code" },
+  { label: "Bank Address", value: "bank_address" },
+  { label: "Reason", value: "reason" },
+  { label: "Note", value: "note" },
+  { label: "Assessment", value: "assessment" },
+  { label: "Progress", value: "progress" },
+  { label: "Status", value: "status" },
+];
 
 function StudentsPage() {
-  const { data, isLoading, error } = useStudents();
-  const students = data?.data;
+  const [students, setStudents] = useState([]);
   const [page, setPage] = useState(0);
   const [pageSize, setPageSize] = useState(10);
   const [search, setSearch] = useState("");
   const [openAlert, setOpenAlert] = useState(false);
   const [studentId, setStudentId] = useState();
 
+  const getData = () => {
+    const token = localStorage.getItem("Token");
+    const config = {
+      headers: {
+        Authorization: `Token ${token}`,
+      },
+    };
+    return axios
+      .get("http://127.0.0.1:8000/students/search/", config)
+      .then(function (response) {
+        setStudents(response.data.data);
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+  };
+  useEffect(() => {
+    getData();
+  }, []);
+
   const startIndex = page * pageSize;
   const endIndex = (page + 1) * pageSize;
 
-  const visibleStudents = students?.slice(startIndex, endIndex);
+  const visibleStudents = students.slice(startIndex, endIndex);
 
   const handlePageSizeChange = (value) => {
     setPageSize(parseInt(value));
@@ -71,16 +127,13 @@ function StudentsPage() {
         config
       );
       setOpenAlert(false);
-      // getData();
+      getData();
       toast.success("Student Delete Successfully");
     } catch (error) {
       console.log(error);
       toast.error("Failed To Delete Student!");
     }
   };
-
-  if (isLoading) return <div>Loading...</div>;
-  if (error) return <div>Error</div>;
 
   return (
     <>
@@ -169,7 +222,7 @@ function StudentsPage() {
         <Table className="relative">
           <TableHeader>
             <TableRow>
-              {gr_columns.map((header, index) => (
+              {headers.map((header, index) => (
                 <TableHead key={index}>{header.label}</TableHead>
               ))}
               <TableHead className="">Actions</TableHead>
@@ -186,11 +239,16 @@ function StudentsPage() {
               })
               .map((student) => (
                 <TableRow key={student.id}>
-                  {gr_columns.map((header) => (
+                  {headers.map((header) => (
                     <TableCell key={header.value}>
-                      {student[header.value] || "None"}
+                      {(header.value === "standard" ||
+                        header.value === "admission_std") &&
+                      student[header.value] == 13
+                        ? "Balvatika"
+                        : student[header.value] || "None"}
                     </TableCell>
                   ))}
+
                   <TableCell className="">
                     <ActionsPopup
                       id={student.id}

@@ -1,9 +1,10 @@
+import FormCard from "@/components/student";
 import axios from "axios";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import FormCard from ".";
 
-const StudentEdit = () => {
+
+const StudentEditPage = () => {
   const [initialData, setInitialData] = useState({});
   const [isLoading, setIsLoading] = useState(true);
 
@@ -43,4 +44,4 @@ const StudentEdit = () => {
   return <FormCard defaultValues={cleanedData} mode="edit" id={id}/>;
 };
 
-export default StudentEdit;
+export default StudentEditPage;

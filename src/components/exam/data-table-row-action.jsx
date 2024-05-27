@@ -7,7 +7,6 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Ellipsis, SquarePen, Trash2 } from "lucide-react";
-import React from "react";
 import { useNavigate } from "react-router-dom";
 
 const ActionsPopupExamMark = ({ id, openAlertDeleteBox }) => {

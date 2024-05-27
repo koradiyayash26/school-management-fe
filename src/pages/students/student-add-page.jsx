@@ -1,7 +1,6 @@
-import React from "react";
-import FormCard from ".";
+import FormCard from "@/components/student";
 
-const StudentAddFrom = () => {
+const StudentAddPage = () => {
   const defaultValues = {
     grno: 0,
     first_name: "",
@@ -38,7 +37,7 @@ const StudentAddFrom = () => {
     bank_address: "",
   };
 
-  return <FormCard defaultValues={defaultValues}/>;
+  return <FormCard defaultValues={defaultValues} />;
 };
 
-export default StudentAddFrom;
+export default StudentAddPage;

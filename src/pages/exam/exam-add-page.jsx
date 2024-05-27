@@ -1,8 +1,6 @@
-import React, { useEffect, useState } from "react";
-import { useForm } from "react-hook-form";
+import { useEffect, useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { useNavigate, useParams } from "react-router-dom";
 import {
   Form,
   FormControl,
@@ -11,7 +9,6 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { Button } from "@/components/ui/button";
 import {
   Select,
   SelectContent,
@@ -19,26 +16,28 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
+import { CalendarIcon } from "lucide-react";
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { CalendarIcon } from "lucide-react";
 import { format } from "date-fns";
+import { useForm } from "react-hook-form";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
-const ExamUpdate = () => {
+const ExamMarksAddPage = () => {
   const formSchema = z.object({
     student: z.string().min(1, { message: "Please select a student" }),
     total_marks: z.coerce
@@ -50,9 +49,21 @@ const ExamUpdate = () => {
     std: z.string().min(1, { message: "Please select a standard" }),
   });
 
-  const { id } = useParams();
+  const defaultValues = {
+    student: "",
+    total_marks: "",
+    marks: "",
+    std: "",
+    sub: "",
+    date: "",
+  };
+
   const navigate = useNavigate();
+
+  const [studentName, setStudentName] = useState([]);
+
   const [loading, setLoading] = useState(false);
+
   const [standards] = useState([
     "Balvatika",
     "1",
@@ -68,16 +79,6 @@ const ExamUpdate = () => {
     "11",
     "12",
   ]);
-  const [studentName, setStudentName] = useState([]);
-
-  const defaultValues = {
-    student: "",
-    total_marks: "",
-    sub: "",
-    std: "",
-    marks: "",
-    date: "",
-  };
 
   const getStudentData = () => {
     const token = localStorage.getItem("Token");
@@ -105,40 +106,6 @@ const ExamUpdate = () => {
     getStudentData();
   }, []);
 
-  const getFeeTypeIdDetails = () => {
-    const token = localStorage.getItem("Token");
-
-    const config = {
-      headers: {
-        Authorization: `Token ${token}`,
-      },
-    };
-
-    setLoading(true);
-
-    return axios
-      .get(`http://127.0.0.1:8000/exams/${id}/search`, config)
-      .then((response) => {
-        const data = response.data.data;
-        setLoading(false);
-        form.reset({
-          student: `${data.student.first_name} ${data.student.last_name}`,
-          marks: data.marks,
-          total_marks: data.total_marks,
-          sub: data.sub,
-          std: data.std,
-          date: data.date,
-        });
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-  };
-
-  useEffect(() => {
-    getFeeTypeIdDetails();
-  }, [id]);
-
   const onSubmit = (data) => {
     const selectedStudent = studentName.find(
       (student) => `${student.first_name} ${student.last_name}` === data.student
@@ -148,19 +115,19 @@ const ExamUpdate = () => {
     }
 
     const token = localStorage.getItem("Token");
-    const config = {
-      headers: {
-        Authorization: `Token ${token}`,
-      },
-    };
 
     axios
-      .patch(`http://127.0.0.1:8000/exams/${id}/edit/`, data, config)
-      .then((response) => {
+      .post("http://127.0.0.1:8000/exams/add/", data, {
+        headers: {
+          Authorization: `token ${token}`,
+        },
+      })
+      .then(function (response) {
+        console.log(response);
         navigate("/exam");
       })
-      .catch((error) => {
-        console.error("Error updating exam:", error);
+      .catch(function (error) {
+        console.log(error);
       });
   };
 
@@ -170,27 +137,23 @@ const ExamUpdate = () => {
     onSubmit,
   });
 
-  if (loading) {
-    return <>Loading...</>;
-  }
-
   return (
     <>
-      <h1>UPDATE EXAM MARK</h1>
+      <h1>ADD EXAM MARKS</h1>
       <Card className="">
-        <div>
-          <Form {...form}>
-            <form
-              onSubmit={form.handleSubmit(onSubmit)}
-              className="space-y-2 w-full"
-            >
-              <CardHeader>
-                <CardTitle>UPDATE EXAM MARK</CardTitle>
-                <CardDescription>
-                  All Fields Are Required in This Form.
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
+        <CardHeader>
+          <CardTitle>ADD EXAM MARKS</CardTitle>
+          <CardDescription>
+            All Fields Are Required in This Form.
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <div>
+            <Form {...form}>
+              <form
+                onSubmit={form.handleSubmit(onSubmit)}
+                className="space-y-2 w-full"
+              >
                 <div className="md:grid md:grid-cols-3 gap-8">
                   <FormField
                     className=""
@@ -355,16 +318,16 @@ const ExamUpdate = () => {
                     )}
                   />
                 </div>
-              </CardContent>
-              <CardFooter className="mt-4">
-                <Button type="submit">Save</Button>
-              </CardFooter>
-            </form>
-          </Form>
-        </div>
+                <Button type="submit" className="mt-4">
+                  Save
+                </Button>
+              </form>
+            </Form>
+          </div>
+        </CardContent>
       </Card>
     </>
   );
 };
 
-export default ExamUpdate;
+export default ExamMarksAddPage;

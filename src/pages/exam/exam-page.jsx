@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState } from "react";
 import axios from "axios";
 import {
   Table,
@@ -10,12 +10,7 @@ import {
 } from "@/components/ui/table";
 import { Link } from "react-router-dom";
 
-import {
-  useMutation,
-  useMutationState,
-  useQuery,
-  useQueryClient,
-} from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import toast, { Toaster } from "react-hot-toast";
 import {
   AlertDialog,
@@ -37,7 +32,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
-import ActionsPopupExamMark from "./data-table-row-action";
+import ActionsPopupExamMark from "@/components/exam/data-table-row-action";
 
 const deleteExamMarks = async (feeTypeId) => {
   const token = localStorage.getItem("Token");
@@ -76,7 +71,7 @@ const headers = [
   { label: "Mark", value: "marks" },
 ];
 
-function ExamMarks() {
+function ExamMarksPage() {
   const queryClient = useQueryClient();
 
   const [page, setPage] = useState(0);
@@ -274,4 +269,4 @@ function ExamMarks() {
   );
 }
 
-export default ExamMarks;
+export default ExamMarksPage;

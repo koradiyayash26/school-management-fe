@@ -10,11 +10,6 @@ import HistoricalFees from "./components/payment/historical-fees";
 import HistoricalFeesAdd from "./components/payment/historical-fees/historical-fee-add";
 import MyDocument from "./components/pdf";
 import ProtectedRoutes from "./components/protected-routes";
-import ExamMarks from "./components/student/exam";
-import ExamMarksAdd from "./components/student/exam/exam-add";
-import ExamUpdate from "./components/student/exam/exam-update";
-import StudentAddFrom from "./components/student/student-add";
-import StudentEdit from "./components/student/student-edit";
 import BirthCertificatePage from "./pages/certificate/birth-certificate-page";
 import BonafideCertificatePage from "./pages/certificate/bonafide-certificate-page";
 import CertificatePage from "./pages/certificate/certificate-page";
@@ -23,6 +18,11 @@ import LoginPage from "./pages/login-page";
 import StandardDetailPage from "./pages/standard/standard-detail-page";
 import StandardPage from "./pages/standard/standard-page";
 import StudentsPage from "./pages/students/students-page";
+import StudentAddPage from "./pages/students/student-add-page";
+import StudentEditPage from "./pages/students/student-edit-page";
+import ExamMarksPage from "./pages/exam/exam-page";
+import ExamMarksAddPage from "./pages/exam/exam-add-page";
+import ExamMarksEditPage from "./pages/exam/exam-edit-page";
 
 const App = () => {
   return (
@@ -35,8 +35,11 @@ const App = () => {
                 <Route path="/" element={<DashboardLayout />}>
                   <Route index element={<HomePage />} />
                   <Route element={<StudentsPage />} path="/student/" />
-                  <Route element={<StudentAddFrom />} path="/student/add" />
-                  <Route element={<StudentEdit />} path="/student/edit/:id" />
+                  <Route element={<StudentAddPage />} path="/student/add" />
+                  <Route
+                    element={<StudentEditPage />}
+                    path="/student/edit/:id"
+                  />
                   <Route element={<StandardPage />} path="/standard" />
                   <Route
                     element={<StandardDetailPage />}
@@ -55,9 +58,9 @@ const App = () => {
                     element={<FeetypeUpdate />}
                     path="/fee-type/edit/:id"
                   />
-                  <Route element={<ExamMarks />} path="/exam" />
-                  <Route element={<ExamMarksAdd />} path="/exam/add" />
-                  <Route element={<ExamUpdate />} path="/exam/edit/:id" />
+                  <Route element={<ExamMarksPage />} path="/exam" />
+                  <Route element={<ExamMarksAddPage />} path="/exam/add" />
+                  <Route element={<ExamMarksEditPage />} path="/exam/edit/:id" />
                   <Route element={<HistoricalFees />} path="/historical-fee" />
                   <Route
                     element={<HistoricalFeesAdd />}

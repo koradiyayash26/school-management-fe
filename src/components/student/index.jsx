@@ -7,7 +7,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { EmployeeForm } from "./_components/student-form";
+import { EmployeeForm } from "./student-form";
 import { BankForm } from "./bank-form";
 import { SchoolLeaveForm } from "./school-leave-form";
 import { useForm } from "react-hook-form";
@@ -18,50 +18,51 @@ import axios from "axios";
 import { format } from "date-fns";
 import { useNavigate } from "react-router-dom";
 
+const formSchema = z.object({
+  grno: z.coerce.number(),
+  first_name: z
+    .string()
+    .min(3, { message: "First Name must be at least 3 characters" }),
+  last_name: z
+    .string()
+    .min(3, { message: "Last Name must be at least 3 characters" }),
+  middle_name: z
+    .string()
+    .min(3, { message: "Middle Name must be at least 3 characters" }),
+  mother_name: z.string(),
+  birth_date: z.string().nonempty("Date of birth is required"),
+  birth_place: z.string().optional(),
+  religion: z.string().min(1, { message: "Please select a religion" }),
+  category: z.string().min(1, { message: "Please select a category" }),
+  caste: z.string().optional(),
+  admission_std: z.string().optional(),
+  admission_date: z.string().min(1, { message: "Please select a category" }),
+  standard: z.string().optional(),
+  section: z.string().optional(),
+  last_school: z.string().optional(),
+  city: z.string().min(3, { message: "City must be at least 2 characters" }),
+  district: z
+    .string()
+    .min(3, { message: "District must be at least 2 characters" }),
+  address: z.string().optional(),
+  mobile_no: z.string().optional(),
+  status: z.string().optional(),
+  gender: z.string().optional(),
+  udise_no: z.string().optional(),
+  aadhar_no: z.string().optional(),
+  assesment: z.coerce.number().optional(),
+  progress: z.coerce.number().optional(),
+  reason: z.string().optional(),
+  left_school_date: z.string().optional(),
+  left_school_std: z.string().optional(),
+  account_no: z.string().optional(),
+  name_on_passbook: z.string().optional(),
+  bank_name: z.string().optional(),
+  ifsc_code: z.string().optional(),
+  bank_address: z.string().optional(),
+});
+
 function FormCard({ defaultValues, mode, id }) {
-  const formSchema = z.object({
-    grno: z.coerce.number(),
-    first_name: z
-      .string()
-      .min(3, { message: "First Name must be at least 3 characters" }),
-    last_name: z
-      .string()
-      .min(3, { message: "Last Name must be at least 3 characters" }),
-    middle_name: z
-      .string()
-      .min(3, { message: "Middle Name must be at least 3 characters" }),
-    mother_name: z.string(),
-    birth_date: z.string().nonempty('Date of birth is required'),
-    birth_place: z.string().optional(),
-    religion: z.string().min(1, { message: "Please select a religion" }),
-    category: z.string().min(1, { message: "Please select a category" }),
-    caste: z.string().optional(),
-    admission_std: z.string().optional(),
-    admission_date: z.string().min(1, { message: "Please select a category" }),
-    standard: z.string().optional(),
-    section: z.string().optional(),
-    last_school: z.string().optional(),
-    city: z.string().min(3, { message: "City must be at least 2 characters" }),
-    district: z
-      .string()
-      .min(3, { message: "District must be at least 2 characters" }),
-    address: z.string().optional(),
-    mobile_no: z.string().optional(),
-    status: z.string().optional(),
-    gender: z.string().optional(),
-    udise_no: z.string().optional(),
-    aadhar_no: z.string().optional(),
-    assesment: z.coerce.number().optional(),
-    progress: z.coerce.number().optional(),
-    reason: z.string().optional(),
-    left_school_date: z.string().optional(),
-    left_school_std: z.string().optional(),
-    account_no: z.string().optional(),
-    name_on_passbook: z.string().optional(),
-    bank_name: z.string().optional(),
-    ifsc_code: z.string().optional(),
-    bank_address: z.string().optional(),
-  });
   const navigate = useNavigate();
 
   const onSubmit = (data) => {

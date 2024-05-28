@@ -1,5 +1,4 @@
-import axios from "axios";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { useParams } from "react-router-dom";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import {
@@ -31,6 +30,9 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import toast, { Toaster } from "react-hot-toast";
+import { useMutation } from "@tanstack/react-query";
+import { deleteStandard } from "@/services/standard-service";
+import { useGetStandard } from "@/hooks/use-standard";
 
 const headers = [
   { label: "ID", value: "id" },
@@ -38,10 +40,8 @@ const headers = [
   { label: "Last Name", value: "last_name" },
   { label: "First Name", value: "first_name" },
   { label: "Middle Name", value: "middle_name" },
-  //   { label: "Mother Name", value: "mother_name" },
   { label: "Gender", value: "gender" },
   { label: "Birth Date", value: "birth_date" },
-  //   { label: "Birth Place", value: "birth_place" },
   { label: "Mobile Number", value: "mobile_no" },
   { label: "Address", value: "address" },
   { label: "City", value: "city" },
@@ -51,53 +51,26 @@ const headers = [
   { label: "Last School", value: "last_school" },
   { label: "Admission Standard", value: "admission_std" },
   { label: "Admission Date", value: "admission_date" },
-  //   { label: "Left School Standard", value: "left_school_std" },
-  //   { label: "Left School Date", value: "left_school_date" },
   { label: "Religion", value: "religion" },
   { label: "Category", value: "category" },
   { label: "Caste", value: "caste" },
   { label: "UDISE Number", value: "udise_no" },
   { label: "Aadhar Number", value: "aadhar_no" },
   { label: "Account Number", value: "account_no" },
-  //   { label: "Name on Passbook", value: "name_on_passbook" },
-  //   { label: "Bank Name", value: "bank_name" },
-  //   { label: "IFSC Code", value: "ifsc_code" },
-  //   { label: "Bank Address", value: "bank_address" },
-  //   { label: "Reason", value: "reason" },
-  //   { label: "Note", value: "note" },
-  //   { label: "Assessment", value: "assessment" },
-  //   { label: "Progress", value: "progress" },
-  //   { label: "Status", value: "status" },
 ];
 
 const StandardDetailPage = () => {
   const { id } = useParams();
-  const [students, setStudents] = useState([]);
+
   const [search, setSearch] = useState("");
   const [page, setPage] = useState(0);
   const [pageSize, setPageSize] = useState(10);
   const [studentId, setStudentId] = useState();
   const [openAlert, setOpenAlert] = useState(false);
 
-  const getStudentData = () => {
-    const token = localStorage.getItem("Token");
-    const config = {
-      headers: {
-        Authorization: `Token ${token}`,
-      },
-    };
-    return axios
-      .get(`http://127.0.0.1:8000/standards/${id}/search`, config)
-      .then(function (response) {
-        setStudents(response.data.data);
-      })
-      .catch(function (error) {
-        console.log(error);
-      });
-  };
-  useEffect(() => {
-    getStudentData();
-  }, []);
+  const { data, isLoading, error, refetch } = useGetStandard(id);
+  const students = data?.data || [];
+
   const startIndex = page * pageSize;
   const endIndex = (page + 1) * pageSize;
 
@@ -113,26 +86,25 @@ const StandardDetailPage = () => {
     setOpenAlert(true);
   };
 
-  const handleDeleteStudent = async (studentId) => {
-    try {
-      const token = localStorage.getItem("Token");
-      const config = {
-        headers: {
-          Authorization: `Token ${token}`,
-        },
-      };
-      await axios.delete(
-        `http://127.0.0.1:8000/students/${studentId}/delete/`,
-        config
-      );
+  const mutation = useMutation({
+    mutationFn: (studentId) => deleteStandard(studentId),
+    onSuccess: () => {
+      refetch();
       setOpenAlert(false);
-      getStudentData();
       toast.success("Student Delete Successfully");
-    } catch (error) {
-      console.log(error);
-      toast.error("Failed To Delete Student!");
-    }
+    },
+  });
+
+  const handleDeleteStudent = async (studentId) => {
+    mutation.mutate(studentId);
   };
+
+  if (isLoading) {
+    return <>Loading...</>;
+  }
+  if (error) {
+    return <>Error</>;
+  }
 
   return (
     <>

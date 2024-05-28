@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import axios from "axios";
 import {
   Table,
   TableBody,
@@ -10,7 +9,7 @@ import {
 } from "@/components/ui/table";
 import { Link } from "react-router-dom";
 
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import toast, { Toaster } from "react-hot-toast";
 import {
   AlertDialog,
@@ -33,36 +32,8 @@ import {
 import { Button } from "@/components/ui/button";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import ActionsPopupHistoricalFees from "@/components/historical-fees/data-table-row-action";
-
-const deleteHistoricalFee = async (historicalFeeId) => {
-  const token = localStorage.getItem("Token");
-
-  const config = {
-    headers: {
-      Authorization: `Token ${token}`,
-    },
-  };
-  const res = await axios.delete(
-    `http://127.0.0.1:8000/historical-fees/${historicalFeeId}/delete/`,
-    config
-  );
-  return res.data;
-};
-
-const getHistoricalData = async () => {
-  const token = localStorage.getItem("Token");
-
-  const config = {
-    headers: {
-      Authorization: `Token ${token}`,
-    },
-  };
-  const res = await axios.get(
-    "http://127.0.0.1:8000/historical-fees/search/",
-    config
-  );
-  return res.data;
-};
+import { useGetListHistoricalFee } from "@/hooks/use-historical-fee";
+import { deleteHistoricalFee } from "@/services/historical-fee-service";
 
 const headers = [
   { label: "Year", value: "year" },
@@ -83,12 +54,9 @@ function HistoricalFeesPage() {
   const [openAlert, setOpenAlert] = useState(false);
   const [historicalFeeId, setHistoricalFeeId] = useState();
 
-  const { data, isLoading } = useQuery({
-    queryKey: ["historicaldata"],
-    queryFn: getHistoricalData,
-  });
+  const { data, isLoading, error, refetch } = useGetListHistoricalFee();
 
-  const students = data?.data;
+  const students = data?.data || [];
   const startIndex = page * pageSize;
   const endIndex = (page + 1) * pageSize;
 
@@ -100,11 +68,11 @@ function HistoricalFeesPage() {
   };
 
   const mutation = useMutation({
-    mutationFn: deleteHistoricalFee,
+    mutationFn: (historicalFeeId) => deleteHistoricalFee(historicalFeeId),
     onSuccess: () => {
-      queryClient.invalidateQueries("historicaldata");
+      refetch();
       setOpenAlert(false);
-      toast.success("Historical Data Delete Successfully");
+      toast.success("Student Delete Successfully");
     },
   });
 
@@ -118,6 +86,10 @@ function HistoricalFeesPage() {
 
   if (isLoading) {
     return <>Loading...</>;
+  }
+
+  if (error) {
+    return <>Error</>;
   }
   return (
     <>

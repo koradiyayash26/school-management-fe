@@ -1,5 +1,4 @@
-import React, { useState, useEffect } from "react";
-import axios from "axios";
+import React, { useState } from "react";
 import {
   Table,
   TableBody,
@@ -11,7 +10,6 @@ import {
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
-// import ActionsPopup from "./data-table-row-actions";
 import {
   DropdownMenu,
   DropdownMenuTrigger,
@@ -19,19 +17,8 @@ import {
   DropdownMenuRadioGroup,
   DropdownMenuRadioItem,
 } from "@/components/ui/dropdown-menu";
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-  AlertDialogTrigger,
-} from "@/components/ui/alert-dialog";
-import toast, { Toaster } from "react-hot-toast";
 import ActionsPopup from "@/components/ui/data-table-row-actions";
+import { useCertificate } from "@/hooks/use-certificate";
 
 const headers = [
   { label: "ID", value: "id" },
@@ -39,63 +26,20 @@ const headers = [
   { label: "Last Name", value: "last_name" },
   { label: "First Name", value: "first_name" },
   { label: "Middle Name", value: "middle_name" },
-  //   { label: "Mother Name", value: "mother_name" },
   { label: "Gender", value: "gender" },
   { label: "Birth Date", value: "birth_date" },
-  //   { label: "Birth Place", value: "birth_place" },
-  //   { label: "Mobile Number", value: "mobile_no" },
-  //   { label: "Address", value: "address" },
-  //   { label: "City", value: "city" },
-  //   { label: "District", value: "district" },
   { label: "Standard", value: "standard" },
   { label: "Section", value: "section" },
-  //   { label: "Last School", value: "last_school" },
-  //   { label: "Admission Standard", value: "admission_std" },
-  //   { label: "Admission Date", value: "admission_date" },
-  //   { label: "Left School Standard", value: "left_school_std" },
-  //   { label: "Left School Date", value: "left_school_date" },
-  //   { label: "Religion", value: "religion" },
-  //   { label: "Category", value: "category" },
-  //   { label: "Caste", value: "caste" },
-  //   { label: "UDISE Number", value: "udise_no" },
-  //   { label: "Aadhar Number", value: "aadhar_no" },
-  //   { label: "Account Number", value: "account_no" },
-  //   { label: "Name on Passbook", value: "name_on_passbook" },
-  //   { label: "Bank Name", value: "bank_name" },
-  //   { label: "IFSC Code", value: "ifsc_code" },
-  //   { label: "Bank Address", value: "bank_address" },
-  //   { label: "Reason", value: "reason" },
-  //   { label: "Note", value: "note" },
-  //   { label: "Assessment", value: "assessment" },
-  //   { label: "Progress", value: "progress" },
   { label: "Status", value: "status" },
 ];
 
 function CertificatePage() {
-  const [students, setStudents] = useState([]);
+  const { data, isLoading, error, refetch } = useCertificate();
+  let students = data?.data || [];
+
   const [page, setPage] = useState(0);
   const [pageSize, setPageSize] = useState(10);
   const [search, setSearch] = useState("");
-
-  const getData = () => {
-    const token = localStorage.getItem("Token");
-    const config = {
-      headers: {
-        Authorization: `Token ${token}`,
-      },
-    };
-    return axios
-      .get("http://127.0.0.1:8000/students/search/", config)
-      .then(function (response) {
-        setStudents(response.data.data);
-      })
-      .catch(function (error) {
-        console.log(error);
-      });
-  };
-  useEffect(() => {
-    getData();
-  }, []);
 
   const startIndex = page * pageSize;
   const endIndex = (page + 1) * pageSize;
@@ -106,7 +50,9 @@ function CertificatePage() {
     setPageSize(parseInt(value));
     setPage(0);
   };
-
+  if (isLoading) {
+    return <>Loading...</>;
+  }
   return (
     <>
       <h1 className="uppercase">certificate</h1>

@@ -1,5 +1,4 @@
-import React, { useState, useEffect } from "react";
-import axios from "axios";
+import React, { useState } from "react";
 import {
   Table,
   TableBody,
@@ -29,9 +28,11 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useMutation } from "@tanstack/react-query";
 import toast, { Toaster } from "react-hot-toast";
 import ActionsPopupFee from "@/components/fee/data-table-row-action";
+import { deleteFeeType } from "@/services/fees-service";
+import { useFeeType } from "@/hooks/use-fees";
 
 const headers = [
   { label: "ID", value: "id" },
@@ -41,48 +42,13 @@ const headers = [
   { label: "Amount", value: "amount" },
 ];
 
-const getFeeTypeData = async () => {
-  const token = localStorage.getItem("Token");
-
-  const config = {
-    headers: {
-      Authorization: `Token ${token}`,
-    },
-  };
-  const res = await axios.get(
-    "http://127.0.0.1:8000/fee-types/search/",
-    config
-  );
-  return res.data;
-};
-
-const deleteFeeType = async (feeTypeId) => {
-  const token = localStorage.getItem("Token");
-
-  const config = {
-    headers: {
-      Authorization: `Token ${token}`,
-    },
-  };
-  const res = await axios.delete(
-    `http://127.0.0.1:8000/fee-types/${feeTypeId}/delete/`,
-    config
-  );
-  return res.data;
-};
-
 function FeesTypePage() {
-  const queryClient = useQueryClient();
+  const { data, isLoading, error, refetch } = useFeeType();
   const [page, setPage] = useState(0);
   const [pageSize, setPageSize] = useState(10);
   const [search, setSearch] = useState("");
   const [openAlert, setOpenAlert] = useState(false);
   const [feeTypeId, setFeeTypeId] = useState();
-
-  const { data, isLoading } = useQuery({
-    queryKey: ["feetypes"],
-    queryFn: getFeeTypeData,
-  });
 
   const students = data?.data;
   const startIndex = page * pageSize;
@@ -103,19 +69,16 @@ function FeesTypePage() {
   const mutation = useMutation({
     mutationFn: deleteFeeType,
     onSuccess: () => {
-      queryClient.invalidateQueries("feetypes");
+      refetch();
       setOpenAlert(false);
       toast.success("FeeType Delete Successfully");
     },
   });
 
-  const handleDeleteStudent = () => {
-    mutation.mutate(feeTypeId);
-  };
+  if (isLoading) return <>Loading...</>;
 
-  if (isLoading) {
-    return <>Loading...</>;
-  }
+  if (error) return <>Error</>;
+
   return (
     <>
       <Toaster
@@ -154,7 +117,7 @@ function FeesTypePage() {
               Cancel
             </AlertDialogCancel>
             <AlertDialogAction
-              onClick={() => handleDeleteStudent(feeTypeId)}
+              onClick={() => mutation.mutate(feeTypeId)}
               className="bg-[red] text-white hover:bg-red-500"
             >
               Delete

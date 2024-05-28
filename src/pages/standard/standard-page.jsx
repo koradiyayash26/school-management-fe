@@ -1,6 +1,5 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { Button } from "@/components/ui/button";
-import axios from "axios";
 import { FaFemale, FaMale } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import {
@@ -14,26 +13,11 @@ import {
 import { Label } from "@/components/ui/label";
 import { Progress } from "@/components/ui/progress";
 import { ClipboardList } from "lucide-react";
+import { useStandard } from "@/hooks/use-standard";
 
 const StandardPage = () => {
-  const [standardDataCount, setStandardDataCount] = useState();
-  const getStudentCount = async () => {
-    try {
-      const token = localStorage.getItem("Token");
-      const config = { headers: { Authorization: `Token ${token}` } };
-      const response = await axios.get(
-        "http://127.0.0.1:8000/standards/standard-counter/",
-        config
-      );
-      setStandardDataCount(response.data.data);
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
-  useEffect(() => {
-    getStudentCount();
-  }, []);
+  const { data, isLoading, refetch } = useStandard();
+  let standardDataCount = data?.data;
 
   const handleCalculate = (standard, gender) => {
     const boys_count = standard.boys_count;
@@ -45,7 +29,9 @@ const StandardPage = () => {
       return (girls_count * 100) / total_count;
     }
   };
-
+  if (isLoading) {
+    return <>Loading...</>;
+  }
   return (
     <>
       <h1 className="uppercase">STANDARD'S INFORMATION</h1>

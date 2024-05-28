@@ -1,5 +1,4 @@
-import React, { useState, useEffect } from "react";
-import axios from "axios";
+import React, { useState } from "react";
 import {
   Table,
   TableBody,
@@ -10,12 +9,7 @@ import {
 } from "@/components/ui/table";
 import { Link } from "react-router-dom";
 
-import {
-  useMutation,
-  useMutationState,
-  useQuery,
-  useQueryClient,
-} from "@tanstack/react-query";
+import { useMutation } from "@tanstack/react-query";
 import toast, { Toaster } from "react-hot-toast";
 import {
   AlertDialog,
@@ -38,33 +32,8 @@ import {
 import { Button } from "@/components/ui/button";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import ActionsPopupExamMark from "@/components/exam/data-table-row-action";
-
-const deleteExamMarks = async (feeTypeId) => {
-  const token = localStorage.getItem("Token");
-
-  const config = {
-    headers: {
-      Authorization: `Token ${token}`,
-    },
-  };
-  const res = await axios.delete(
-    `http://127.0.0.1:8000/exams/${feeTypeId}/delete/`,
-    config
-  );
-  return res.data;
-};
-
-const getExamMarksData = async () => {
-  const token = localStorage.getItem("Token");
-
-  const config = {
-    headers: {
-      Authorization: `Token ${token}`,
-    },
-  };
-  const res = await axios.get("http://127.0.0.1:8000/exams/search/", config);
-  return res.data;
-};
+import { useExamList } from "@/hooks/use-exam";
+import { deleteExam } from "@/services/exam-service";
 
 const headers = [
   { label: "ID", value: "id" },
@@ -77,18 +46,13 @@ const headers = [
 ];
 
 function ExamMarksPage() {
-  const queryClient = useQueryClient();
-
   const [page, setPage] = useState(0);
   const [pageSize, setPageSize] = useState(10);
   const [search, setSearch] = useState("");
   const [openAlert, setOpenAlert] = useState(false);
-  const [feeTypeId, setFeeTypeId] = useState();
+  const [examId, setExamId] = useState();
 
-  const { data, isLoading } = useQuery({
-    queryKey: ["exammarks"],
-    queryFn: getExamMarksData,
-  });
+  const { data, isLoading, refetch } = useExamList();
 
   const students = data?.data;
   const startIndex = page * pageSize;
@@ -100,22 +64,21 @@ function ExamMarksPage() {
     setPageSize(parseInt(value));
     setPage(0);
   };
-
   const mutation = useMutation({
-    mutationFn: deleteExamMarks,
+    mutationFn: (examId) => deleteExam(examId),
     onSuccess: () => {
-      queryClient.invalidateQueries("exammarks");
+      refetch();
       setOpenAlert(false);
-      toast.success("ExamMarks Delete Successfully");
+      toast.success("Exam Delete Successfully");
     },
   });
 
   const openAlertDeleteBox = (id) => {
-    setFeeTypeId(id);
+    setExamId(id);
     setOpenAlert(true);
   };
   const handleDeleteStudent = () => {
-    mutation.mutate(feeTypeId);
+    mutation.mutate(examId);
   };
 
   if (isLoading) {
@@ -159,7 +122,7 @@ function ExamMarksPage() {
               Cancel
             </AlertDialogCancel>
             <AlertDialogAction
-              onClick={() => handleDeleteStudent(feeTypeId)}
+              onClick={() => handleDeleteStudent(examId)}
               className="bg-[red] text-white hover:bg-red-500"
             >
               Delete

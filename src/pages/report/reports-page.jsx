@@ -1,4 +1,3 @@
-
 import ActionsPopupReport from "@/components/report/data-table-row-action";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import {
@@ -9,46 +8,22 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import axios from "axios";
+import { useFeeReport, useStudentStandardCOunt } from "@/hooks/use-report";
 import React, { useEffect, useState } from "react";
 
 const ReportsPage = () => {
-  const [standardDataCount, setStandardDataCount] = useState();
-  const [feeReportData, setFeeReportData] = useState();
   const [combinedData, setCombinedData] = useState([]);
 
-  const getStudentCount = async () => {
-    try {
-      const token = localStorage.getItem("Token");
-      const config = { headers: { Authorization: `Token ${token}` } };
-      const response = await axios.get(
-        "http://127.0.0.1:8000/standards/standard-counter/",
-        config
-      );
-      setStandardDataCount(response.data.data);
-    } catch (error) {
-      console.log(error);
-    }
-  };
+  const { data, isLoading, error, refetch } = useStudentStandardCOunt();
+  let standardDataCount = data?.data;
 
-  const getFeeReport = async () => {
-    try {
-      const token = localStorage.getItem("Token");
-      const config = { headers: { Authorization: `Token ${token}` } };
-      const response = await axios.get(
-        "http://127.0.0.1:8000/fee-report/",
-        config
-      );
-      setFeeReportData(response.data.data);
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
-  useEffect(() => {
-    getStudentCount();
-    getFeeReport();
-  }, []);
+  const {
+    data: reportData,
+    isLoading: reportLoading,
+    error: reportError,
+    refetch: reportRefetch,
+  } = useFeeReport();
+  let feeReportData = reportData?.data;
 
   const combineData = () => {
     if (standardDataCount && feeReportData) {
@@ -102,6 +77,14 @@ const ReportsPage = () => {
   useEffect(() => {
     combineData();
   }, [standardDataCount, feeReportData]);
+
+  if (isLoading || reportLoading) {
+    return <>Loading....</>;
+  }
+
+  if (error || reportError) {
+    return <>Error</>;
+  }
 
   return (
     <>

@@ -1,5 +1,4 @@
-import React, { useState, useEffect } from "react";
-import axios from "axios";
+import React, { useState } from "react";
 import {
   Table,
   TableBody,
@@ -11,7 +10,6 @@ import {
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
-// import ActionsPopup from "./data-table-row-actions";
 import {
   DropdownMenu,
   DropdownMenuTrigger,
@@ -28,10 +26,14 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-  AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import toast, { Toaster } from "react-hot-toast";
 import ActionsPopup from "@/components/ui/data-table-row-actions";
+import { useStudents } from "@/hooks/use-student";
+import { useMutation } from "@tanstack/react-query";
+import { deleteStudent } from "@/services/student-service";
+import { Link } from "react-router-dom";
+import { ClipboardList, Plus } from "lucide-react";
 
 const headers = [
   { label: "ID", value: "id" },
@@ -72,37 +74,19 @@ const headers = [
 ];
 
 function StudentsPage() {
-  const [students, setStudents] = useState([]);
+  const { data, isLoading, error, refetch } = useStudents();
+
   const [page, setPage] = useState(0);
   const [pageSize, setPageSize] = useState(10);
   const [search, setSearch] = useState("");
   const [openAlert, setOpenAlert] = useState(false);
   const [studentId, setStudentId] = useState();
-
-  const getData = () => {
-    const token = localStorage.getItem("Token");
-    const config = {
-      headers: {
-        Authorization: `Token ${token}`,
-      },
-    };
-    return axios
-      .get("http://127.0.0.1:8000/students/search/", config)
-      .then(function (response) {
-        setStudents(response.data.data);
-      })
-      .catch(function (error) {
-        console.log(error);
-      });
-  };
-  useEffect(() => {
-    getData();
-  }, []);
+  const students = data?.data;
 
   const startIndex = page * pageSize;
   const endIndex = (page + 1) * pageSize;
 
-  const visibleStudents = students.slice(startIndex, endIndex);
+  const visibleStudents = students?.slice(startIndex, endIndex);
 
   const handlePageSizeChange = (value) => {
     setPageSize(parseInt(value));
@@ -114,26 +98,18 @@ function StudentsPage() {
     setOpenAlert(true);
   };
 
-  const handleDeleteStudent = async (studentId) => {
-    try {
-      const token = localStorage.getItem("Token");
-      const config = {
-        headers: {
-          Authorization: `Token ${token}`,
-        },
-      };
-      await axios.delete(
-        `http://127.0.0.1:8000/students/${studentId}/delete/`,
-        config
-      );
+  const mutation = useMutation({
+    mutationFn: (params) => deleteStudent(params.id),
+    onSuccess: () => {
+      refetch();
       setOpenAlert(false);
-      getData();
       toast.success("Student Delete Successfully");
-    } catch (error) {
-      console.log(error);
-      toast.error("Failed To Delete Student!");
-    }
-  };
+    },
+  });
+
+  if (isLoading) return <>Loading...</>;
+
+  if (error) return <>Error</>;
 
   return (
     <>
@@ -176,7 +152,7 @@ function StudentsPage() {
               Cancel
             </AlertDialogCancel>
             <AlertDialogAction
-              onClick={() => handleDeleteStudent(studentId)}
+              onClick={() => mutation.mutate({ id: studentId })}
               className="bg-[red] text-white hover:bg-red-500"
             >
               Delete
@@ -218,6 +194,11 @@ function StudentsPage() {
           </DropdownMenuContent>
         </DropdownMenu>
       </div>
+      <Link to="/student/add">
+        <Button>
+          <span className="">Add</span>
+        </Button>
+      </Link>
       <ScrollArea className="rounded-md border max-w-[1280px] h-[calc(80vh-120px)]">
         <Table className="relative">
           <TableHeader>

@@ -31,6 +31,7 @@ import PaymentFeeFormPage from "./pages/payment/payment-fee-form-page";
 import SchoolStudentPage from "./pages/school-student/school-student-page";
 import SchoolStudentAddPage from "./pages/school-student/school-student-add-page";
 import SchoolStudentUpdatePage from "./pages/school-student/school-student-update-page";
+import CustomTable from "./components/data-table";
 
 const App = () => {
   return (
@@ -39,6 +40,7 @@ const App = () => {
         <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
           <Router>
             <Routes>
+              <Route path="/data-table" element={<CustomTable />} />
               <Route element={<ProtectedRoutes />}>
                 <Route path="/" element={<DashboardLayout />}>
                   <Route index element={<HomePage />} />
@@ -85,11 +87,23 @@ const App = () => {
                     element={<ReportDetailsPage />}
                     path="/report/standard/:id"
                   />
-                  <Route element={<SchoolStudentPage />} path="/school-student" />
-                  <Route element={<SchoolStudentAddPage />} path="/school-student/add" />
-                  <Route element={<SchoolStudentUpdatePage />} path="/school-student/edit/:id" />
+                  <Route
+                    element={<SchoolStudentPage />}
+                    path="/school-student"
+                  />
+                  <Route
+                    element={<SchoolStudentAddPage />}
+                    path="/school-student/add"
+                  />
+                  <Route
+                    element={<SchoolStudentUpdatePage />}
+                    path="/school-student/edit/:id"
+                  />
                   <Route element={<PaymentsPage />} path="/payment" />
-                  <Route element={<PaymentFeeFormPage />} path="/payment/:id/:year" />
+                  <Route
+                    element={<PaymentFeeFormPage />}
+                    path="/payment/:id/:year"
+                  />
                   <Route element={<PaymentReceiptPage />} path="/receipt/:id" />
                   <Route element={<Notfound />} path="*" />
                 </Route>

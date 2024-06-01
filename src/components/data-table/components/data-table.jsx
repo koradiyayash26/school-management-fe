@@ -20,10 +20,13 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 
-export function DataTable({ columns, data }) {
+export function DataTable({ columns, hiddenColumns, data }) {
   const [rowSelection, setRowSelection] = React.useState({});
-  const [columnVisibility, setColumnVisibility] = React.useState({});
+  const [columnVisibility, setColumnVisibility] = React.useState({
+    ...hiddenColumns,
+  });
   const [columnFilters, setColumnFilters] = React.useState([]);
   const [sorting, setSorting] = React.useState([]);
 
@@ -52,9 +55,12 @@ export function DataTable({ columns, data }) {
   return (
     <div className="space-y-4">
       <DataTableToolbar table={table} />
-      <div className="rounded-md border">
+      <ScrollArea
+        className="rounded-md border h-[50vh]"
+        scrollClassName="z-[2]"
+      >
         <Table>
-          <TableHeader>
+          <TableHeader className="sticky top-0 bg-white dark:bg-zinc-950 z-[1] [&_tr]:border-0 [&_tr]:shadow-[inset_0_-1px_0] [&_tr]:shadow-border">
             {table.getHeaderGroups().map((headerGroup) => (
               <TableRow key={headerGroup.id}>
                 {headerGroup.headers.map((header) => {
@@ -101,7 +107,8 @@ export function DataTable({ columns, data }) {
             )}
           </TableBody>
         </Table>
-      </div>
+        <ScrollBar orientation="horizontal" />
+      </ScrollArea>
       <DataTablePagination table={table} />
     </div>
   );

@@ -47,6 +47,11 @@ export const MENU = [
     icon: () => <Calculator className="h-4 w-4" />,
   },
   {
+    lable: "SCHOOL STUDENT",
+    path: "/school-student",
+    icon: () => <UsersRound className="h-4 w-4" />,
+  },
+  {
     lable: "PAYMENT",
     path: "/payment",
     icon: () => <IndianRupee className="h-4 w-4" />,

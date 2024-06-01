@@ -82,7 +82,7 @@ const FeeTypeForm = ({
         className="space-y-2 w-full"
       >
         <CardHeader>
-          <CardTitle>UPDATE FEE TYPE</CardTitle>
+          <CardTitle>FEE TYPE FORM</CardTitle>
           <CardDescription>
             All Fields Are Required in This Form.
           </CardDescription>

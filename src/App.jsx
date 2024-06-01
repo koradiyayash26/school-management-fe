@@ -26,6 +26,11 @@ import PaymentsPage from "./pages/payment/payments-page";
 import FeesTypePage from "./pages/fee/fees-page";
 import FeetypeUpdatePage from "./pages/fee/fee-update-page";
 import FeeTypesAddPage from "./pages/fee/fee-add-page";
+import PaymentReceiptPage from "./pages/payment/payment-receipt-page";
+import PaymentFeeFormPage from "./pages/payment/payment-fee-form-page";
+import SchoolStudentPage from "./pages/school-student/school-student-page";
+import SchoolStudentAddPage from "./pages/school-student/school-student-add-page";
+import SchoolStudentUpdatePage from "./pages/school-student/school-student-update-page";
 
 const App = () => {
   return (
@@ -80,7 +85,12 @@ const App = () => {
                     element={<ReportDetailsPage />}
                     path="/report/standard/:id"
                   />
+                  <Route element={<SchoolStudentPage />} path="/school-student" />
+                  <Route element={<SchoolStudentAddPage />} path="/school-student/add" />
+                  <Route element={<SchoolStudentUpdatePage />} path="/school-student/edit/:id" />
                   <Route element={<PaymentsPage />} path="/payment" />
+                  <Route element={<PaymentFeeFormPage />} path="/payment/:id/:year" />
+                  <Route element={<PaymentReceiptPage />} path="/receipt/:id" />
                   <Route element={<Notfound />} path="*" />
                 </Route>
               </Route>

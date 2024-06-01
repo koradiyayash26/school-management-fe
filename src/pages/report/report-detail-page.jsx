@@ -65,9 +65,9 @@ const ReportDetailsPage = () => {
                   {headers.map((header) => (
                     <TableCell key={header.value}>
                       {header.value === "student__standard" &&
-                      data[header.value] === 13
+                      data[header.value] === "13"
                         ? "Balvatika"
-                        : data[header.value]}
+                        : data[header.value] || 0}
                     </TableCell>
                   ))}
                 </TableRow>

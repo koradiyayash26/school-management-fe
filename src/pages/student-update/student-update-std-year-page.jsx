@@ -15,7 +15,8 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { useMutation } from "@tanstack/react-query";
 import toast, { Toaster } from "react-hot-toast";
 import { updateStudentUpdatestdandYear } from "@/services/student-update";
-import { Check, X } from "lucide-react";
+import { Check, Terminal, X } from "lucide-react";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 
 const headers = [
   { label: "Grno", value: "grno" },
@@ -116,8 +117,17 @@ function StudentUpdateStdYearPage() {
           },
         }}
       />
+      <Alert className="">
+        <AlertTitle>Notice :</AlertTitle>
+        <AlertDescription className="capitalize">
+          When you update standard and year that update on
+          <p className="inline uppercase underline font-semibold">
+            &nbsp;general register&nbsp;
+          </p>
+          also that under data can remove.
+        </AlertDescription>
+      </Alert>
       <h1>STUDENT UPDATE</h1>
-
       <div>
         <Button onClick={handleSubmit}>Update</Button>
       </div>
@@ -154,7 +164,10 @@ function StudentUpdateStdYearPage() {
             {students.map((student) => {
               const isSelected = selectedStudents.includes(student.id);
               return (
-                <TableRow key={student.id}>
+                <TableRow
+                  key={student.id}
+                  className={isSelected ? "bg-muted" : ""}
+                >
                   <TableCell>
                     <Checkbox
                       checked={isSelected}

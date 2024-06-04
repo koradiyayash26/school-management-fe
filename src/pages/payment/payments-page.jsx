@@ -357,7 +357,11 @@ const PaymentsPage = () => {
                 <TableRow key={payment.id}>
                   {headers.map((header) => (
                     <TableCell key={header.value} className="capitalize">
-                      {payment[header.value] || "None"}
+                      {header.value === "standard"
+                        ? payment.standard || "None"
+                        : payment[header.value] == 13
+                        ? "Balvatika"
+                        : payment[header.value] || "None"}
                     </TableCell>
                   ))}
                   <TableCell className="">

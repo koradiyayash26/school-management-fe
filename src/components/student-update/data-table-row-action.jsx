@@ -8,17 +8,56 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Ellipsis, SquarePen } from "lucide-react";
-import { useNavigate } from "react-router-dom";
+import { json, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
+import { useMutation } from "@tanstack/react-query";
+import { addStudentsAddTogetDatastdyear } from "@/services/student-update";
+import toast, { Toaster } from "react-hot-toast";
 
 const ActionsPopupStudentUpdate = ({ std, year }) => {
   const navigate = useNavigate();
+  const mutation = useMutation({
+    mutationFn: (data) => addStudentsAddTogetDatastdyear(data),
+    onSuccess: () => {
+      console.log("Data Created");
+    },
+    onError: (error) => {
+      toast.error(`Failed To Get Students: ${error.message}`);
+    },
+  });
   const updateStudent = (std, year) => {
+    let data = {
+      standard: std,
+      year: year,
+    };
+    mutation.mutate(data);
     navigate(`/update/students/${std}/${year}`);
   };
 
   return (
     <>
+      <Toaster
+        position="top-center"
+        reverseOrder={false}
+        gutter={8}
+        containerClassName=""
+        containerStyle={{}}
+        toastOptions={{
+          className: "",
+          duration: 5000,
+          style: {
+            background: "#363636",
+            color: "#fff",
+          },
+          success: {
+            duration: 3000,
+            theme: {
+              primary: "green",
+              secondary: "black",
+            },
+          },
+        }}
+      />
       <DropdownMenu className="">
         <DropdownMenuTrigger asChild>
           <Button

@@ -46,10 +46,20 @@ const updateStudentUpdatestdandYearUnseleted = async (jsonData) => {
   });
 };
 
+const addStudentsAddTogetDatastdyear = async (data) => {
+  console.log(data);
+  return await apiClient.post("/student-update/add-multilist/", data, {
+    headers: {
+      Authorization: `Token ${getToken()}`,
+    },
+  });
+};
+
 export {
   getStudentUpdateTemplateData,
   addStudentUpdateTemplateData,
   getStudentUpdateStdYearData,
   updateStudentUpdatestdandYearSeleted,
   updateStudentUpdatestdandYearUnseleted,
+  addStudentsAddTogetDatastdyear,
 };

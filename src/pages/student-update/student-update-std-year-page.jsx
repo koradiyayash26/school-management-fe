@@ -170,12 +170,9 @@ function StudentUpdateStdYearPage() {
       />
       <Alert className="">
         <AlertTitle>Notice :</AlertTitle>
-        <AlertDescription className="capitalize">
-          When you update standard and year that update on
-          <p className="inline uppercase underline font-semibold">
-            &nbsp;general register&nbsp;
-          </p>
-          also that under data can remove.
+        <AlertDescription className="uppercase">
+          If Data Is Exist On General Register And Not Show Under Table Then
+          Refresh Page.
         </AlertDescription>
       </Alert>
       <h1>STUDENT NOT UPDATED</h1>
@@ -192,7 +189,8 @@ function StudentUpdateStdYearPage() {
           <TableHeader>
             <TableRow>
               <TableHead className="text-start">
-                {selectedInactiveStudents.length === inactiveStudents.length ? (
+                {selectedInactiveStudents.length === inactiveStudents.length &&
+                selectedInactiveStudents.length !== 0 ? (
                   <Checkbox
                     className="mr-4"
                     checked={
@@ -252,6 +250,12 @@ function StudentUpdateStdYearPage() {
         </Table>
         <ScrollBar orientation="horizontal" />
       </ScrollArea>
+      <Alert className="">
+        <AlertTitle>Notice :</AlertTitle>
+        <AlertDescription className="uppercase">
+          If Update Not Work Then CLick Twice Times Then Work.
+        </AlertDescription>
+      </Alert>
       <h1>STUDENT UPDATED</h1>
       <div>
         <Button
@@ -266,7 +270,8 @@ function StudentUpdateStdYearPage() {
           <TableHeader>
             <TableRow>
               <TableHead className="text-start">
-                {selectedActiveStudents.length === activeStudents.length ? (
+                {selectedActiveStudents.length === activeStudents.length &&
+                selectedActiveStudents.length !== 0 ? (
                   <Checkbox
                     className="mr-4"
                     checked={

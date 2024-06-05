@@ -14,8 +14,11 @@ import { useParams } from "react-router-dom";
 import { Checkbox } from "@/components/ui/checkbox";
 import { useMutation } from "@tanstack/react-query";
 import toast, { Toaster } from "react-hot-toast";
-import { updateStudentUpdatestdandYear } from "@/services/student-update";
-import { Check, Terminal, X } from "lucide-react";
+import {
+  updateStudentUpdatestdandYearSeleted,
+  updateStudentUpdatestdandYearUnseleted,
+} from "@/services/student-update";
+import { Check, X } from "lucide-react";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 
 const headers = [
@@ -33,13 +36,26 @@ function StudentUpdateStdYearPage() {
     year
   );
 
-  const [selectedStudents, setSelectedStudents] = useState([]);
-  const [isSeleted, setIsSeleted] = useState(false);
+  const [selectedActiveStudents, setSelectedActiveStudents] = useState([]);
+  const [selectedInactiveStudents, setSelectedInactiveStudents] = useState([]);
+  const [isSelectedActive, setIsSelectedActive] = useState(false);
+  const [isSelectedInactive, setIsSelectedInactive] = useState(false);
 
   const mutation = useMutation({
-    mutationFn: (jsonData) => updateStudentUpdatestdandYear(jsonData),
+    mutationFn: (jsonData) => updateStudentUpdatestdandYearSeleted(jsonData),
     onSuccess: () => {
       toast.success("Student Update Successfully");
+      refetch();
+    },
+    onError: (error) => {
+      toast.error(`Update failed: ${error.message}`);
+    },
+  });
+
+  const mutationUnseleted = useMutation({
+    mutationFn: (jsonData) => updateStudentUpdatestdandYearUnseleted(jsonData),
+    onSuccess: () => {
+      toast.success("Student Refetch Successfully");
       refetch();
     },
     onError: (error) => {
@@ -50,21 +66,23 @@ function StudentUpdateStdYearPage() {
   if (isLoading) return <>Loading...</>;
   if (error) return <>Error</>;
 
-  const students = data;
+  const students = data?.data;
+  const activeStudents = students.filter((student) => student.is_active);
+  const inactiveStudents = students.filter((student) => !student.is_active);
 
-  const handleSelectAll = () => {
-    const allStudentIds = students.map((student) => student.id);
-    setSelectedStudents(allStudentIds);
-    setIsSeleted(true);
+  const handleSelectAllActive = () => {
+    const allStudentIds = activeStudents.map((student) => student.id);
+    setSelectedActiveStudents(allStudentIds);
+    setIsSelectedActive(true);
   };
 
-  const handleUnSelectAll = () => {
-    setIsSeleted(false);
-    setSelectedStudents([]);
+  const handleUnSelectAllActive = () => {
+    setIsSelectedActive(false);
+    setSelectedActiveStudents([]);
   };
 
-  const handleSelectStudent = (id) => {
-    setSelectedStudents((prevSelected) => {
+  const handleSelectActiveStudent = (id) => {
+    setSelectedActiveStudents((prevSelected) => {
       const newSelected = prevSelected.includes(id)
         ? prevSelected.filter((studentId) => studentId !== id)
         : [...prevSelected, id];
@@ -72,24 +90,57 @@ function StudentUpdateStdYearPage() {
     });
   };
 
-  const handleSubmit = () => {
-    const unselectedStudents = students
-      .filter((student) => !selectedStudents.includes(student.id))
-      .map((student) => student.grno); // Use student.grno to get the GRNO values
+  const handleSelectAllInactive = () => {
+    const allStudentIds = inactiveStudents.map((student) => student.id);
+    setSelectedInactiveStudents(allStudentIds);
+    setIsSelectedInactive(true);
+  };
 
-    const selectedStudentsGRNO = selectedStudents
+  const handleUnSelectAllInactive = () => {
+    setIsSelectedInactive(false);
+    setSelectedInactiveStudents([]);
+  };
+
+  const handleSelectInactiveStudent = (id) => {
+    setSelectedInactiveStudents((prevSelected) => {
+      const newSelected = prevSelected.includes(id)
+        ? prevSelected.filter((studentId) => studentId !== id)
+        : [...prevSelected, id];
+      return newSelected;
+    });
+  };
+
+  const handleSubmitActive = () => {
+    const selectedStudentsGRNO = selectedActiveStudents
       .map((id) => {
-        const student = students.find((student) => student.id === id);
+        const student = activeStudents.find((student) => student.id === id);
         return student ? student.grno : null;
       })
       .filter(Boolean);
 
     const logData = {
       selectedGRNOs: selectedStudentsGRNO,
-      unselectedGRNOs: unselectedStudents,
     };
 
     let jsonData = JSON.stringify(logData, null, 2);
+    console.log(jsonData + "Unseleted");
+    mutationUnseleted.mutate(jsonData);
+  };
+
+  const handleSubmitInactive = () => {
+    const selectedStudentsGRNO = selectedInactiveStudents
+      .map((id) => {
+        const student = inactiveStudents.find((student) => student.id === id);
+        return student ? student.grno : null;
+      })
+      .filter(Boolean);
+
+    const logData = {
+      selectedGRNOs: selectedStudentsGRNO,
+    };
+
+    let jsonData = JSON.stringify(logData, null, 2);
+    console.log(jsonData + "seleted");
     mutation.mutate(jsonData);
   };
 
@@ -127,28 +178,35 @@ function StudentUpdateStdYearPage() {
           also that under data can remove.
         </AlertDescription>
       </Alert>
-      <h1>STUDENT UPDATE</h1>
+      <h1>STUDENT NOT UPDATED</h1>
       <div>
-        <Button onClick={handleSubmit}>Update</Button>
+        <Button
+          onClick={handleSubmitInactive}
+          disabled={selectedInactiveStudents.length === 0}
+        >
+          Update
+        </Button>
       </div>
       <ScrollArea className="rounded-md border max-w-[1280px] h-[calc(80vh-120px)]">
         <Table className="relative">
           <TableHeader>
             <TableRow>
               <TableHead className="text-start">
-                {selectedStudents.length === students.length ? (
+                {selectedInactiveStudents.length === inactiveStudents.length ? (
                   <Checkbox
                     className="mr-4"
                     checked={
-                      isSeleted || selectedStudents.length === students.length
+                      isSelectedInactive ||
+                      selectedInactiveStudents.length ===
+                        inactiveStudents.length
                     }
-                    onClick={handleUnSelectAll}
+                    onClick={handleUnSelectAllInactive}
                   />
                 ) : (
                   <Checkbox
                     className="mr-4"
-                    checked={isSeleted}
-                    onClick={handleSelectAll}
+                    checked={isSelectedInactive}
+                    onClick={handleSelectAllInactive}
                   />
                 )}
               </TableHead>
@@ -161,8 +219,8 @@ function StudentUpdateStdYearPage() {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {students.map((student) => {
-              const isSelected = selectedStudents.includes(student.id);
+            {inactiveStudents.map((student) => {
+              const isSelected = selectedInactiveStudents.includes(student.id);
               return (
                 <TableRow
                   key={student.id}
@@ -171,18 +229,85 @@ function StudentUpdateStdYearPage() {
                   <TableCell>
                     <Checkbox
                       checked={isSelected}
-                      onClick={() => handleSelectStudent(student.id)}
+                      onClick={() => handleSelectInactiveStudent(student.id)}
                     />
                   </TableCell>
-                  {student.is_active ? (
-                    <TableCell>
-                      <Check className="w-4 h-4" />
+                  <TableCell>
+                    <X className="w-4 h-4" />
+                  </TableCell>
+                  {headers.map((header) => (
+                    <TableCell
+                      key={header.value}
+                      className="capitalize text-center"
+                    >
+                      {header.value === "standard" && student.standard === "13"
+                        ? "Balvatika"
+                        : student[header.value] || "None"}
                     </TableCell>
-                  ) : (
-                    <TableCell>
-                      <X className="w-4 h-4" />
-                    </TableCell>
-                  )}
+                  ))}
+                </TableRow>
+              );
+            })}
+          </TableBody>
+        </Table>
+        <ScrollBar orientation="horizontal" />
+      </ScrollArea>
+      <h1>STUDENT UPDATED</h1>
+      <div>
+        <Button
+          onClick={handleSubmitActive}
+          disabled={selectedActiveStudents.length === 0}
+        >
+          Update
+        </Button>
+      </div>
+      <ScrollArea className="rounded-md border max-w-[1280px] h-[calc(80vh-120px)]">
+        <Table className="relative">
+          <TableHeader>
+            <TableRow>
+              <TableHead className="text-start">
+                {selectedActiveStudents.length === activeStudents.length ? (
+                  <Checkbox
+                    className="mr-4"
+                    checked={
+                      isSelectedActive ||
+                      selectedActiveStudents.length === activeStudents.length
+                    }
+                    onClick={handleUnSelectAllActive}
+                  />
+                ) : (
+                  <Checkbox
+                    className="mr-4"
+                    checked={isSelectedActive}
+                    onClick={handleSelectAllActive}
+                  />
+                )}
+              </TableHead>
+              <TableHead>Status</TableHead>
+              {headers.map((header, index) => (
+                <TableHead key={index} className="text-center">
+                  {header.label}
+                </TableHead>
+              ))}
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {activeStudents.map((student) => {
+              const isSelected = selectedActiveStudents.includes(student.id);
+              return (
+                <TableRow
+                  key={student.id}
+                  className={isSelected ? "bg-muted" : ""}
+                >
+                  <TableCell>
+                    <Checkbox
+                      checked={isSelected}
+                      onClick={() => handleSelectActiveStudent(student.id)}
+                    />
+                  </TableCell>
+                  <TableCell>
+                    <Check className="w-4 h-4" />
+                  </TableCell>
                   {headers.map((header) => (
                     <TableCell
                       key={header.value}

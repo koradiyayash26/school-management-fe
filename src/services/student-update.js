@@ -30,8 +30,16 @@ const getStudentUpdateStdYearData = async (standard, year) => {
   return response.data;
 };
 
-const updateStudentUpdatestdandYear = async (jsonData) => {
-  return await apiClient.post("/student-update/update/", jsonData, {
+const updateStudentUpdatestdandYearSeleted = async (jsonData) => {
+  return await apiClient.post("/student-update/seleted/", jsonData, {
+    headers: {
+      Authorization: `Token ${getToken()}`,
+    },
+  });
+};
+
+const updateStudentUpdatestdandYearUnseleted = async (jsonData) => {
+  return await apiClient.post("/student-update/unseleted/", jsonData, {
     headers: {
       Authorization: `Token ${getToken()}`,
     },
@@ -42,5 +50,6 @@ export {
   getStudentUpdateTemplateData,
   addStudentUpdateTemplateData,
   getStudentUpdateStdYearData,
-  updateStudentUpdatestdandYear,
+  updateStudentUpdatestdandYearSeleted,
+  updateStudentUpdatestdandYearUnseleted,
 };

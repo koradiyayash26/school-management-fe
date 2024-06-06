@@ -35,6 +35,7 @@ import StudentHistoricalPage from "./pages/student-historical/student-historical
 import StudentUpdatePage from "./pages/student-update/student-update-page";
 import StudentUpdateAddPage from "./pages/student-update/student-update-add-page";
 import StudentUpdateStdYearPage from "./pages/student-update/student-update-std-year-page";
+import FeesAssingPage from "./pages/fee/fee-assing-page";
 
 const App = () => {
   return (
@@ -70,6 +71,11 @@ const App = () => {
                     element={<FeetypeUpdatePage />}
                     path="/fee-type/edit/:id"
                   />
+                  <Route
+                    element={<FeesAssingPage />}
+                    path="/fee-type/:id/:std/:year/student-assign"
+                  />
+
                   <Route element={<ExamMarksPage />} path="/exam" />
                   <Route element={<ExamMarksAddPage />} path="/exam/add" />
                   <Route

@@ -235,7 +235,9 @@ const PaymentsPage = () => {
                       {paymentFeeData.last_name}
                     </TableCell>
                     <TableCell className="text-center">
-                      {paymentFeeData.standard}
+                      {paymentFeeData.standard === "13"
+                        ? "Balvatika"
+                        : paymentFeeData.standard}
                     </TableCell>
                   </TableRow>
                 ))}

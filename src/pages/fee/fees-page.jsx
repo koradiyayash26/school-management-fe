@@ -195,6 +195,8 @@ function FeesTypePage() {
                   <TableCell className="">
                     <ActionsPopupFee
                       id={fee.id}
+                      standard={fee.standard}
+                      year={fee.year}
                       openAlertDeleteBox={openAlertDeleteBox}
                     />
                   </TableCell>

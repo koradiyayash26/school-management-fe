@@ -50,7 +50,7 @@ const BonafideCertificatePage = () => {
               <figcaption className="lg:flex md:flex items-center justify-between block w-full mb-4">
                 <div className="mb-6">BONAFIDE CERTIFICATE</div>
                 <div className="flex items-center">
-                  <div className="w-10 h-10 uppercase bg-gray-400 rounded-full flex items-center justify-center text-white text-sm font-bold">
+                  <div className="w-10 h-10 uppercase p-[20px] bg-gray-400 rounded-full flex items-center justify-center text-white text-sm font-bold">
                     {studentData.middle_name?.[0] || "N/A"}
                   </div>
                   <div className="space-y-0.5 font-medium dark:text-white text-left rtl:text-right ms-3">

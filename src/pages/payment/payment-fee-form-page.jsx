@@ -42,7 +42,7 @@ import {
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "@tanstack/react-query";
 import { format } from "date-fns";
-import { CalendarIcon } from "lucide-react";
+import { CalendarIcon, TriangleAlert } from "lucide-react";
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import toast, { Toaster } from "react-hot-toast";
@@ -131,7 +131,41 @@ const PaymentFeeFormPage = () => {
   }
 
   if (error) {
-    return <>Error</>;
+    return (
+      <>
+        <div className="text-center">
+          <h1 className="mb-4 text-6xl font-semibold text-red-500">404</h1>
+          <p className="mb-4 text-lg text-gray-600">
+            Oops!
+            <p className="capitalize inline-block">
+              {error?.response?.data?.alert}
+            </p>
+          </p>
+          <div className="animate-bounce">
+            <svg
+              className="mx-auto h-16 w-16 text-red-500"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="2"
+                d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"
+              ></path>
+            </svg>
+          </div>
+          <p className="mt-4 text-gray-600">
+            Let's get you back&nbsp;
+            <a href="/payment" className="text-blue-500">
+              Payment
+            </a>
+            .
+          </p>
+        </div>
+      </>
+    );
   }
 
   return (

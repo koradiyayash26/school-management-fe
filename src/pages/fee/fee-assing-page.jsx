@@ -208,7 +208,9 @@ function FeesAssingPage() {
                   </TableCell>
                   {headers.map((header) => (
                     <TableCell key={header.value} className="text-center">
-                      {student[header.value] || "None"}
+                      {header.value === "standard" && student.standard === "13"
+                        ? "Balvatika"
+                        : student[header.value] || "None"}
                     </TableCell>
                   ))}
                 </TableRow>
@@ -278,7 +280,9 @@ function FeesAssingPage() {
                   </TableCell>
                   {headers.map((header) => (
                     <TableCell key={header.value} className="text-center">
-                      {student[header.value] || "None"}
+                      {header.value === "standard" && student.standard === "13"
+                        ? "Balvatika"
+                        : student[header.value] || "None"}
                     </TableCell>
                   ))}
                 </TableRow>

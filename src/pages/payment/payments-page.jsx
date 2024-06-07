@@ -116,7 +116,17 @@ const PaymentsPage = () => {
   const startIndex = page * pageSize;
   const endIndex = (page + 1) * pageSize;
 
-  const visibleStudents = paymentFeeList?.slice(startIndex, endIndex);
+  const filteredStudents = paymentFeeList?.filter((payment) => {
+    return search.toLowerCase() === ""
+      ? payment
+      : payment.student__standard.toLocaleLowerCase().includes(search) ||
+          payment.student__first_name.toLocaleLowerCase().includes(search) ||
+          payment.student__last_name.toLocaleLowerCase().includes(search) ||
+          payment.student__middle_name.toLocaleLowerCase().includes(search) ||
+          payment.fee_paid_date.toLocaleLowerCase().includes(search);
+  });
+
+  const visibleStudents = filteredStudents?.slice(startIndex, endIndex);
 
   const handlePageSizeChange = (value) => {
     setPageSize(parseInt(value));
@@ -334,8 +344,8 @@ const PaymentsPage = () => {
               <TableHead className="">Actions</TableHead>
             </TableRow>
           </TableHeader>
-          {!paymentFeeList ? (
-            <TableBody>
+          <TableBody>
+            {!paymentFeeList || filteredStudents.length === 0 ? (
               <TableRow className="text-center">
                 <TableCell
                   colSpan={headers.length + 1}
@@ -344,30 +354,8 @@ const PaymentsPage = () => {
                   No Data Found
                 </TableCell>
               </TableRow>
-            </TableBody>
-          ) : null}
-          <TableBody>
-            {visibleStudents
-              .filter((payment) => {
-                return search.toLocaleLowerCase() === ""
-                  ? payment
-                  : payment.student__standard
-                      .toLocaleLowerCase()
-                      .includes(search) ||
-                      payment.student__first_name
-                        .toLocaleLowerCase()
-                        .includes(search) ||
-                      payment.student__last_name
-                        .toLocaleLowerCase()
-                        .includes(search) ||
-                      payment.student__middle_name
-                        .toLocaleLowerCase()
-                        .includes(search) ||
-                      payment.fee_paid_date
-                        .toLocaleLowerCase()
-                        .includes(search);
-              })
-              .map((payment) => (
+            ) : (
+              visibleStudents.map((payment) => (
                 <TableRow key={payment.id}>
                   {headers.map((header) => (
                     <TableCell key={header.value} className="capitalize">
@@ -385,7 +373,8 @@ const PaymentsPage = () => {
                     />
                   </TableCell>
                 </TableRow>
-              ))}
+              ))
+            )}
           </TableBody>
         </Table>
         <ScrollBar orientation="horizontal" />

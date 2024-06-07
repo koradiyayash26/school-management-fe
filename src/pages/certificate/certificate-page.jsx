@@ -19,6 +19,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import ActionsPopup from "@/components/ui/data-table-row-actions";
 import { useCertificate } from "@/hooks/use-certificate";
+import { SearchX } from "lucide-react";
 
 const headers = [
   { label: "ID", value: "id" },
@@ -44,21 +45,31 @@ function CertificatePage() {
   const startIndex = page * pageSize;
   const endIndex = (page + 1) * pageSize;
 
-  const visibleStudents = students.slice(startIndex, endIndex);
-
   const handlePageSizeChange = (value) => {
     setPageSize(parseInt(value));
     setPage(0);
   };
+
   if (isLoading) {
     return <>Loading...</>;
   }
+
+  const filteredStudents = students.filter((student) => {
+    return search.toLocaleLowerCase() === ""
+      ? student
+      : student.first_name.toLocaleLowerCase().includes(search) ||
+          student.last_name.toLocaleLowerCase().includes(search) ||
+          student.middle_name.toLocaleLowerCase().includes(search);
+  });
+
+  const visibleStudents = filteredStudents.slice(startIndex, endIndex);
+
   return (
     <>
       <h1 className="uppercase">certificate</h1>
       <div className="flex flex-col md:flex-row items-center justify-between mb-4">
         <Input
-          className="w-full md:max-w-sm mb-2 md:mb-0  md:mr-2"
+          className="w-full md:max-w-sm mb-2 md:mb-0 md:mr-2"
           placeholder="Search By Name"
           onChange={(e) => setSearch(e.target.value)}
         />
@@ -99,9 +110,9 @@ function CertificatePage() {
               <TableHead className="">Certificate</TableHead>
             </TableRow>
           </TableHeader>
-          {!students ? (
-            <TableBody>
-              <TableRow className="text-center">
+          <TableBody>
+            {visibleStudents.length === 0 || !students ? (
+              <TableRow className="text-start md:text-center">
                 <TableCell
                   colSpan={headers.length + 1}
                   className="uppercase text-lg"
@@ -109,18 +120,8 @@ function CertificatePage() {
                   No Data Found
                 </TableCell>
               </TableRow>
-            </TableBody>
-          ) : null}
-          <TableBody>
-            {visibleStudents
-              .filter((student) => {
-                return search.toLocaleLowerCase() === ""
-                  ? student
-                  : student.first_name.toLocaleLowerCase().includes(search) ||
-                      student.last_name.toLocaleLowerCase().includes(search) ||
-                      student.middle_name.toLocaleLowerCase().includes(search);
-              })
-              .map((student) => (
+            ) : (
+              visibleStudents.map((student) => (
                 <TableRow key={student.id}>
                   {headers.map((header) => (
                     <TableCell key={header.value}>
@@ -131,7 +132,6 @@ function CertificatePage() {
                         : student[header.value] || "None"}
                     </TableCell>
                   ))}
-
                   <TableCell className="">
                     <ActionsPopup
                       Bonafide="Bonafide"
@@ -140,7 +140,8 @@ function CertificatePage() {
                     />
                   </TableCell>
                 </TableRow>
-              ))}
+              ))
+            )}
           </TableBody>
         </Table>
         <ScrollBar orientation="horizontal" />

@@ -54,7 +54,13 @@ function StudentHistoricalPage() {
   const startIndex = page * pageSize;
   const endIndex = (page + 1) * pageSize;
 
-  const visibleStudents = students?.slice(startIndex, endIndex);
+  const filteredStudents = (students ?? []).filter((student) =>
+  ["name", "year", "update_date"].some((field) =>
+    student[field]?.toString().toLowerCase().includes(search.toLowerCase())
+  )
+);
+
+  const visibleStudents = filteredStudents.slice(startIndex, endIndex);
 
   const handlePageSizeChange = (value) => {
     setPageSize(parseInt(value));
@@ -171,8 +177,8 @@ function StudentHistoricalPage() {
               <TableHead className="">Actions</TableHead>
             </TableRow>
           </TableHeader>
-          {!students ? (
-            <TableBody>
+          <TableBody>
+            {filteredStudents.length === 0 ? (
               <TableRow className="text-center">
                 <TableCell
                   colSpan={headers.length + 1}
@@ -181,18 +187,8 @@ function StudentHistoricalPage() {
                   No Data Found
                 </TableCell>
               </TableRow>
-            </TableBody>
-          ) : null}
-          <TableBody>
-            {visibleStudents
-              .filter((student) => {
-                return search.toLocaleLowerCase() === ""
-                  ? student
-                  : student.year.toLocaleLowerCase().includes(search) ||
-                      student.name.toLocaleLowerCase().includes(search) ||
-                      student.update_date.toLocaleLowerCase().includes(search);
-              })
-              .map((student) => (
+            ) : (
+              visibleStudents.map((student) => (
                 <TableRow key={student.id}>
                   {headers.map((header) => (
                     <TableCell
@@ -211,7 +207,8 @@ function StudentHistoricalPage() {
                     />
                   </TableCell>
                 </TableRow>
-              ))}
+              ))
+            )}
           </TableBody>
         </Table>
         <ScrollBar orientation="horizontal" />

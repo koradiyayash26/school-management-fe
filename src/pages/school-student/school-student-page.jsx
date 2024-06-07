@@ -73,7 +73,11 @@ function SchoolStudentPage() {
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button variant="outline" className="w-[160px]">
-              {pageSize === 9999 ? "Show All" : "Items per page"}
+              {pageSize <= 10
+                ? "Items per page"
+                : pageSize == "9999"
+                ? "Show All"
+                : pageSize}
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent className="w-56">
@@ -108,7 +112,7 @@ function SchoolStudentPage() {
               <TableHead className="">Actions</TableHead>
             </TableRow>
           </TableHeader>
-          {!students ? (
+          {!students || filteredStudents.length === 0 ? (
             <TableBody>
               <TableRow className="text-center">
                 <TableCell

@@ -36,7 +36,13 @@ function StudentUpdatePage() {
   const startIndex = page * pageSize;
   const endIndex = (page + 1) * pageSize;
 
-  const visibleStudents = students?.slice(startIndex, endIndex);
+  const filteredStudents = students?.filter((student) => {
+    return search.toLowerCase() === ""
+      ? student
+      : student.year.toLowerCase().includes(search);
+  });
+
+  const visibleStudents = filteredStudents?.slice(startIndex, endIndex);
 
   const handlePageSizeChange = (value) => {
     setPageSize(parseInt(value));
@@ -100,8 +106,8 @@ function StudentUpdatePage() {
               <TableHead className="">Actions</TableHead>
             </TableRow>
           </TableHeader>
-          {!students ? (
-            <TableBody>
+          <TableBody>
+            {!students || filteredStudents.length === 0 ? (
               <TableRow className="text-center">
                 <TableCell
                   colSpan={headers.length + 1}
@@ -110,38 +116,28 @@ function StudentUpdatePage() {
                   No Data Found
                 </TableCell>
               </TableRow>
-            </TableBody>
-          ) : null}
-          <TableBody>
-            {visibleStudents
-              .filter((student) => {
-                return search.toLocaleLowerCase() === ""
-                  ? student
-                  : student.year.toLocaleLowerCase().includes(search);
-              })
-              .map((student) => {
-                return (
-                  <TableRow key={student.id}>
-                    {headers.map((header) => (
-                      <TableCell
-                        key={header.value}
-                        className="capitalize text-center"
-                      >
-                        {header.value === "standard" &&
-                        student.standard === "13"
-                          ? "Balvatika"
-                          : student[header.value] || "None"}
-                      </TableCell>
-                    ))}
-                    <TableCell>
-                      <ActionsPopupStudentUpdate
-                        std={student.standard}
-                        year={student.year}
-                      />
+            ) : (
+              visibleStudents.map((student) => (
+                <TableRow key={student.id}>
+                  {headers.map((header) => (
+                    <TableCell
+                      key={header.value}
+                      className="capitalize text-center"
+                    >
+                      {header.value === "standard" && student.standard === "13"
+                        ? "Balvatika"
+                        : student[header.value] || "None"}
                     </TableCell>
-                  </TableRow>
-                );
-              })}
+                  ))}
+                  <TableCell>
+                    <ActionsPopupStudentUpdate
+                      std={student.standard}
+                      year={student.year}
+                    />
+                  </TableCell>
+                </TableRow>
+              ))
+            )}
           </TableBody>
         </Table>
         <ScrollBar orientation="horizontal" />

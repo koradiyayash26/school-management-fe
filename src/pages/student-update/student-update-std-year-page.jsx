@@ -245,7 +245,6 @@ function StudentUpdateStdYearPage() {
                   />
                 )}
               </TableHead>
-              <TableHead>Status</TableHead>
               {headers.map((header, index) => (
                 <TableHead key={index} className="text-center">
                   {header.label}
@@ -266,9 +265,6 @@ function StudentUpdateStdYearPage() {
                       checked={isSelected}
                       onClick={() => handleSelectInactiveStudent(student.id)}
                     />
-                  </TableCell>
-                  <TableCell>
-                    <X className="w-4 h-4" />
                   </TableCell>
                   {headers.map((header) => (
                     <TableCell
@@ -325,7 +321,6 @@ function StudentUpdateStdYearPage() {
                   />
                 )}
               </TableHead>
-              <TableHead>Status</TableHead>
               {headers.map((header, index) => (
                 <TableHead key={index} className="text-center">
                   {header.label}
@@ -346,9 +341,6 @@ function StudentUpdateStdYearPage() {
                       checked={isSelected}
                       onClick={() => handleSelectActiveStudent(student.id)}
                     />
-                  </TableCell>
-                  <TableCell>
-                    <Check className="w-4 h-4" />
                   </TableCell>
                   {headers.map((header) => (
                     <TableCell

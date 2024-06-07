@@ -334,6 +334,18 @@ const PaymentsPage = () => {
               <TableHead className="">Actions</TableHead>
             </TableRow>
           </TableHeader>
+          {!paymentFeeList ? (
+            <TableBody>
+              <TableRow className="text-center">
+                <TableCell
+                  colSpan={headers.length + 1}
+                  className="uppercase text-lg"
+                >
+                  No Data Found
+                </TableCell>
+              </TableRow>
+            </TableBody>
+          ) : null}
           <TableBody>
             {visibleStudents
               .filter((payment) => {

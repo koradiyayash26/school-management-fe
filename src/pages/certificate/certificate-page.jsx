@@ -99,6 +99,18 @@ function CertificatePage() {
               <TableHead className="">Certificate</TableHead>
             </TableRow>
           </TableHeader>
+          {!students ? (
+            <TableBody>
+              <TableRow className="text-center">
+                <TableCell
+                  colSpan={headers.length + 1}
+                  className="uppercase text-lg"
+                >
+                  No Data Found
+                </TableCell>
+              </TableRow>
+            </TableBody>
+          ) : null}
           <TableBody>
             {visibleStudents
               .filter((student) => {

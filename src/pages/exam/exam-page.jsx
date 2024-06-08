@@ -42,6 +42,8 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 
+import ReactHTMLTableToExcel from "react-html-table-to-excel";
+
 const headers = [
   { label: "ID", value: "id" },
   { label: "Student", value: "student" },
@@ -226,13 +228,38 @@ function ExamMarksPage() {
         ) : (
           <Button onClick={generatePDF}>PDF</Button>
         )}
+        {!students || filteredStudents.length === 0 ? (
+          <TooltipProvider>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Button className="cursor-not-allowed bg-[gray] hover:bg-[gray]">
+                  Download as XLS
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent>
+                <p>Not Print Empty Data</p>
+              </TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
+        ) : (
+          <Button>
+            <ReactHTMLTableToExcel
+              id="test-table-xls-button"
+              className="download-table-xls-button"
+              table="print-excel"
+              filename="tablexls"
+              sheet="tablexls"
+              buttonText="Download as XLS"
+            />
+          </Button>
+        )}
       </div>
       <ScrollArea className="rounded-md border max-w-[1280px] h-[calc(80vh-120px)]">
         <div ref={componentPDF} style={{ width: "100%" }}>
           <h1 className="hidden title-table">
             THINKERS MARKS SHEET / 2005-02-02
           </h1>
-          <Table className="relative">
+          <Table className="relative" id="print-excel">
             <TableHeader>
               <TableRow>
                 {headers.map((header, index) => (

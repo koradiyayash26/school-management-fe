@@ -1,7 +1,8 @@
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import {
   Table,
   TableBody,
+  TableCaption,
   TableCell,
   TableHead,
   TableHeader,
@@ -33,6 +34,13 @@ import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import ActionsPopupExamMark from "@/components/exam/data-table-row-action";
 import { useExamList } from "@/hooks/use-exam";
 import { deleteExam } from "@/services/exam-service";
+import { useReactToPrint } from "react-to-print";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 
 const headers = [
   { label: "ID", value: "id" },
@@ -50,6 +58,8 @@ function ExamMarksPage() {
   const [search, setSearch] = useState("");
   const [openAlert, setOpenAlert] = useState(false);
   const [examId, setExamId] = useState();
+
+  const componentPDF = useRef();
 
   const { data, isLoading, refetch } = useExamList();
 
@@ -91,12 +101,33 @@ function ExamMarksPage() {
 
   const visibleStudents = filteredStudents?.slice(startIndex, endIndex);
 
+  const generatePDF = useReactToPrint({
+    content: () => componentPDF.current,
+    documentTitle: "Exam Marks",
+    onAfterPrint: () => alert("PDF generated successfully"),
+  });
+
   if (isLoading) {
     return <>Loading...</>;
   }
 
   return (
     <>
+      <style>
+        {`
+          @media print {
+            .no-print {
+              display: none;
+            }
+            .title-table{
+              display: block;
+              text-align:center;
+              margin:20px 0px;
+              font-size:20px;
+            }
+          }
+        `}
+      </style>
       <Toaster
         position="top-center"
         reverseOrder={false}
@@ -175,58 +206,79 @@ function ExamMarksPage() {
           </DropdownMenuContent>
         </DropdownMenu>
       </div>
-      <div>
+      <div className="flex gap-2">
         <Link to="/exam/add">
           <Button>Add</Button>
         </Link>
+        {!students || filteredStudents.length === 0 ? (
+          <TooltipProvider>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Button className="cursor-not-allowed bg-[gray] hover:bg-[gray]">
+                  PDF
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent>
+                <p>Not Print Empty Data</p>
+              </TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
+        ) : (
+          <Button onClick={generatePDF}>PDF</Button>
+        )}
       </div>
       <ScrollArea className="rounded-md border max-w-[1280px] h-[calc(80vh-120px)]">
-        <Table className="relative">
-          <TableHeader>
-            <TableRow>
-              {headers.map((header, index) => (
-                <TableHead key={index}>{header.label}</TableHead>
-              ))}
-              <TableHead className="">Actions</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {!students || filteredStudents.length === 0 ? (
-              <TableRow className="text-center">
-                <TableCell
-                  colSpan={headers.length + 1}
-                  className="uppercase text-lg"
-                >
-                  No Data Found
-                </TableCell>
+        <div ref={componentPDF} style={{ width: "100%" }}>
+          <h1 className="hidden title-table">
+            THINKERS MARKS SHEET / 2005-02-02
+          </h1>
+          <Table className="relative">
+            <TableHeader>
+              <TableRow>
+                {headers.map((header, index) => (
+                  <TableHead key={index}>{header.label}</TableHead>
+                ))}
+                <TableHead className="no-print">Actions</TableHead>
               </TableRow>
-            ) : (
-              visibleStudents.map((exam) => (
-                <TableRow key={exam.id}>
-                  {headers.map((header) => (
-                    <TableCell key={header.value} className="capitalize">
-                      {header.value === "student"
-                        ? (exam.student?.first_name || "None") +
-                          " " +
-                          (exam.student?.last_name || "None")
-                        : header.value === "std"
-                        ? exam[header.value] === "13"
-                          ? "Balvatika"
-                          : exam[header.value] || "None"
-                        : exam[header.value] || "None"}
-                    </TableCell>
-                  ))}
-                  <TableCell className="">
-                    <ActionsPopupExamMark
-                      id={exam.id}
-                      openAlertDeleteBox={openAlertDeleteBox}
-                    />
+            </TableHeader>
+            <TableBody>
+              {!students || filteredStudents.length === 0 ? (
+                <TableRow className="text-center">
+                  <TableCell
+                    colSpan={headers.length + 1}
+                    className="uppercase text-lg"
+                  >
+                    No Data Found
                   </TableCell>
                 </TableRow>
-              ))
-            )}
-          </TableBody>
-        </Table>
+              ) : (
+                visibleStudents.map((exam) => (
+                  <TableRow key={exam.id}>
+                    {headers.map((header) => (
+                      <TableCell key={header.value} className="capitalize">
+                        {header.value === "student"
+                          ? (exam.student?.first_name || "None") +
+                            " " +
+                            (exam.student?.last_name || "None")
+                          : header.value === "std"
+                          ? exam[header.value] === "13"
+                            ? "Balvatika"
+                            : exam[header.value] || "None"
+                          : exam[header.value] || "None"}
+                      </TableCell>
+                    ))}
+                    <TableCell className="no-print">
+                      <ActionsPopupExamMark
+                        id={exam.id}
+                        openAlertDeleteBox={openAlertDeleteBox}
+                      />
+                    </TableCell>
+                  </TableRow>
+                ))
+              )}
+            </TableBody>
+          </Table>
+        </div>
         <ScrollBar orientation="horizontal" />
       </ScrollArea>
       <div className="flex items-center justify-end space-x-2 py-4">

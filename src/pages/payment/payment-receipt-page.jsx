@@ -89,7 +89,7 @@ const PaymentReceiptPage = () => {
                         Standard :&nbsp;
                       </span>
                       <span className="text-[#9ca3af]">
-                        {studentData.fee_type.standard}
+                        {studentData.fee_type.standard === 13 ? "Balvatika":studentData.fee_type.standard}
                       </span>
                     </h3>
                   </div>

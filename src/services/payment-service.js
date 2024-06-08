@@ -19,6 +19,15 @@ const getPaymentFeeList = async () => {
   return response.data;
 };
 
+const getPaymentStudentFee = async (id, year) => {
+  let response = await apiClient.get(`/payments/${id}/${year}/`, {
+    headers: {
+      Authorization: `Token ${getToken()}`,
+    },
+  });
+  return response.data;
+};
+
 const getReceiptDetailsByid = async (id) => {
   let response = await apiClient.get(`/payments/${id}/receipt/details/`, {
     headers: {
@@ -36,9 +45,20 @@ const deletePaymentFee = async (paymentId) => {
   });
 };
 
+const patchPaymentFeeData = async (formattedData) => {
+  console.log(formattedData);
+  return await apiClient.patch("payments/payment-collect/", formattedData, {
+    headers: {
+      Authorization: `Token ${getToken()}`,
+    },
+  });
+};
+
 export {
   getPaymentStudentNames,
   getPaymentFeeList,
   getReceiptDetailsByid,
   deletePaymentFee,
+  getPaymentStudentFee,
+  patchPaymentFeeData,
 };

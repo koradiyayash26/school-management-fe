@@ -56,6 +56,35 @@ const feeTypeUpdate = async (formattedData, id) => {
   });
 };
 
+const getFeeStudentAssignUnAssignData = async (id, standard, year) => {
+  let res = await apiClient.get(
+    `/fee-types/${id}/${standard}/${year}/student-assign/`,
+    {
+      headers: {
+        Authorization: `Token ${getToken()}`,
+      },
+    }
+  );
+  return res.data;
+};
+
+const assignStudentUpdatePatch = async (assigned_students_data) => {
+  try {
+    const response = await apiClient.patch(
+      "/update-student-fee-types/",
+      assigned_students_data,
+      {
+        headers: {
+          Authorization: `Token ${getToken()}`,
+        },
+      }
+    );
+    return response.data; // Return the response data
+  } catch (error) {
+    throw error.response.data; // Throw the error response data
+  }
+};
+
 export {
   deleteFeeType,
   getFeeTypeData,
@@ -63,4 +92,6 @@ export {
   FeeTypeadd,
   getFeeTypeAdd,
   feeTypeUpdate,
+  getFeeStudentAssignUnAssignData,
+  assignStudentUpdatePatch,
 };

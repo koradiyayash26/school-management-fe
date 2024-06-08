@@ -50,11 +50,9 @@ function FeesTypePage() {
   const [openAlert, setOpenAlert] = useState(false);
   const [feeTypeId, setFeeTypeId] = useState();
 
-  const students = data?.data;
+  const students = data?.data || [];
   const startIndex = page * pageSize;
   const endIndex = (page + 1) * pageSize;
-
-  const visibleStudents = students?.slice(startIndex, endIndex);
 
   const handlePageSizeChange = (value) => {
     setPageSize(parseInt(value));
@@ -74,6 +72,14 @@ function FeesTypePage() {
       toast.success("FeeType Delete Successfully");
     },
   });
+
+  const filteredStudents = students.filter((fee) => {
+    return search.toLowerCase() === ""
+      ? fee
+      : fee.year.toLowerCase().includes(search);
+  });
+
+  const visibleStudents = filteredStudents.slice(startIndex, endIndex);
 
   if (isLoading) return <>Loading...</>;
 
@@ -137,7 +143,7 @@ function FeesTypePage() {
             <Button variant="outline" className="w-[160px]">
               {pageSize <= 10
                 ? "Items per page"
-                : pageSize == "9999"
+                : pageSize === "9999"
                 ? "Show All"
                 : pageSize}
             </Button>
@@ -175,19 +181,23 @@ function FeesTypePage() {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {visibleStudents
-              .filter((fee) => {
-                return search.toLocaleLowerCase() === ""
-                  ? fee
-                  : fee.year.toLocaleLowerCase().includes(search);
-              })
-              .map((fee) => (
+            {!students || filteredStudents.length === 0 ? (
+              <TableRow className="text-center">
+                <TableCell
+                  colSpan={headers.length + 1}
+                  className="uppercase text-lg"
+                >
+                  No Data Found
+                </TableCell>
+              </TableRow>
+            ) : (
+              visibleStudents.map((fee) => (
                 <TableRow key={fee.id}>
                   {headers.map((header) => (
                     <TableCell key={header.value} className="capitalize">
                       {header.value === "fee_master"
                         ? fee.fee_master?.name || "None"
-                        : fee[header.value] == 13
+                        : fee[header.value] === 13
                         ? "Balvatika"
                         : fee[header.value] || "None"}
                     </TableCell>
@@ -195,11 +205,14 @@ function FeesTypePage() {
                   <TableCell className="">
                     <ActionsPopupFee
                       id={fee.id}
+                      standard={fee.standard}
+                      year={fee.year}
                       openAlertDeleteBox={openAlertDeleteBox}
                     />
                   </TableCell>
                 </TableRow>
-              ))}
+              ))
+            )}
           </TableBody>
         </Table>
         <ScrollBar orientation="horizontal" />
@@ -219,7 +232,7 @@ function FeesTypePage() {
             variant="outline"
             onClick={() => setPage(page + 1)}
             size="sm"
-            disabled={endIndex >= students.length}
+            disabled={endIndex >= filteredStudents.length}
           >
             Next
           </Button>

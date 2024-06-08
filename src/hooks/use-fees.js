@@ -1,4 +1,9 @@
-import { getFeeTypeAdd, getFeeTypeData, getFeeTypeIdDetails } from "@/services/fees-service";
+import {
+  getFeeStudentAssignUnAssignData,
+  getFeeTypeAdd,
+  getFeeTypeData,
+  getFeeTypeIdDetails,
+} from "@/services/fees-service";
 import { useQuery } from "@tanstack/react-query";
 
 export const useFeeType = () => {
@@ -13,6 +18,13 @@ export const useFeetypeGetdata = (id) => {
   return useQuery({
     queryKey: ["getfeetype", id],
     queryFn: () => getFeeTypeIdDetails(id),
+  });
+};
+
+export const useFeeStudentAssignUnAssignData = (id, std, year) => {
+  return useQuery({
+    queryKey: ["getfeestudentassignunassingdata", id, std, year],
+    queryFn: () => getFeeStudentAssignUnAssignData(id, std, year),
   });
 };
 

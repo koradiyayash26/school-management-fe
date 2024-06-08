@@ -60,12 +60,22 @@ function HistoricalFeesPage() {
   const startIndex = page * pageSize;
   const endIndex = (page + 1) * pageSize;
 
-  const visibleStudents = students?.slice(startIndex, endIndex);
-
   const handlePageSizeChange = (value) => {
     setPageSize(parseInt(value));
     setPage(0);
   };
+
+  const filteredStudents = students.filter((historical) => {
+    return search.toLocaleLowerCase() === ""
+      ? historical
+      : historical.name.toLocaleLowerCase().includes(search) ||
+          historical.receipt_no.toLocaleLowerCase().includes(search) ||
+          historical.date.toLocaleLowerCase().includes(search) ||
+          historical.year.toLocaleLowerCase().includes(search) ||
+          historical.fee_type.toLocaleLowerCase().includes(search);
+  });
+
+  const visibleStudents = filteredStudents.slice(startIndex, endIndex);
 
   const mutation = useMutation({
     mutationFn: (historicalFeeId) => deleteHistoricalFee(historicalFeeId),
@@ -91,6 +101,7 @@ function HistoricalFeesPage() {
   if (error) {
     return <>Error</>;
   }
+
   return (
     <>
       <Toaster
@@ -187,19 +198,17 @@ function HistoricalFeesPage() {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {visibleStudents
-              .filter((historical) => {
-                return search.toLocaleLowerCase() === ""
-                  ? historical
-                  : historical.name.toLocaleLowerCase().includes(search) ||
-                      historical.receipt_no
-                        .toLocaleLowerCase()
-                        .includes(search) ||
-                      historical.date.toLocaleLowerCase().includes(search) ||
-                      historical.year.toLocaleLowerCase().includes(search) ||
-                      historical.fee_type.toLocaleLowerCase().includes(search);
-              })
-              .map((historical) => (
+            {!students || filteredStudents.length === 0 ? (
+              <TableRow className="text-center">
+                <TableCell
+                  colSpan={headers.length + 1}
+                  className="uppercase text-lg"
+                >
+                  No Data Found
+                </TableCell>
+              </TableRow>
+            ) : (
+              visibleStudents.map((historical) => (
                 <TableRow key={historical.id}>
                   {headers.map((header) => (
                     <TableCell key={header.value} className="capitalize">
@@ -221,7 +230,8 @@ function HistoricalFeesPage() {
                     />
                   </TableCell>
                 </TableRow>
-              ))}
+              ))
+            )}
           </TableBody>
         </Table>
         <ScrollBar orientation="horizontal" />
@@ -241,7 +251,7 @@ function HistoricalFeesPage() {
             variant="outline"
             onClick={() => setPage(page + 1)}
             size="sm"
-            disabled={endIndex >= students.length}
+            disabled={endIndex >= filteredStudents.length}
           >
             Next
           </Button>

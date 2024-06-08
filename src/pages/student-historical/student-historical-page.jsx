@@ -17,60 +17,125 @@ import {
   DropdownMenuRadioGroup,
   DropdownMenuRadioItem,
 } from "@/components/ui/dropdown-menu";
-import ActionsPopup from "@/components/ui/data-table-row-actions";
-import { useCertificate } from "@/hooks/use-certificate";
-import { SearchX } from "lucide-react";
+import { useStudentHistorical } from "@/hooks/use-student-historical";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
+import toast, { Toaster } from "react-hot-toast";
+import ActionsPopupStudentHistorical from "@/components/student-historical/data-table-row-action";
+import { useMutation } from "@tanstack/react-query";
+import { deleteStudentHistorical } from "@/services/student-historical-service";
 
 const headers = [
-  { label: "ID", value: "id" },
-  { label: "GR Number", value: "grno" },
-  { label: "Last Name", value: "last_name" },
-  { label: "First Name", value: "first_name" },
-  { label: "Middle Name", value: "middle_name" },
-  { label: "Gender", value: "gender" },
-  { label: "Birth Date", value: "birth_date" },
+  { label: "Name", value: "name" },
+  { label: "Year", value: "year" },
   { label: "Standard", value: "standard" },
-  { label: "Section", value: "section" },
-  { label: "Status", value: "status" },
+  { label: "Note", value: "note" },
+  { label: "Update Date", value: "update_date" },
 ];
 
-function CertificatePage() {
-  const { data, isLoading, error, refetch } = useCertificate();
-  let students = data?.data || [];
-
+function StudentHistoricalPage() {
+  const { data, isLoading, error, refetch } = useStudentHistorical();
   const [page, setPage] = useState(0);
   const [pageSize, setPageSize] = useState(10);
   const [search, setSearch] = useState("");
 
+  const [openAlert, setOpenAlert] = useState(false);
+  const [studentId, setStudentId] = useState("");
+
+  const students = data?.data;
   const startIndex = page * pageSize;
   const endIndex = (page + 1) * pageSize;
+
+  const filteredStudents = (students ?? []).filter((student) =>
+  ["name", "year", "update_date"].some((field) =>
+    student[field]?.toString().toLowerCase().includes(search.toLowerCase())
+  )
+);
+
+  const visibleStudents = filteredStudents.slice(startIndex, endIndex);
 
   const handlePageSizeChange = (value) => {
     setPageSize(parseInt(value));
     setPage(0);
   };
 
-  if (isLoading) {
-    return <>Loading...</>;
-  }
+  const openAlertDeleteBox = (id) => {
+    setStudentId(id);
+    setOpenAlert(true);
+  };
 
-  const filteredStudents = students.filter((student) => {
-    return search.toLocaleLowerCase() === ""
-      ? student
-      : student.first_name.toLocaleLowerCase().includes(search) ||
-          student.last_name.toLocaleLowerCase().includes(search) ||
-          student.middle_name.toLocaleLowerCase().includes(search);
+  const mutation = useMutation({
+    mutationFn: (studentId) => deleteStudentHistorical(studentId),
+    onSuccess: () => {
+      refetch();
+      setOpenAlert(false);
+      toast.success("Student Delete Successfully");
+    },
   });
 
-  const visibleStudents = filteredStudents.slice(startIndex, endIndex);
+  if (isLoading) return <>Loading...</>;
+
+  if (error) return <>Error</>;
 
   return (
     <>
-      <h1 className="uppercase">certificate</h1>
+      <Toaster
+        position="top-center"
+        reverseOrder={false}
+        gutter={8}
+        containerClassName=""
+        containerStyle={{}}
+        toastOptions={{
+          className: "",
+          duration: 5000,
+          style: {
+            background: "#363636",
+            color: "#fff",
+          },
+          success: {
+            duration: 3000,
+            theme: {
+              primary: "green",
+              secondary: "black",
+            },
+          },
+        }}
+      />
+      <AlertDialog open={openAlert}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Are you sure?</AlertDialogTitle>
+            <AlertDialogDescription>
+              This will permanently delete and remove your data from our
+              servers.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel onClick={() => setOpenAlert(false)}>
+              Cancel
+            </AlertDialogCancel>
+            <AlertDialogAction
+              onClick={() => mutation.mutate(studentId)}
+              className="bg-[red] text-white hover:bg-red-500"
+            >
+              Delete
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+      <h1>STUDENT HISTORICAL</h1>
       <div className="flex flex-col md:flex-row items-center justify-between mb-4">
         <Input
-          className="w-full md:max-w-sm mb-2 md:mb-0 md:mr-2"
-          placeholder="Search By Name"
+          className="w-full md:max-w-sm mb-2 md:mb-0  md:mr-2"
+          placeholder="Search"
           onChange={(e) => setSearch(e.target.value)}
         />
         <DropdownMenu>
@@ -105,14 +170,16 @@ function CertificatePage() {
           <TableHeader>
             <TableRow>
               {headers.map((header, index) => (
-                <TableHead key={index}>{header.label}</TableHead>
+                <TableHead key={index} className="text-center">
+                  {header.label}
+                </TableHead>
               ))}
-              <TableHead className="">Certificate</TableHead>
+              <TableHead className="">Actions</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
-            {visibleStudents.length === 0 || !students ? (
-              <TableRow className="text-start md:text-center">
+            {filteredStudents.length === 0 ? (
+              <TableRow className="text-center">
                 <TableCell
                   colSpan={headers.length + 1}
                   className="uppercase text-lg"
@@ -124,19 +191,19 @@ function CertificatePage() {
               visibleStudents.map((student) => (
                 <TableRow key={student.id}>
                   {headers.map((header) => (
-                    <TableCell key={header.value}>
-                      {(header.value === "standard" ||
-                        header.value === "admission_std") &&
-                      student[header.value] == 13
+                    <TableCell
+                      key={header.value}
+                      className="capitalize text-center"
+                    >
+                      {header.value === "standard" && student.standard === "13"
                         ? "Balvatika"
                         : student[header.value] || "None"}
                     </TableCell>
                   ))}
                   <TableCell className="">
-                    <ActionsPopup
-                      Bonafide="Bonafide"
-                      Birth="Birth Certificate"
+                    <ActionsPopupStudentHistorical
                       id={student.id}
+                      openAlertDeleteBox={openAlertDeleteBox}
                     />
                   </TableCell>
                 </TableRow>
@@ -171,4 +238,4 @@ function CertificatePage() {
   );
 }
 
-export default CertificatePage;
+export default StudentHistoricalPage;

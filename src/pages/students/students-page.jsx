@@ -86,7 +86,15 @@ function StudentsPage() {
   const startIndex = page * pageSize;
   const endIndex = (page + 1) * pageSize;
 
-  const visibleStudents = students?.slice(startIndex, endIndex);
+  const filteredStudents = students?.filter((student) => {
+    return search.toLowerCase() === ""
+      ? student
+      : student.first_name.toLocaleLowerCase().includes(search) ||
+          student.last_name.toLocaleLowerCase().includes(search) ||
+          student.middle_name.toLocaleLowerCase().includes(search);
+  });
+
+  const visibleStudents = filteredStudents?.slice(startIndex, endIndex);
 
   const handlePageSizeChange = (value) => {
     setPageSize(parseInt(value));
@@ -210,6 +218,51 @@ function StudentsPage() {
             </TableRow>
           </TableHeader>
           <TableBody>
+            {!students || filteredStudents.length === 0 ? (
+              <TableRow className="text-center">
+                <TableCell
+                  colSpan={headers.length + 1}
+                  className="uppercase text-lg"
+                >
+                  No Data Found
+                </TableCell>
+              </TableRow>
+            ) : (
+              visibleStudents.map((student) => (
+                <TableRow key={student.id}>
+                  {headers.map((header) => (
+                    <TableCell key={header.value}>
+                      {(header.value === "standard" ||
+                        header.value === "admission_std") &&
+                      student[header.value] == 13
+                        ? "Balvatika"
+                        : student[header.value] || "None"}
+                    </TableCell>
+                  ))}
+
+                  <TableCell className="">
+                    <ActionsPopup
+                      id={student.id}
+                      openAlertDeleteBox={openAlertDeleteBox}
+                    />
+                  </TableCell>
+                </TableRow>
+              ))
+            )}
+          </TableBody>
+          {/* {!students ? (
+            <TableBody>
+              <TableRow className="text-center">
+                <TableCell
+                  colSpan={headers.length + 1}
+                  className="uppercase text-lg"
+                >
+                  No Data Found
+                </TableCell>
+              </TableRow>
+            </TableBody>
+          ) : null}
+          <TableBody>
             {visibleStudents
               .filter((student) => {
                 return search.toLocaleLowerCase() === ""
@@ -238,7 +291,7 @@ function StudentsPage() {
                   </TableCell>
                 </TableRow>
               ))}
-          </TableBody>
+          </TableBody> */}
         </Table>
         <ScrollBar orientation="horizontal" />
       </ScrollArea>

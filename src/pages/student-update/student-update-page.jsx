@@ -17,60 +17,49 @@ import {
   DropdownMenuRadioGroup,
   DropdownMenuRadioItem,
 } from "@/components/ui/dropdown-menu";
-import ActionsPopup from "@/components/ui/data-table-row-actions";
-import { useCertificate } from "@/hooks/use-certificate";
-import { SearchX } from "lucide-react";
+import { useStudentUpdateStdYearTemplate } from "@/hooks/use-student-update";
+import { Link } from "react-router-dom";
+import ActionsPopupStudentUpdate from "@/components/student-update/data-table-row-action";
 
 const headers = [
-  { label: "ID", value: "id" },
-  { label: "GR Number", value: "grno" },
-  { label: "Last Name", value: "last_name" },
-  { label: "First Name", value: "first_name" },
-  { label: "Middle Name", value: "middle_name" },
-  { label: "Gender", value: "gender" },
-  { label: "Birth Date", value: "birth_date" },
+  { label: "Year", value: "year" },
   { label: "Standard", value: "standard" },
-  { label: "Section", value: "section" },
-  { label: "Status", value: "status" },
 ];
 
-function CertificatePage() {
-  const { data, isLoading, error, refetch } = useCertificate();
-  let students = data?.data || [];
-
+function StudentUpdatePage() {
+  const { data, isLoading, error } = useStudentUpdateStdYearTemplate();
   const [page, setPage] = useState(0);
   const [pageSize, setPageSize] = useState(10);
   const [search, setSearch] = useState("");
 
+  const students = data?.data;
   const startIndex = page * pageSize;
   const endIndex = (page + 1) * pageSize;
+
+  const filteredStudents = students?.filter((student) => {
+    return search.toLowerCase() === ""
+      ? student
+      : student.year.toLowerCase().includes(search);
+  });
+
+  const visibleStudents = filteredStudents?.slice(startIndex, endIndex);
 
   const handlePageSizeChange = (value) => {
     setPageSize(parseInt(value));
     setPage(0);
   };
 
-  if (isLoading) {
-    return <>Loading...</>;
-  }
+  if (isLoading) return <>Loading...</>;
 
-  const filteredStudents = students.filter((student) => {
-    return search.toLocaleLowerCase() === ""
-      ? student
-      : student.first_name.toLocaleLowerCase().includes(search) ||
-          student.last_name.toLocaleLowerCase().includes(search) ||
-          student.middle_name.toLocaleLowerCase().includes(search);
-  });
-
-  const visibleStudents = filteredStudents.slice(startIndex, endIndex);
+  if (error) return <>Error</>;
 
   return (
     <>
-      <h1 className="uppercase">certificate</h1>
+      <h1>STUDENT UPDATE</h1>
       <div className="flex flex-col md:flex-row items-center justify-between mb-4">
         <Input
-          className="w-full md:max-w-sm mb-2 md:mb-0 md:mr-2"
-          placeholder="Search By Name"
+          className="w-full md:max-w-sm mb-2 md:mb-0  md:mr-2"
+          placeholder="Search By Year"
           onChange={(e) => setSearch(e.target.value)}
         />
         <DropdownMenu>
@@ -100,19 +89,26 @@ function CertificatePage() {
           </DropdownMenuContent>
         </DropdownMenu>
       </div>
+      <div>
+        <Link to="/update/add">
+          <Button>Add</Button>
+        </Link>
+      </div>
       <ScrollArea className="rounded-md border max-w-[1280px] h-[calc(80vh-120px)]">
         <Table className="relative">
           <TableHeader>
             <TableRow>
               {headers.map((header, index) => (
-                <TableHead key={index}>{header.label}</TableHead>
+                <TableHead key={index} className="text-center">
+                  {header.label}
+                </TableHead>
               ))}
-              <TableHead className="">Certificate</TableHead>
+              <TableHead className="">Actions</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
-            {visibleStudents.length === 0 || !students ? (
-              <TableRow className="text-start md:text-center">
+            {!students || filteredStudents.length === 0 ? (
+              <TableRow className="text-center">
                 <TableCell
                   colSpan={headers.length + 1}
                   className="uppercase text-lg"
@@ -124,19 +120,19 @@ function CertificatePage() {
               visibleStudents.map((student) => (
                 <TableRow key={student.id}>
                   {headers.map((header) => (
-                    <TableCell key={header.value}>
-                      {(header.value === "standard" ||
-                        header.value === "admission_std") &&
-                      student[header.value] == 13
+                    <TableCell
+                      key={header.value}
+                      className="capitalize text-center"
+                    >
+                      {header.value === "standard" && student.standard === "13"
                         ? "Balvatika"
                         : student[header.value] || "None"}
                     </TableCell>
                   ))}
-                  <TableCell className="">
-                    <ActionsPopup
-                      Bonafide="Bonafide"
-                      Birth="Birth Certificate"
-                      id={student.id}
+                  <TableCell>
+                    <ActionsPopupStudentUpdate
+                      std={student.standard}
+                      year={student.year}
                     />
                   </TableCell>
                 </TableRow>
@@ -171,4 +167,4 @@ function CertificatePage() {
   );
 }
 
-export default CertificatePage;
+export default StudentUpdatePage;

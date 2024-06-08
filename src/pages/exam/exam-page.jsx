@@ -8,7 +8,6 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Link } from "react-router-dom";
-
 import { useMutation } from "@tanstack/react-query";
 import toast, { Toaster } from "react-hot-toast";
 import {
@@ -58,12 +57,11 @@ function ExamMarksPage() {
   const startIndex = page * pageSize;
   const endIndex = (page + 1) * pageSize;
 
-  const visibleStudents = students?.slice(startIndex, endIndex);
-
   const handlePageSizeChange = (value) => {
     setPageSize(parseInt(value));
     setPage(0);
   };
+
   const mutation = useMutation({
     mutationFn: (examId) => deleteExam(examId),
     onSuccess: () => {
@@ -77,13 +75,26 @@ function ExamMarksPage() {
     setExamId(id);
     setOpenAlert(true);
   };
+
   const handleDeleteStudent = () => {
     mutation.mutate(examId);
   };
 
+  const filteredStudents = students?.filter((exam) => {
+    return search.toLocaleLowerCase() === ""
+      ? exam
+      : exam.date.toLocaleLowerCase().includes(search) ||
+          exam.sub.toLocaleLowerCase().includes(search) ||
+          exam.std.toLocaleLowerCase().includes(search) ||
+          exam.marks.toLocaleLowerCase().includes(search);
+  });
+
+  const visibleStudents = filteredStudents?.slice(startIndex, endIndex);
+
   if (isLoading) {
     return <>Loading...</>;
   }
+
   return (
     <>
       <Toaster
@@ -133,7 +144,7 @@ function ExamMarksPage() {
       <h1>EXAM MARKS</h1>
       <div className="flex flex-col md:flex-row items-center justify-between mb-4">
         <Input
-          className="w-full md:max-w-sm mb-2 md:mb-0  md:mr-2"
+          className="w-full md:max-w-sm mb-2 md:mb-0 md:mr-2"
           placeholder="Search"
           onChange={(e) => setSearch(e.target.value)}
         />
@@ -180,16 +191,17 @@ function ExamMarksPage() {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {visibleStudents
-              .filter((exam) => {
-                return search.toLocaleLowerCase() === ""
-                  ? exam
-                  : exam.date.toLocaleLowerCase().includes(search) ||
-                      exam.sub.toLocaleLowerCase().includes(search) ||
-                      exam.std.toLocaleLowerCase().includes(search) ||
-                      exam.marks.toLocaleLowerCase().includes(search);
-              })
-              .map((exam) => (
+            {!students || filteredStudents.length === 0 ? (
+              <TableRow className="text-center">
+                <TableCell
+                  colSpan={headers.length + 1}
+                  className="uppercase text-lg"
+                >
+                  No Data Found
+                </TableCell>
+              </TableRow>
+            ) : (
+              visibleStudents.map((exam) => (
                 <TableRow key={exam.id}>
                   {headers.map((header) => (
                     <TableCell key={header.value} className="capitalize">
@@ -211,7 +223,8 @@ function ExamMarksPage() {
                     />
                   </TableCell>
                 </TableRow>
-              ))}
+              ))
+            )}
           </TableBody>
         </Table>
         <ScrollBar orientation="horizontal" />

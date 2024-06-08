@@ -67,38 +67,12 @@ function CertificatePage() {
   return (
     <>
       <h1 className="uppercase">certificate</h1>
-      <div className="flex flex-col md:flex-row items-center justify-between mb-4">
+      <div className="flex flex-col md:flex-row items-center justify-between">
         <Input
           className="w-full md:max-w-sm mb-2 md:mb-0 md:mr-2"
           placeholder="Search By Name"
           onChange={(e) => setSearch(e.target.value)}
         />
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="outline" className="w-[160px]">
-              {pageSize <= 10
-                ? "Items per page"
-                : pageSize == "9999"
-                ? "Show All"
-                : pageSize}
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent className="w-56">
-            <DropdownMenuRadioGroup
-              value={pageSize.toString()}
-              onValueChange={(value) => handlePageSizeChange(value)}
-            >
-              <DropdownMenuRadioItem value="10">10</DropdownMenuRadioItem>
-              <DropdownMenuRadioItem value="20">20</DropdownMenuRadioItem>
-              <DropdownMenuRadioItem value="30">30</DropdownMenuRadioItem>
-              <DropdownMenuRadioItem value="40">40</DropdownMenuRadioItem>
-              <DropdownMenuRadioItem value="50">50</DropdownMenuRadioItem>
-              <DropdownMenuRadioItem value="9999">
-                Show All
-              </DropdownMenuRadioItem>
-            </DropdownMenuRadioGroup>
-          </DropdownMenuContent>
-        </DropdownMenu>
       </div>
       <ScrollArea className="rounded-md border max-w-[1280px] h-[calc(80vh-120px)]">
         <Table className="relative">
@@ -146,9 +120,34 @@ function CertificatePage() {
         </Table>
         <ScrollBar orientation="horizontal" />
       </ScrollArea>
-      <div className="flex items-center justify-end space-x-2 py-4">
-        <div className="flex-1 text-sm text-muted-foreground"></div>
-        <div className="space-x-2">
+      <div className="block text-center  md:flex md:items-center md:justify-end md:space-x-2 py-4">
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button variant="outline" className="w-[160px]">
+              {pageSize <= 10
+                ? "Items per page"
+                : pageSize == "9999"
+                ? "Show All"
+                : pageSize}
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent className="w-56">
+            <DropdownMenuRadioGroup
+              value={pageSize.toString()}
+              onValueChange={(value) => handlePageSizeChange(value)}
+            >
+              <DropdownMenuRadioItem value="10">10</DropdownMenuRadioItem>
+              <DropdownMenuRadioItem value="20">20</DropdownMenuRadioItem>
+              <DropdownMenuRadioItem value="30">30</DropdownMenuRadioItem>
+              <DropdownMenuRadioItem value="40">40</DropdownMenuRadioItem>
+              <DropdownMenuRadioItem value="50">50</DropdownMenuRadioItem>
+              <DropdownMenuRadioItem value="9999">
+                Show All
+              </DropdownMenuRadioItem>
+            </DropdownMenuRadioGroup>
+          </DropdownMenuContent>
+        </DropdownMenu>
+        <div className="space-x-2 md:m-0 mt-2">
           <Button
             variant="outline"
             onClick={() => setPage(Math.max(page - 1, 0))}

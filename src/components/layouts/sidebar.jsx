@@ -13,10 +13,6 @@ function Sidebar() {
             <Package2 className="h-6 w-6" />
             <span className="">Thinker PVT LTD</span>
           </NavLink>
-          <Button variant="outline" size="icon" className="ml-auto h-8 w-8">
-            <Bell className="h-4 w-4" />
-            <span className="sr-only">Toggle notifications</span>
-          </Button>
         </div>
         <div className="flex-1 mt-[10px]">
           <nav className="grid gap-2 items-start px-2 text-sm  font-medium lg:px-4">

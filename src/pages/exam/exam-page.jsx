@@ -217,16 +217,14 @@ function ExamMarksPage() {
               </Tooltip>
             </TooltipProvider>
           ) : (
-            <Button>
-              <ReactHTMLTableToExcel
-                id="test-table-xls-button"
-                className="download-table-xls-button"
-                table="print-excel"
-                filename="tablexls"
-                sheet="tablexls"
-                buttonText="Download as XLS"
-              />
-            </Button>
+            <ReactHTMLTableToExcel
+              id="test-table-xls-button"
+              className="download-table-xls-button inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90 h-10 px-4 py-2"
+              table="print-excel"
+              filename="tablexls"
+              sheet="tablexls"
+              buttonText="Download as XLS"
+            />
           )}
         </div>
       </div>
@@ -241,7 +239,9 @@ function ExamMarksPage() {
                 {headers.map((header, index) => (
                   <TableHead key={index}>{header.label}</TableHead>
                 ))}
-                <TableHead className="no-print sticky top-0 right-0 z-[999] bg-[#151518]">Actions</TableHead>
+                <TableHead className="no-print sticky top-0 right-0 z-[999] bg-[#151518]">
+                  Actions
+                </TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>

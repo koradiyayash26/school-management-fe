@@ -9,6 +9,7 @@ import {
   DropdownMenuTrigger,
 } from "../ui/dropdown-menu";
 import { Button } from "../ui/button";
+import { ModeToggle } from "./theme-mode-toggle";
 
 export default function Header() {
   const logout = () => {
@@ -18,6 +19,7 @@ export default function Header() {
     <header className="flex h-14 items-center gap-4 border-b bg-muted/40 px-4 lg:h-[60px] lg:px-6">
       <MobileSidebar />
       <div className="w-full flex-1"></div>
+      <ModeToggle />
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <Button variant="secondary" size="icon" className="rounded-full">

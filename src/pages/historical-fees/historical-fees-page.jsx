@@ -246,7 +246,7 @@ function HistoricalFeesPage() {
                 {headers.map((header, index) => (
                   <TableHead key={index}>{header.label}</TableHead>
                 ))}
-                <TableHead className="no-print">Actions</TableHead>
+                <TableHead className="no-print sticky top-0 right-0 z-[999] bg-[#151518]">Actions</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -275,7 +275,7 @@ function HistoricalFeesPage() {
                           : historical[header.value] || "None"}
                       </TableCell>
                     ))}
-                    <TableCell className="no-print">
+                    <TableCell className="no-print sticky top-0 right-0 z-[1] bg-[#151518]">
                       <ActionsPopupHistoricalFees
                         id={historical.id}
                         openAlertDeleteBox={openAlertDeleteBox}

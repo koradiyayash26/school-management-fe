@@ -81,7 +81,9 @@ function CertificatePage() {
               {headers.map((header, index) => (
                 <TableHead key={index}>{header.label}</TableHead>
               ))}
-              <TableHead className="">Certificate</TableHead>
+              <TableHead className="sticky top-0 right-0 z-[999] bg-[#151518]">
+                Certificate
+              </TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -106,7 +108,7 @@ function CertificatePage() {
                         : student[header.value] || "None"}
                     </TableCell>
                   ))}
-                  <TableCell className="">
+                  <TableCell className="sticky top-0 right-0 z-[1] bg-[#151518]">
                     <ActionsPopup
                       Bonafide="Bonafide"
                       Birth="Birth Certificate"

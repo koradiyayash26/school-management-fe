@@ -150,7 +150,7 @@ function StudentHistoricalPage() {
                   {header.label}
                 </TableHead>
               ))}
-              <TableHead className="">Actions</TableHead>
+              <TableHead className="sticky top-0 right-0 z-[999] bg-[#151518]">Actions</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -176,7 +176,7 @@ function StudentHistoricalPage() {
                         : student[header.value] || "None"}
                     </TableCell>
                   ))}
-                  <TableCell className="">
+                  <TableCell className="sticky top-0 right-0 z-[1] bg-[#151518]">
                     <ActionsPopupStudentHistorical
                       id={student.id}
                       openAlertDeleteBox={openAlertDeleteBox}

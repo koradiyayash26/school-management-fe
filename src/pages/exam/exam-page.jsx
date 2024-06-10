@@ -241,7 +241,7 @@ function ExamMarksPage() {
                 {headers.map((header, index) => (
                   <TableHead key={index}>{header.label}</TableHead>
                 ))}
-                <TableHead className="no-print">Actions</TableHead>
+                <TableHead className="no-print sticky top-0 right-0 z-[999] bg-[#151518]">Actions</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -270,7 +270,7 @@ function ExamMarksPage() {
                           : exam[header.value] || "None"}
                       </TableCell>
                     ))}
-                    <TableCell className="no-print">
+                    <TableCell className="no-print sticky top-0 right-0 z-[1] bg-[#151518]">
                       <ActionsPopupExamMark
                         id={exam.id}
                         openAlertDeleteBox={openAlertDeleteBox}

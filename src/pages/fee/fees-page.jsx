@@ -153,7 +153,7 @@ function FeesTypePage() {
               {headers.map((header, index) => (
                 <TableHead key={index}>{header.label}</TableHead>
               ))}
-              <TableHead className="">Actions</TableHead>
+              <TableHead className="sticky top-0 right-0 z-[999] bg-[#151518]">Actions</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -178,7 +178,7 @@ function FeesTypePage() {
                         : fee[header.value] || "None"}
                     </TableCell>
                   ))}
-                  <TableCell className="">
+                  <TableCell className="sticky top-0 right-0 z-[1] bg-[#151518]">
                     <ActionsPopupFee
                       id={fee.id}
                       standard={fee.standard}

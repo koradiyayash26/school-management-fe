@@ -61,6 +61,7 @@ export const GrDetails = ({ form, categories }) => {
   ];
 
   const years = [
+    { _id: "2025", name: "2025" },
     { _id: "2024", name: "2024" },
     { _id: "2023", name: "2023" },
     { _id: "2022", name: "2022" },

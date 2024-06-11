@@ -100,6 +100,6 @@ export const studentDetail = {
   reason: "",
   progress: "1",
   assesment: "1",
-  left_school_date: "2005-04-26",
+  left_school_date: "",
   bank_address: "",
 };

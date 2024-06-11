@@ -24,51 +24,53 @@ export const SchoolLeaveDetails = ({ form }) => {
   return (
     <>
       <div className="md:grid md:grid-cols-3 gap-8">
-        <FormField
-          control={form.control}
-          name="left_school_date"
-          render={({ field }) => (
-            <FormItem className="flex flex-col self-end">
-              <FormLabel>Left School Date</FormLabel>
-              <Popover>
-                <PopoverTrigger asChild>
-                  <FormControl>
-                    <Button
-                      variant={"outline"}
-                      className={
-                        ("pl-3 text-left font-normal",
-                        !field.value && "text-muted-foreground")
-                      }
-                    >
-                      {field.value ? (
-                        format(field.value, "y-M-d")
-                      ) : (
-                        <span>Pick a Date</span>
-                      )}
-                      <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
-                    </Button>
-                  </FormControl>
-                </PopoverTrigger>
-                <PopoverContent className="w-auto p-0" align="start">
-                  <Calendar
-                    mode="single"
-                    selected={field.value}
-                    // onSelect={field.onChange}
-                    onSelect={(date) => {
-                      field.onChange(format(date, "y-M-d"));
-                      console.log(field.onChange(format(date, "y-M-d")));
-                    }}
-                    disabled={(date) =>
-                      date > new Date() || date < new Date("1900-01-01")
+      <FormField
+        control={form.control}
+        name="left_school_date"
+        render={({ field }) => (
+          <FormItem className="flex flex-col self-end">
+            <FormLabel>Left School Date</FormLabel>
+            <Popover>
+              <PopoverTrigger asChild>
+                <FormControl>
+                  <Button
+                    variant={"outline"}
+                    className={
+                      ("pl-3 text-left font-normal",
+                      !field.value && "text-muted-foreground")
                     }
-                    initialFocus
-                  />
-                </PopoverContent>
-              </Popover>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+                  >
+                    {field.value ? (
+                      format(new Date(field.value), "yyyy-MM-dd")
+                    ) : (
+                      <span>Pick a Date</span>
+                    )}
+                    <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                  </Button>
+                </FormControl>
+              </PopoverTrigger>
+              <PopoverContent className="w-auto p-0" align="start">
+                <Calendar
+                  mode="single"
+                  selected={field.value ? new Date(field.value) : null}
+                  onSelect={(date) => {
+                    if (date) {
+                      field.onChange(format(date, "yyyy-MM-dd"));
+                    } else {
+                      field.onChange("");
+                    }
+                  }}
+                  disabled={(date) =>
+                    date > new Date() || date < new Date("1900-01-01")
+                  }
+                  initialFocus
+                />
+              </PopoverContent>
+            </Popover>
+            <FormMessage />
+          </FormItem>
+        )}
+      />
         <FormField
           control={form.control}
           name="left_school_std"

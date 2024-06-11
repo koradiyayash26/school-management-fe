@@ -19,7 +19,9 @@ const StudentAddPage = () => {
     const formattedData = {
       ...data,
       birth_date: format(new Date(data.birth_date), "yyyy-MM-dd"),
-      left_school_date: format(new Date(data.left_school_date), "yyyy-MM-dd"),
+      left_school_date: data.left_school_date
+        ? format(new Date(data.left_school_date), "yyyy-MM-dd")
+        : null,
     };
     mutation.mutate(formattedData);
   };

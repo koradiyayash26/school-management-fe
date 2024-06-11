@@ -36,7 +36,9 @@ const ExamMarksAddPage = () => {
 
   const onSubmit = (data) => {
     const selectedStudent = studentName.find(
-      (student) => `${student.first_name} ${student.last_name}` === data.student
+      (student) =>
+        `${student.id} ${student.first_name} ${student.last_name}` ===
+        data.student
     );
     if (selectedStudent) {
       data.student = selectedStudent.id;

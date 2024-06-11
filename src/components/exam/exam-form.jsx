@@ -24,7 +24,7 @@ import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 
-const ExamForm = ({defaultValues,onSubmit,studentName,loading}) => {
+const ExamForm = ({ defaultValues, onSubmit, studentName, loading }) => {
   const formSchema = z.object({
     student: z.string().min(1, { message: "Please select a student" }),
     total_marks: z.coerce
@@ -88,9 +88,9 @@ const ExamForm = ({defaultValues,onSubmit,studentName,loading}) => {
                       {studentName.map((student) => (
                         <SelectItem
                           key={student.id}
-                          value={`${student.first_name} ${student.last_name}`}
+                          value={`${student.id} ${student.first_name} ${student.last_name}`}
                         >
-                          {`${student.first_name} ${student.last_name}`}
+                          {`${student.id} ${student.first_name} ${student.last_name}`}
                         </SelectItem>
                       ))}
                     </SelectContent>

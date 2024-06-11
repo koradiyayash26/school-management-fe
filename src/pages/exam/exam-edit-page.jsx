@@ -24,9 +24,9 @@ const ExamMarksEditPage = () => {
   } = useGetExam(id);
 
   let examGetData = data?.data;
-
+// if any of problem on seletd student name then remove only ids on all add,edit,form of exam then fix it
   const defaultValues = {
-    student: `${examGetData?.student?.first_name} ${examGetData?.student?.last_name}`,
+    student: `${examGetData?.student?.id} ${examGetData?.student?.first_name} ${examGetData?.student?.last_name}`,
     total_marks: examGetData?.total_marks,
     sub: examGetData?.sub,
     std: examGetData?.std,
@@ -45,7 +45,7 @@ const ExamMarksEditPage = () => {
 
   const onSubmit = (data) => {
     const selectedStudent = studentName.find(
-      (student) => `${student.first_name} ${student.last_name}` === data.student
+      (student) => `${student.id} ${student.first_name} ${student.last_name}` === data.student
     );
     if (selectedStudent) {
       data.student = selectedStudent.id;

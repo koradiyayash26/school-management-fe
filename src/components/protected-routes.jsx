@@ -16,6 +16,7 @@ function ProtectedRoutes() {
       );
       if (response.status === 200) {
         setIsAuthenticated(true);
+        localStorage.setItem("user", response.data.user.username);
       }
     } catch (error) {
       setIsAuthenticated(false);

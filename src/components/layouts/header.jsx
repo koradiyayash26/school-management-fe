@@ -31,7 +31,7 @@ export default function Header() {
           <DropdownMenuLabel>My Account</DropdownMenuLabel>
           <DropdownMenuSeparator />
           <DropdownMenuItem>Settings</DropdownMenuItem>
-          <DropdownMenuItem>Support</DropdownMenuItem>
+          <DropdownMenuItem>Switch Account</DropdownMenuItem>
           <DropdownMenuSeparator />
           <DropdownMenuItem className="hover:cursor-pointer" onClick={logout}>
             Logout

@@ -239,7 +239,7 @@ function ExamMarksPage() {
                 {headers.map((header, index) => (
                   <TableHead key={index}>{header.label}</TableHead>
                 ))}
-                <TableHead className="no-print sticky top-0 right-0 z-[999] bg-[#151518]">
+                <TableHead className="no-print bg-[#151518]">
                   Actions
                 </TableHead>
               </TableRow>

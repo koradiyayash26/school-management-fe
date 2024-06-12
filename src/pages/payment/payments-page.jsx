@@ -317,7 +317,7 @@ const PaymentsPage = () => {
               {headers.map((header, index) => (
                 <TableHead key={index}>{header.label}</TableHead>
               ))}
-              <TableHead className="sticky top-0 right-0 z-[999] bg-[#151518]">Actions</TableHead>
+              <TableHead className="bg-[#151518]">Actions</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>

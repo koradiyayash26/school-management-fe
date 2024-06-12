@@ -81,7 +81,7 @@ function CertificatePage() {
               {headers.map((header, index) => (
                 <TableHead key={index}>{header.label}</TableHead>
               ))}
-              <TableHead className="sticky top-0 right-0 z-[999] bg-[#151518]">
+              <TableHead className="bg-[#151518]">
                 Certificate
               </TableHead>
             </TableRow>

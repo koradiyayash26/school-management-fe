@@ -1,5 +1,5 @@
 import { MENU } from "@/constant";
-import { Bell, Package2 } from "lucide-react";
+import { Bell, ChevronLeft, ChevronRight, Package2 } from "lucide-react";
 import { NavLink } from "react-router-dom";
 import { Button } from "../ui/button";
 import Logout from "./logout";
@@ -35,6 +35,11 @@ function Sidebar() {
         <div className="mt-auto p-4">
           <Logout />
         </div>
+        {/* sidebar arrow */}
+        <div className="absolute top-1/2 right-0 transform -translate-y-1/2 hover:bg-muted cursor-pointer rounded-l-lg">
+          <ChevronLeft className="h-6 w-6" />
+        </div>
+        {/* sidebar arrow */}
       </div>
     </div>
   );

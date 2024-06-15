@@ -141,7 +141,7 @@ function StudentHistoricalPage() {
           />
         </div>
       </div>
-      <ScrollArea className="rounded-md border max-w-[1280px] h-[calc(80vh-120px)]">
+      <ScrollArea className="rounded-md border w-full h-[calc(80vh-120px)]">
         <Table className="relative">
           <TableHeader>
             <TableRow>

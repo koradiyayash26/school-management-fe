@@ -257,7 +257,7 @@ function StudentsPage() {
           )}
         </div>
       </div>
-      <ScrollArea className="rounded-md border max-w-[1280px] h-[calc(80vh-120px)]">
+      <ScrollArea className="rounded-md border w-full h-[calc(80vh-120px)]">
         <div ref={componentPDF} style={{ width: "100%" }}>
           <h1 className="hidden title-table">THINKERS GENERAL REGISTER</h1>
           <Table className="relative" id="print-excel">

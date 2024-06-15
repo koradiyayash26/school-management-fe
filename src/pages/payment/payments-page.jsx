@@ -187,7 +187,7 @@ const PaymentsPage = () => {
             </Form>
           </div>
         </div>
-        <ScrollArea className="rounded-md border mt-6 max-w-[1280px]">
+        <ScrollArea className="rounded-md border mt-6 w-full">
           <Table className="relative">
             <TableHeader>
               <TableRow>
@@ -310,7 +310,7 @@ const PaymentsPage = () => {
           />
         </div>
       </div>
-      <ScrollArea className="rounded-md border max-w-[1280px] h-[calc(80vh-120px)]">
+      <ScrollArea className="rounded-md border w-full h-[calc(80vh-120px)]">
         <Table className="relative">
           <TableHeader>
             <TableRow>

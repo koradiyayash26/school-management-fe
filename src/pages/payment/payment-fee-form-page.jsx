@@ -114,10 +114,10 @@ const PaymentFeeFormPage = () => {
   const mutationFeeList = useMutation({
     mutationFn: (paymentId) => deletePaymentFee(paymentId),
     onSuccess: (res) => {
-      refetch();
+      form.reset();
       setOpenAlert(false);
       toast.success("History Fee Delete Successfully");
-      form.reset();
+      refetch();
     },
   });
 

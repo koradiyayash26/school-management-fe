@@ -56,7 +56,7 @@ export default function Header() {
             <Button
               variant="outline"
               size="icon"
-              className="rounded-full border-2 border-black dark:border-white"
+              className="rounded-full border-2 uppercase border-black dark:border-white"
             >
               {username[0]}
               <span className="sr-only">Toggle user menu</span>

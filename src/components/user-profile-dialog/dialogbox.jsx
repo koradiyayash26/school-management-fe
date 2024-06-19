@@ -132,21 +132,21 @@ const UserProfileDialogbox = ({ refetch }) => {
       <Dialog open={isOpen} onOpenChange={setIsOpen}>
         <div className="block md:flex gap-4">
           <DialogTrigger asChild>
-            <Button
-              variant="outline"
-              onClick={() => setMode(false)}
-              className="w-full mt-4 md:mt-0"
-            >
-              Change Password
-            </Button>
-          </DialogTrigger>
-          <DialogTrigger className="w-full">
-            <Button
-              onClick={() => setMode(true)}
-              className="w-full mt-4 md:mt-0"
-            >
-              Change Username
-            </Button>
+            <div className="block md:flex justify-between w-full gap-6">
+              <Button
+                variant="outline"
+                onClick={() => setMode(false)}
+                className="w-full"
+              >
+                Change Password
+              </Button>
+              <Button
+                onClick={() => setMode(true)}
+                className="w-full mt-4 md:mt-0"
+              >
+                Change Username
+              </Button>
+            </div>
           </DialogTrigger>
         </div>
         <DialogContent className="sm:max-w-[425px]">

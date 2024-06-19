@@ -73,7 +73,7 @@ const PaymentFeeFormPage = () => {
   let studentFeeDetail = data?.fees;
   let studentFeeTotal = data?.fee_total;
 
-  const todayDate = format(new Date(), "dd-MM-yyyy");
+  const todayDate = format(new Date(), "yyyy-MM-dd");
 
   const defaultValues = {
     fee_paid_date: todayDate,
@@ -380,7 +380,7 @@ const PaymentFeeFormPage = () => {
                                   }
                                 >
                                   {field.value ? (
-                                    format(new Date(field.value), "MM-dd-yyyy")
+                                    format(new Date(field.value), "dd-MM-yyyy")
                                   ) : (
                                     <span>Pick a Date</span>
                                   )}

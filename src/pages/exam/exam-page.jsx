@@ -189,6 +189,9 @@ function ExamMarksPage() {
     }
   }, [uploaddata, fileLoader]);
 
+  const selectedPages = JSON.parse(localStorage.getItem("selectedPages")) || [];
+  const showUploadDialog = selectedPages.includes("Exam");
+
   if (isLoading) {
     return <>Loading...</>;
   }
@@ -263,38 +266,40 @@ function ExamMarksPage() {
             onChange={(e) => setSearch(e.target.value)}
           />
         </div>
-        {/* <div className="flex gap-2">
-          <Dialog>
-            <DialogTrigger asChild>
-              <Button className="mt-1 md:mt-0">Upload Excel</Button>
-            </DialogTrigger>
-            <DialogContent className="sm:max-w-[425px]">
-              <DialogHeader>
-                <DialogTitle>Edit profile</DialogTitle>
-                <DialogDescription>
-                  Make changes to your profile here. Click save when you're
-                  done.
-                </DialogDescription>
-              </DialogHeader>
-              <div className="w-full py-4">
-                <div className="w-full">
-                  <Input
-                    className="mb-2 cursor-pointer  md:mb-0 md:mr-2"
-                    id="picture"
-                    onChange={handleFileChange}
-                    ref={fileInputRef}
-                    type="file"
-                  />
+        {showUploadDialog && (
+          <div className="flex gap-2">
+            <Dialog>
+              <DialogTrigger asChild>
+                <Button className="mt-1 md:mt-0">Upload Excel</Button>
+              </DialogTrigger>
+              <DialogContent className="sm:max-w-[425px]">
+                <DialogHeader>
+                  <DialogTitle>Edit profile</DialogTitle>
+                  <DialogDescription>
+                    Make changes to your profile here. Click save when you're
+                    done.
+                  </DialogDescription>
+                </DialogHeader>
+                <div className="w-full py-4">
+                  <div className="w-full">
+                    <Input
+                      className="mb-2 cursor-pointer  md:mb-0 md:mr-2"
+                      id="picture"
+                      onChange={handleFileChange}
+                      ref={fileInputRef}
+                      type="file"
+                    />
+                  </div>
                 </div>
-              </div>
-              <DialogFooter>
-                <Button type="button" onClick={handleFileUpload}>
-                  Upload
-                </Button>
-              </DialogFooter>
-            </DialogContent>
-          </Dialog>
-        </div> */}
+                <DialogFooter>
+                  <Button type="button" onClick={handleFileUpload}>
+                    Upload
+                  </Button>
+                </DialogFooter>
+              </DialogContent>
+            </Dialog>
+          </div>
+        )}
         <div className="flex gap-2 md:m-0 mt-4">
           <Link to="/exam/add">
             <Button>Add</Button>

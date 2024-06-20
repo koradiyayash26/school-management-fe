@@ -10,7 +10,7 @@ import {
 } from "../ui/dropdown-menu";
 import { Button } from "../ui/button";
 import { ModeToggle } from "./theme-mode-toggle";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import {
   Sheet,
   SheetContent,
@@ -71,10 +71,12 @@ export default function Header() {
                 <span>Profile</span>
               </DropdownMenuItem>
             </SheetTrigger>
-            <DropdownMenuItem>
-              <Settings className="mr-2 h-4 w-4" />
-              <span>Settings</span>
-            </DropdownMenuItem>
+            <Link to="/setting">
+              <DropdownMenuItem>
+                <Settings className="mr-2 h-4 w-4" />
+                <span>Settings</span>
+              </DropdownMenuItem>
+            </Link>
             <DropdownMenuItem>
               <LifeBuoy className="mr-2 h-4 w-4" />
               <span>Support</span>

@@ -36,6 +36,7 @@ import StudentUpdatePage from "./pages/student-update/student-update-page";
 import StudentUpdateAddPage from "./pages/student-update/student-update-add-page";
 import StudentUpdateStdYearPage from "./pages/student-update/student-update-std-year-page";
 import FeesAssingPage from "./pages/fee/fee-assing-page";
+import Setting from "./pages/settings/setting";
 
 const App = () => {
   return (
@@ -126,6 +127,7 @@ const App = () => {
                     path="/payment/:id/:year"
                   />
                   <Route element={<PaymentReceiptPage />} path="/receipt/:id" />
+                  <Route element={<Setting />} path="/setting" />
                   <Route element={<Notfound />} path="*" />
                 </Route>
               </Route>

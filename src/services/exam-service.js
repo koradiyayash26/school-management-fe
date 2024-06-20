@@ -27,6 +27,14 @@ const addExam = async (data) => {
   });
 };
 
+const UploadFileExamAdd = async (uploaddata) => {
+  return await apiClient.post(`/exams/uploadfile/add/`, uploaddata, {
+    headers: {
+      Authorization: `Token ${getToken()}`,
+    },
+  });
+};
+
 const updateExam = async (data, id) => {
   console.log(data, id);
   return await apiClient.patch(`/exams/${id}/edit/`, data, {
@@ -60,4 +68,5 @@ export {
   updateExam,
   getExamMarksData,
   deleteExam,
+  UploadFileExamAdd,
 };

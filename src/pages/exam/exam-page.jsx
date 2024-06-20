@@ -1,8 +1,7 @@
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import {
   Table,
   TableBody,
-  TableCaption,
   TableCell,
   TableHead,
   TableHeader,
@@ -33,7 +32,7 @@ import { Button } from "@/components/ui/button";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import ActionsPopupExamMark from "@/components/exam/data-table-row-action";
 import { useExamList } from "@/hooks/use-exam";
-import { deleteExam } from "@/services/exam-service";
+import { UploadFileExamAdd, deleteExam } from "@/services/exam-service";
 import { useReactToPrint } from "react-to-print";
 import {
   Tooltip,
@@ -43,6 +42,17 @@ import {
 } from "@/components/ui/tooltip";
 
 import ReactHTMLTableToExcel from "react-html-table-to-excel";
+import * as XLSX from "xlsx";
+import { format } from "date-fns";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 
 const headers = [
   { label: "ID", value: "id" },
@@ -108,6 +118,76 @@ function ExamMarksPage() {
     documentTitle: "Exam Marks",
     onAfterPrint: () => alert("PDF generated successfully"),
   });
+
+  const [uploaddata, setUploaddata] = useState([]);
+  const [fileLoader, setFileLoader] = useState(true);
+
+  const [file, setFile] = useState(null);
+  const fileInputRef = useRef(null);
+
+  const handleFileChange = (e) => {
+    setFile(e.target.files[0]);
+  };
+  const handleFileUpload = () => {
+    if (file) {
+      const reader = new FileReader();
+      reader.readAsBinaryString(file);
+      reader.onload = (e) => {
+        const data = e.target.result;
+        const workbook = XLSX.read(data, { type: "binary" });
+        const sheetName = workbook.SheetNames[0];
+        const sheet = workbook.Sheets[sheetName];
+        const parsedData = XLSX.utils.sheet_to_json(sheet, { raw: true });
+
+        const formattedData = parsedData.map((row) => {
+          if (row.Date) {
+            const dateCode = parseFloat(row.Date);
+            if (!isNaN(dateCode)) {
+              const date = XLSX.SSF.parse_date_code(dateCode);
+              row.Date = new Date(
+                date.y,
+                date.m - 1,
+                date.d
+              ).toLocaleDateString("en-GB");
+            }
+          }
+          row.Date = format(row.Date, "yyyy-MM-dd");
+          return row;
+        });
+
+        setUploaddata(formattedData);
+        setFileLoader(false);
+        // toast.success("File Upload Successfully");
+        if (fileInputRef.current) {
+          fileInputRef.current.value = null;
+        }
+        setFile(null);
+      };
+      reader.onerror = (error) => {
+        toast.error("Failed to read file: " + error);
+        setFileLoader(true);
+      };
+    } else {
+      setFileLoader(true);
+      toast.error("Please select a file first");
+    }
+  };
+  const uploadFilemutation = useMutation({
+    mutationFn: (uploaddata) => UploadFileExamAdd(uploaddata),
+    onSuccess: (res) => {
+      refetch();
+      toast.success(res.data.message);
+    },
+    onError: (error) => {
+      toast.error(`Failed To Upload File: ${error.errors}`);
+    },
+  });
+
+  useEffect(() => {
+    if (!fileLoader) {
+      uploadFilemutation.mutate(uploaddata);
+    }
+  }, [uploaddata, fileLoader]);
 
   if (isLoading) {
     return <>Loading...</>;
@@ -183,6 +263,38 @@ function ExamMarksPage() {
             onChange={(e) => setSearch(e.target.value)}
           />
         </div>
+        {/* <div className="flex gap-2">
+          <Dialog>
+            <DialogTrigger asChild>
+              <Button className="mt-1 md:mt-0">Upload Excel</Button>
+            </DialogTrigger>
+            <DialogContent className="sm:max-w-[425px]">
+              <DialogHeader>
+                <DialogTitle>Edit profile</DialogTitle>
+                <DialogDescription>
+                  Make changes to your profile here. Click save when you're
+                  done.
+                </DialogDescription>
+              </DialogHeader>
+              <div className="w-full py-4">
+                <div className="w-full">
+                  <Input
+                    className="mb-2 cursor-pointer  md:mb-0 md:mr-2"
+                    id="picture"
+                    onChange={handleFileChange}
+                    ref={fileInputRef}
+                    type="file"
+                  />
+                </div>
+              </div>
+              <DialogFooter>
+                <Button type="button" onClick={handleFileUpload}>
+                  Upload
+                </Button>
+              </DialogFooter>
+            </DialogContent>
+          </Dialog>
+        </div> */}
         <div className="flex gap-2 md:m-0 mt-4">
           <Link to="/exam/add">
             <Button>Add</Button>
@@ -239,9 +351,7 @@ function ExamMarksPage() {
                 {headers.map((header, index) => (
                   <TableHead key={index}>{header.label}</TableHead>
                 ))}
-                <TableHead className="no-print bg-[#151518]">
-                  Actions
-                </TableHead>
+                <TableHead className="no-print bg-[#151518]">Actions</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { FaFemale, FaMale } from "react-icons/fa";
 import { Link } from "react-router-dom";
@@ -19,23 +19,57 @@ const StandardPage = () => {
   const { data, isLoading, refetch } = useStandard();
   let standardDataCount = data?.data;
 
-  const handleCalculate = (standard, gender) => {
-    const boys_count = standard.boys_count;
-    const girls_count = standard.girls_count;
-    const total_count = boys_count + girls_count;
+  const calculateProgress = (boysCount, girlsCount, totalCount, gender) => {
     if (gender === "MALE") {
-      return (boys_count * 100) / total_count;
+      return (boysCount * 100) / totalCount;
     } else {
-      return (girls_count * 100) / total_count;
+      return (girlsCount * 100) / totalCount;
     }
   };
+
+  const [progressValues, setProgressValues] = useState({});
+
+  useEffect(() => {
+    if (standardDataCount) {
+      const initialProgressValues = {};
+      standardDataCount.standards.forEach((standard, index) => {
+        initialProgressValues[index] = { male: 0, female: 0 };
+      });
+      setProgressValues(initialProgressValues);
+
+      const timer = setTimeout(() => {
+        const updatedProgressValues = {};
+        standardDataCount.standards.forEach((standard, index) => {
+          updatedProgressValues[index] = {
+            male: calculateProgress(
+              standard.boys_count,
+              standard.girls_count,
+              standard.boys_count + standard.girls_count,
+              "MALE"
+            ),
+            female: calculateProgress(
+              standard.boys_count,
+              standard.girls_count,
+              standard.boys_count + standard.girls_count,
+              "FEMALE"
+            ),
+          };
+        });
+        setProgressValues(updatedProgressValues);
+      }, 500);
+
+      return () => clearTimeout(timer);
+    }
+  }, [standardDataCount]);
+
   if (isLoading) {
     return <>Loading...</>;
   }
+
   return (
     <>
       <h1 className="uppercase">STANDARD'S INFORMATION</h1>
-      {/* Total Student COunt */}
+      {/* Total Student Count */}
       <Card className="">
         <CardHeader>
           <CardTitle>Total</CardTitle>
@@ -94,7 +128,7 @@ const StandardPage = () => {
           </Link>
         </CardFooter>
       </Card>
-      {/* Each Standard  Student COunt */}
+      {/* Each Standard Student Count */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {standardDataCount &&
           standardDataCount.standards.map((standard, index) => (
@@ -119,7 +153,7 @@ const StandardPage = () => {
                         {standard.boys_count}
                       </span>
                       <Progress
-                        value={handleCalculate(standard, "MALE")}
+                        value={progressValues[index]?.male || 0}
                         className="w-[60%]"
                       />
                     </div>
@@ -130,7 +164,7 @@ const StandardPage = () => {
                         {standard.girls_count}
                       </span>
                       <Progress
-                        value={handleCalculate(standard, "FEMALE")}
+                        value={progressValues[index]?.female || 0}
                         className="w-[60%]"
                       />
                     </div>

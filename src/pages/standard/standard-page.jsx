@@ -62,6 +62,34 @@ const StandardPage = () => {
     }
   }, [standardDataCount]);
 
+  const [boysProgress, setBoysProgress] = useState(0);
+  const [girlsProgress, setGirlsProgress] = useState(0);
+
+  useEffect(() => {
+    if (standardDataCount) {
+      const totalBoys = standardDataCount.total_boys;
+      const totalGirls = standardDataCount.total_girls;
+      const totalStudents = standardDataCount.total_students;
+
+      const boysCalculatedValue = (totalBoys / totalStudents) * 100;
+      const girlsCalculatedValue = (totalGirls / totalStudents) * 100;
+
+      const boysTimeout = setTimeout(() => {
+        setBoysProgress(boysCalculatedValue);
+      }, 500);
+
+      const girlsTimeout = setTimeout(() => {
+        setGirlsProgress(girlsCalculatedValue);
+      }, 500);
+
+      // Cleanup the timeouts if the component unmounts or if the dependencies change
+      return () => {
+        clearTimeout(boysTimeout);
+        clearTimeout(girlsTimeout);
+      };
+    }
+  }, [standardDataCount]);
+
   if (isLoading) {
     return <>Loading...</>;
   }
@@ -83,16 +111,7 @@ const StandardPage = () => {
                 <Label htmlFor="Boys">Total Male</Label> -&nbsp;
                 {standardDataCount ? standardDataCount.total_boys : "0"}
               </span>
-              <Progress
-                value={
-                  standardDataCount
-                    ? (standardDataCount.total_boys /
-                        standardDataCount.total_students) *
-                      100
-                    : 0
-                }
-                className="w-full"
-              />
+              <Progress value={boysProgress} className="w-full" />
             </div>
             <div className="flex flex-col space-y-1.5">
               <span className="text-sm text-muted-foreground">
@@ -100,16 +119,7 @@ const StandardPage = () => {
                 <Label htmlFor="Girls">Total Female</Label> -&nbsp;
                 {standardDataCount ? standardDataCount.total_girls : "0"}
               </span>
-              <Progress
-                value={
-                  standardDataCount
-                    ? (standardDataCount.total_girls /
-                        standardDataCount.total_students) *
-                      100
-                    : 0
-                }
-                className="w-full"
-              />
+              <Progress value={girlsProgress} className="w-full" />
             </div>
             <div className="flex flex-col space-y-1.5">
               <Label htmlFor="Total">Total Student's</Label>

@@ -17,6 +17,7 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { Separator } from "@/components/ui/separator";
+import PropTypes from "prop-types";
 
 export function DataTableFacetedFilter({ column, title, options }) {
   const facets = column?.getFacetedUniqueValues();
@@ -128,3 +129,19 @@ export function DataTableFacetedFilter({ column, title, options }) {
     </Popover>
   );
 }
+
+DataTableFacetedFilter.propTypes = {
+  column: PropTypes.shape({
+    getFacetedUniqueValues: PropTypes.func,
+    getFilterValue: PropTypes.func,
+    setFilterValue: PropTypes.func,
+  }).isRequired,
+  title: PropTypes.string.isRequired,
+  options: PropTypes.arrayOf(
+    PropTypes.shape({
+      value: PropTypes.any.isRequired,
+      label: PropTypes.string.isRequired,
+      icon: PropTypes.elementType,
+    })
+  ).isRequired,
+};

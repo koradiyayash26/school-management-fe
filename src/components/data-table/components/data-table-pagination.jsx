@@ -1,3 +1,4 @@
+import PropTypes from "prop-types";
 import {
   ChevronLeftIcon,
   ChevronRightIcon,
@@ -15,15 +16,25 @@ import {
 } from "@/components/ui/select";
 
 export function DataTablePagination({ table }) {
+  // Check if row selection is enabled
+  const isRowSelectionEnabled = table.options.enableRowSelection;
+
   return (
-    <div className="flex items-center justify-between px-2">
-      <div className="flex-1 text-sm text-muted-foreground">
-        {table.getFilteredSelectedRowModel().rows.length} of{" "}
-        {table.getFilteredRowModel().rows.length} row(s) selected.
-      </div>
-      <div className="flex items-center space-x-6 lg:space-x-8">
-        <div className="flex items-center space-x-2">
-          <p className="text-sm font-medium">Rows per page</p>
+    <div className="flex items-center justify-between md:px-2">
+      {isRowSelectionEnabled && (
+        <div className="md:flex hidden flex-1 text-sm text-muted-foreground">
+          {`${table.getFilteredSelectedRowModel().rows.length} of ${
+            table.getFilteredRowModel().rows.length
+          } row(s) selected.`}
+        </div>
+      )}
+      <div
+        className={`flex items-center gap-x-6 gap-y-3 justify-between md:justify-normal md:w-auto w-full ${
+          !isRowSelectionEnabled ? "md:ml-auto" : ""
+        }`}
+      >
+        <div className="flex items-center gap-x-2">
+          <p className="md:flex hidden text-sm font-medium">Rows per page</p>
           <Select
             value={`${table.getState().pagination.pageSize}`}
             onValueChange={(value) => {
@@ -42,9 +53,10 @@ export function DataTablePagination({ table }) {
             </SelectContent>
           </Select>
         </div>
-        <div className="flex w-[100px] items-center justify-center text-sm font-medium">
-          Page {table.getState().pagination.pageIndex + 1} of{" "}
-          {table.getPageCount()}
+        <div className="md:flex hidden w-[100px] items-center justify-center text-sm font-medium">
+          {`Page ${
+            table.getState().pagination.pageIndex + 1
+          } of ${table.getPageCount()}`}
         </div>
         <div className="flex items-center space-x-2">
           <Button
@@ -88,3 +100,21 @@ export function DataTablePagination({ table }) {
     </div>
   );
 }
+
+DataTablePagination.propTypes = {
+  table: PropTypes.shape({
+    options: PropTypes.shape({
+      enableRowSelection: PropTypes.bool.isRequired,
+    }),
+    getFilteredSelectedRowModel: PropTypes.func.isRequired,
+    getFilteredRowModel: PropTypes.func.isRequired,
+    getState: PropTypes.func.isRequired,
+    setPageSize: PropTypes.func.isRequired,
+    getPageCount: PropTypes.func.isRequired,
+    setPageIndex: PropTypes.func.isRequired,
+    getCanPreviousPage: PropTypes.func.isRequired,
+    previousPage: PropTypes.func.isRequired,
+    nextPage: PropTypes.func.isRequired,
+    getCanNextPage: PropTypes.func.isRequired,
+  }).isRequired,
+};

@@ -14,7 +14,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { labels } from "../data/data";
-import { taskSchema } from "../data/schema";
+import PropTypes from "prop-types";
 
 export function DataTableRowActions({ row }) {
   // const task = taskSchema.parse(row.original);
@@ -57,3 +57,9 @@ export function DataTableRowActions({ row }) {
     </DropdownMenu>
   );
 }
+
+DataTableRowActions.propTypes = {
+  row: PropTypes.shape({
+    original: PropTypes.object.isRequired,
+  }).isRequired,
+};

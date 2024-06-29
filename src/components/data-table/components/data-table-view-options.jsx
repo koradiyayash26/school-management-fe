@@ -1,5 +1,6 @@
 import { DropdownMenuTrigger } from "@radix-ui/react-dropdown-menu";
 import { MixerHorizontalIcon } from "@radix-ui/react-icons";
+import PropTypes from "prop-types";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -24,10 +25,10 @@ export function DataTableViewOptions({ table }) {
           View
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent align="end" className="w-[150px]">
+      <DropdownMenuContent align="end" className="w-[180px]">
         <DropdownMenuLabel>Toggle columns</DropdownMenuLabel>
         <DropdownMenuSeparator />
-        <ScrollArea className="h-[300px]">
+        <ScrollArea className="h-[250px]">
           {table
             .getAllColumns()
             .filter(
@@ -42,7 +43,7 @@ export function DataTableViewOptions({ table }) {
                   checked={column.getIsVisible()}
                   onCheckedChange={(value) => column.toggleVisibility(!!value)}
                 >
-                  {column.id}
+                  {column?.id?.replace(/_/g, " ")}
                 </DropdownMenuCheckboxItem>
               );
             })}
@@ -51,3 +52,9 @@ export function DataTableViewOptions({ table }) {
     </DropdownMenu>
   );
 }
+
+DataTableViewOptions.propTypes = {
+  table: PropTypes.shape({
+    getAllColumns: PropTypes.func.isRequired,
+  }).isRequired,
+};

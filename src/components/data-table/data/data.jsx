@@ -69,3 +69,30 @@ export const priorities = [
     icon: ArrowUpIcon,
   },
 ]
+
+
+export const o_statuses = [
+  {
+    value: "ચાલુ",
+    label: "ચાલુ",
+    icon: QuestionMarkCircledIcon,
+  },
+  {
+    value: "કમી",
+    label: "કમી",
+    icon: QuestionMarkCircledIcon,
+  },
+]
+
+export const o_gender = [
+  {
+    value: "કુમાર",
+    label: "કુમાર",
+    icon: QuestionMarkCircledIcon,
+  },
+  {
+    value: "કન્યા",
+    label: "કન્યા",
+    icon: QuestionMarkCircledIcon,
+  },
+]

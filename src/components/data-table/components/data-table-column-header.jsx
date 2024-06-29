@@ -13,8 +13,9 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import PropTypes from "prop-types";
 
-export function DataTableColumnHeader({ column, title, className }) {
+export function   DataTableColumnHeader({ column, title, className }) {
   if (!column.getCanSort()) {
     return <div className={cn(className)}>{title}</div>;
   }
@@ -61,3 +62,15 @@ export function DataTableColumnHeader({ column, title, className }) {
     </div>
   );
 }
+
+DataTableColumnHeader.propTypes = {
+  column: PropTypes.shape({
+    getCanSort: PropTypes.func.isRequired,
+    getIsSorted: PropTypes.func.isRequired,
+    toggleSorting: PropTypes.func.isRequired,
+    getCanHide: PropTypes.func,
+    toggleVisibility: PropTypes.func,
+  }).isRequired,
+  title: PropTypes.string.isRequired,
+  className: PropTypes.string,
+};

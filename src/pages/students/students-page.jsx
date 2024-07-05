@@ -264,7 +264,7 @@ function StudentsPage() {
             <TableHeader>
               <TableRow>
                 {headers.map((header, index) => (
-                  <TableHead key={index}>{header.label}</TableHead>
+                  <TableHead className="whitespace-nowrap" key={index}>{header.label}</TableHead>
                 ))}
                 <TableHead className="no-print bg-[#151518]">
                   Actions

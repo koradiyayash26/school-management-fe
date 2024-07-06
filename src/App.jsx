@@ -31,12 +31,12 @@ import PaymentFeeFormPage from "./pages/payment/payment-fee-form-page";
 import SchoolStudentPage from "./pages/school-student/school-student-page";
 import SchoolStudentAddPage from "./pages/school-student/school-student-add-page";
 import SchoolStudentUpdatePage from "./pages/school-student/school-student-update-page";
-import CustomTable from "./components/data-table";
 import StudentHistoricalPage from "./pages/student-historical/student-historical-page";
 import StudentUpdatePage from "./pages/student-update/student-update-page";
 import StudentUpdateAddPage from "./pages/student-update/student-update-add-page";
 import StudentUpdateStdYearPage from "./pages/student-update/student-update-std-year-page";
 import FeesAssingPage from "./pages/fee/fee-assing-page";
+import TaskPage from "./pages/task-page";
 
 const App = () => {
   return (
@@ -45,7 +45,7 @@ const App = () => {
         <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
           <Router>
             <Routes>
-              <Route path="/data-table" element={<CustomTable />} />
+              <Route path="/data-table" element={<TaskPage />} />
               <Route element={<ProtectedRoutes />}>
                 <Route path="/" element={<DashboardLayout />}>
                   <Route index element={<HomePage />} />

@@ -4,19 +4,19 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuRadioGroup,
-  DropdownMenuRadioItem,
+  // DropdownMenuRadioGroup,
+  // DropdownMenuRadioItem,
   DropdownMenuSeparator,
   DropdownMenuShortcut,
-  DropdownMenuSub,
-  DropdownMenuSubContent,
-  DropdownMenuSubTrigger,
+  // DropdownMenuSub,
+  // DropdownMenuSubContent,
+  // DropdownMenuSubTrigger,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { labels } from "../data/data";
+// import { labels } from "../data/data";
 import PropTypes from "prop-types";
 
-export function DataTableRowActions({ row }) {
+export function DataTableRowActions({ row, onEdit = null, onDelete = null }) {
   // const task = taskSchema.parse(row.original);
   const task = row.original;
 
@@ -32,11 +32,13 @@ export function DataTableRowActions({ row }) {
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="w-[160px]">
-        <DropdownMenuItem>Edit</DropdownMenuItem>
+        {onEdit && (
+          <DropdownMenuItem onClick={() => onEdit(task)}>Edit</DropdownMenuItem>
+        )}
         <DropdownMenuItem>Make a copy</DropdownMenuItem>
         <DropdownMenuItem>Favorite</DropdownMenuItem>
-        <DropdownMenuSeparator />
-        <DropdownMenuSub>
+        {/* <DropdownMenuSeparator /> */}
+        {/* <DropdownMenuSub>
           <DropdownMenuSubTrigger>Labels</DropdownMenuSubTrigger>
           <DropdownMenuSubContent>
             <DropdownMenuRadioGroup value={task.label}>
@@ -47,12 +49,14 @@ export function DataTableRowActions({ row }) {
               ))}
             </DropdownMenuRadioGroup>
           </DropdownMenuSubContent>
-        </DropdownMenuSub>
+        </DropdownMenuSub> */}
         <DropdownMenuSeparator />
-        <DropdownMenuItem>
-          Delete
-          <DropdownMenuShortcut>⌘⌫</DropdownMenuShortcut>
-        </DropdownMenuItem>
+        {onDelete && (
+          <DropdownMenuItem onClick={() => onDelete(task)}>
+            Delete
+            <DropdownMenuShortcut>⌘⌫</DropdownMenuShortcut>
+          </DropdownMenuItem>
+        )}
       </DropdownMenuContent>
     </DropdownMenu>
   );
@@ -62,4 +66,6 @@ DataTableRowActions.propTypes = {
   row: PropTypes.shape({
     original: PropTypes.object.isRequired,
   }).isRequired,
+  onEdit: PropTypes.func, // Added prop validation for onEdit
+  onDelete: PropTypes.func, // Added prop validation for onDelete
 };

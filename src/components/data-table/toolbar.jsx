@@ -2,8 +2,8 @@ import PropTypes from "prop-types";
 import { Cross2Icon } from "@radix-ui/react-icons";
 import { Button } from "@/components/ui/button";
 // import { Input } from "@/components/ui/input";
-import { DataTableFacetedFilter } from "./data-table-faceted-filter";
-import { DataTableViewOptions } from "./data-table-view-options";
+import { DataTableFacetedFilter } from "./faceted-filter";
+import { DataTableViewOptions } from "./view-options";
 import DebouncedInput from "./debounced-input";
 
 export function DataTableToolbar({ table, settings }) {

@@ -1,57 +1,161 @@
-import { DataTable } from "./components/data-table";
-import { UserNav } from "./components/user-nav";
-import { students_columns } from "./components/columns";
-import { useStudents } from "@/hooks/use-student";
-import { o_gender, o_statuses } from "./data/data";
+import * as React from "react";
+import PropTypes from "prop-types";
+import {
+  getCoreRowModel,
+  getFacetedRowModel,
+  getFacetedUniqueValues,
+  getFilteredRowModel,
+  getPaginationRowModel,
+  getSortedRowModel,
+  useReactTable,
+  flexRender, // Added this line
+} from "@tanstack/react-table";
 
-const settings = {
-  enableGlobalFilter: true,
-  facetedFilters: [
-    {
-      column: "gender",
-      title: "Gender",
-      options: o_gender,
-    },
-    {
-      column: "status",
-      title: "Status",
-      options: o_statuses,
-    },
-  ],
+import { DataTablePagination } from "./pagination";
+import { DataTableToolbar } from "./toolbar";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
+import {
+  DataTableBodySkeleton,
+  DataTablePaginationSkeleton,
+  DataTableToolbarSkeleton,
+} from "./skeletons";
+
+const defaultSettings = {
+  enableGlobalFilter: false,
+  enableRowSelection: false,
+  hiddenColumns: {},
+  globalFilterColumns: [],
+  facetedFilters: [],
 };
 
-const CustomTable = () => {
-  const { data, isLoading, error } = useStudents();
-  const students = [...(data?.data || [])];
+export function DataTable({ data, columns, loading = false, settings = {} }) {
+  settings = { ...defaultSettings, ...settings };
 
-  // console.log(students);
-  if (error) return <div>Error</div>;
+  const [globalFilter, setGlobalFilter] = React.useState("");
+  const [rowSelection, setRowSelection] = React.useState({});
+  const [columnVisibility, setColumnVisibility] = React.useState({
+    ...settings.hiddenColumns,
+  });
+  const [columnFilters, setColumnFilters] = React.useState([]);
+  const [sorting, setSorting] = React.useState([]);
+
+  const table = useReactTable({
+    data,
+    columns,
+    state: {
+      sorting,
+      columnVisibility,
+      rowSelection,
+      columnFilters,
+      globalFilter,
+    },
+    enableRowSelection: settings.enableRowSelection,
+    onRowSelectionChange: setRowSelection,
+    onSortingChange: setSorting,
+    onColumnFiltersChange: setColumnFilters,
+    onGlobalFilterChange: setGlobalFilter,
+    onColumnVisibilityChange: setColumnVisibility,
+    getCoreRowModel: getCoreRowModel(),
+    getFilteredRowModel: getFilteredRowModel(),
+    getPaginationRowModel: getPaginationRowModel(),
+    getSortedRowModel: getSortedRowModel(),
+    getFacetedRowModel: getFacetedRowModel(),
+    getFacetedUniqueValues: getFacetedUniqueValues(),
+  });
 
   return (
-    <div className="h-full flex-1 flex-col space-y-8 p-8 flex">
-      <Header />
-      <DataTable
-        data={students}
-        columns={students_columns}
-        loading={isLoading}
-        settings={settings}
-      />
+    <div className="space-y-4">
+      {loading ? (
+        <DataTableToolbarSkeleton />
+      ) : (
+        <DataTableToolbar table={table} settings={settings} />
+      )}
+
+      <ScrollArea
+        className="rounded-md border h-[50vh]"
+        scrollClassName="z-[2]"
+      >
+        {loading ? (
+          <DataTableBodySkeleton />
+        ) : (
+          <Table>
+            <TableHeader className="sticky top-0 bg-white dark:bg-zinc-950 z-[1] [&_tr]:border-0 [&_tr]:shadow-[inset_0_-1px_0] [&_tr]:shadow-border">
+              {table.getHeaderGroups().map((headerGroup) => (
+                <TableRow key={headerGroup.id}>
+                  {headerGroup.headers.map((header) => {
+                    return (
+                      <TableHead key={header.id} colSpan={header.colSpan}>
+                        {header.isPlaceholder
+                          ? null
+                          : flexRender(
+                              header.column.columnDef.header,
+                              header.getContext()
+                            )}
+                      </TableHead>
+                    );
+                  })}
+                </TableRow>
+              ))}
+            </TableHeader>
+            <TableBody>
+              {table.getRowModel().rows?.length ? (
+                table.getRowModel().rows.map((row) => (
+                  <TableRow
+                    key={row.id}
+                    data-state={row.getIsSelected() && "selected"}
+                  >
+                    {row.getVisibleCells().map((cell) => (
+                      <TableCell key={cell.id}>
+                        {flexRender(
+                          cell.column.columnDef.cell,
+                          cell.getContext()
+                        )}
+                      </TableCell>
+                    ))}
+                  </TableRow>
+                ))
+              ) : (
+                <TableRow>
+                  <TableCell
+                    colSpan={columns.length}
+                    className="h-24 text-center"
+                  >
+                    No results.
+                  </TableCell>
+                </TableRow>
+              )}
+            </TableBody>
+          </Table>
+        )}
+        <ScrollBar orientation="horizontal" />
+      </ScrollArea>
+
+      {loading ? (
+        <DataTablePaginationSkeleton />
+      ) : (
+        <DataTablePagination table={table} />
+      )}
     </div>
   );
+}
+
+DataTable.propTypes = {
+  data: PropTypes.array.isRequired,
+  columns: PropTypes.array.isRequired,
+  tools: PropTypes.any,
+  settings: PropTypes.shape({
+    hiddenColumns: PropTypes.object,
+    globalFilterColumns: PropTypes.arrayOf(PropTypes.string),
+    enableGlobalFilter: PropTypes.bool,
+  }),
+  loading: PropTypes.bool,
+  error: PropTypes.any,
 };
-
-const Header = () => (
-  <div className="flex items-center justify-between space-y-2">
-    <div>
-      <h2 className="text-2xl font-bold tracking-tight">Welcome back!</h2>
-      <p className="text-muted-foreground">
-        Here&apos;s a list of your tasks for this month!
-      </p>
-    </div>
-    <div className="flex items-center space-x-2">
-      <UserNav />
-    </div>
-  </div>
-);
-
-export default CustomTable;

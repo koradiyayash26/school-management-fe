@@ -4,7 +4,7 @@ import { getToken } from "@/utils/token";
 const getPaymentStudentNames = async () => {
   let response = await apiClient.get("/students/search/", {
     headers: {
-      Authorization: `Token ${getToken()}`,
+      Authorization: `Bearer ${getToken()}`,
     },
   });
   return response.data;
@@ -13,7 +13,7 @@ const getPaymentStudentNames = async () => {
 const getPaymentFeeList = async () => {
   let response = await apiClient.get("/payments/search/", {
     headers: {
-      Authorization: `Token ${getToken()}`,
+      Authorization: `Bearer ${getToken()}`,
     },
   });
   return response.data;
@@ -22,7 +22,7 @@ const getPaymentFeeList = async () => {
 const getPaymentStudentFee = async (id, year) => {
   let response = await apiClient.get(`/payments/${id}/${year}/`, {
     headers: {
-      Authorization: `Token ${getToken()}`,
+      Authorization: `Bearer ${getToken()}`,
     },
   });
   return response.data;
@@ -31,7 +31,7 @@ const getPaymentStudentFee = async (id, year) => {
 const getReceiptDetailsByid = async (id) => {
   let response = await apiClient.get(`/payments/${id}/receipt/details/`, {
     headers: {
-      Authorization: `Token ${getToken()}`,
+      Authorization: `Bearer ${getToken()}`,
     },
   });
   return response.data;
@@ -40,7 +40,7 @@ const getReceiptDetailsByid = async (id) => {
 const deletePaymentFee = async (paymentId) => {
   return await apiClient.delete(`/payments/${paymentId}/delete/`, {
     headers: {
-      Authorization: `Token ${getToken()}`,
+      Authorization: `Bearer ${getToken()}`,
     },
   });
 };
@@ -49,7 +49,7 @@ const patchPaymentFeeData = async (formattedData) => {
   console.log(formattedData);
   return await apiClient.patch("payments/payment-collect/", formattedData, {
     headers: {
-      Authorization: `Token ${getToken()}`,
+      Authorization: `Bearer ${getToken()}`,
     },
   });
 };

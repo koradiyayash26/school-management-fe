@@ -19,7 +19,6 @@ export default function LoginPage() {
         password: password,
       })
       .then(function (response) {
-        localStorage.setItem("Token", response.data.token);
         localStorage.setItem("jwt_token", JSON.stringify(response.data.jwt_token));
         navigate("/");
       })

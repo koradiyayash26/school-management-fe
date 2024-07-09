@@ -4,7 +4,7 @@ import { getToken } from "@/utils/token";
 const getStudentUpdateTemplateData = async () => {
   let response = await apiClient.get("/student-update/search/", {
     headers: {
-      Authorization: `Token ${getToken()}`,
+      Authorization: `Bearer ${getToken()}`,
     },
   });
   return response.data;
@@ -13,7 +13,7 @@ const getStudentUpdateTemplateData = async () => {
 const addStudentUpdateTemplateData = async (data) => {
   return await apiClient.post("/student-update/add/", data, {
     headers: {
-      Authorization: `Token ${getToken()}`,
+      Authorization: `Bearer ${getToken()}`,
     },
   });
 };
@@ -23,7 +23,7 @@ const getStudentUpdateStdYearData = async (standard, year) => {
     `/student-update/students/${year}/${standard}/`,
     {
       headers: {
-        Authorization: `Token ${getToken()}`,
+        Authorization: `Bearer ${getToken()}`,
       },
     }
   );
@@ -33,7 +33,7 @@ const getStudentUpdateStdYearData = async (standard, year) => {
 const updateStudentUpdatestdandYearSeleted = async (jsonData) => {
   return await apiClient.post("/student-update/seleted/", jsonData, {
     headers: {
-      Authorization: `Token ${getToken()}`,
+      Authorization: `Bearer ${getToken()}`,
     },
   });
 };
@@ -41,7 +41,7 @@ const updateStudentUpdatestdandYearSeleted = async (jsonData) => {
 const updateStudentUpdatestdandYearUnseleted = async (jsonData) => {
   return await apiClient.post("/student-update/unseleted/", jsonData, {
     headers: {
-      Authorization: `Token ${getToken()}`,
+      Authorization: `Bearer ${getToken()}`,
     },
   });
 };
@@ -50,7 +50,7 @@ const addStudentsAddTogetDatastdyear = async (data) => {
   console.log(data);
   return await apiClient.post("/student-update/add-multilist/", data, {
     headers: {
-      Authorization: `Token ${getToken()}`,
+      Authorization: `Bearer ${getToken()}`,
     },
   });
 };

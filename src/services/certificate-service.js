@@ -5,7 +5,7 @@ const getCertificateList = async () => {
   try {
     const response = await apiClient.get("/students/search/", {
       headers: {
-        Authorization: `Token ${getToken()}`,
+        Authorization: `Bearer ${getToken()}`,
       },
     });
     return response.data;
@@ -19,7 +19,7 @@ const getCertificateData = async (id) => {
   try {
     const response = await apiClient.get(`/students/${id}/search/`, {
       headers: {
-        Authorization: `Token ${getToken()}`,
+        Authorization: `Bearer ${getToken()}`,
       },
     });
     return response.data;

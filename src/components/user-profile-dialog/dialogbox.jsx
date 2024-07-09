@@ -32,7 +32,7 @@ const usernameSchema = z.object({
     .min(3, "Username must be at least 3 characters long"),
 });
 
-const UserProfileDialogbox = ({ refetch }) => {
+const UserProfileDialogbox = () => {
   const [mode, setMode] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const [errorPass, setErrorPass] = useState("");
@@ -61,7 +61,6 @@ const UserProfileDialogbox = ({ refetch }) => {
   const mutation = useMutation({
     mutationFn: (formData) => updatePassword(formData),
     onSuccess: (res) => {
-      refetch();
       setIsOpen(false);
       toast.success(res.data.detail);
     },

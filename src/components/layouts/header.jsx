@@ -24,26 +24,17 @@ import { Input } from "../ui/input";
 import { Label } from "../ui/label";
 import { useState } from "react";
 import UserProfileDialogbox from "../user-profile-dialog/dialogbox";
-import { useUserProfileUsername } from "@/hooks/use-user-profile";
 
 export default function Header() {
   const navigate = useNavigate();
 
-  const [showPass, setShowPass] = useState(false);
-
-  let token = localStorage.getItem("Token");
-
-  const { data, isLoading, refetch } = useUserProfileUsername(token);
-  let username = data?.username;
+  let username = localStorage.getItem("user");
 
   const logout = () => {
     localStorage.clear();
     navigate("/login");
   };
 
-  if (isLoading) {
-    return <>Loading...</>;
-  }
 
   return (
     <header className="flex h-14 items-center gap-4 border-b bg-muted/40 px-4 lg:h-[60px] lg:px-6">
@@ -132,7 +123,7 @@ export default function Header() {
             </div> */}
           </div>
           <SheetFooter>
-            <UserProfileDialogbox refetch={refetch} />
+            <UserProfileDialogbox />
           </SheetFooter>
         </SheetContent>
       </Sheet>

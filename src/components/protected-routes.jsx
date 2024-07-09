@@ -9,27 +9,36 @@ function ProtectedRoutes() {
 
   const getStudentCount = async () => {
     try {
-      const token = localStorage.getItem("Token");
+      const jwt_token = JSON.parse(localStorage.getItem("jwt_token"));
+      if (!jwt_token || !jwt_token.access) {
+        throw new Error("JWT token not found");
+      }
+  
       const response = await axios.get(
         "http://127.0.0.1:8000/api-token-verify/",
-        { params: { token } }
+        {
+          headers: {
+            Authorization: `Bearer ${jwt_token.access}`,
+          },
+        }
       );
+  
       if (response.status === 200) {
         setIsAuthenticated(true);
         localStorage.setItem("user", response.data.user.username);
       }
     } catch (error) {
       setIsAuthenticated(false);
-      console.log(error);
+      console.error("Error verifying token:", error);
     } finally {
       setIsLoading(false);
     }
   };
-
+  
   useEffect(() => {
     getStudentCount();
   }, [location]);
-
+  
   if (isLoading) {
     return <div>Loading...</div>;
   }

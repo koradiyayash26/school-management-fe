@@ -5,7 +5,7 @@ const getReportStandardData = async (id) => {
   try {
     const response = await apiClient.get(`/report/standard/${id}`, {
       headers: {
-        Authorization: `Token ${getToken()}`,
+        Authorization: `Bearer ${getToken()}`,
       },
     });
     return response.data;
@@ -17,9 +17,9 @@ const getReportStandardData = async (id) => {
 
 const getReportStandardCount = async () => {
   try {
-    const response = await apiClient.get("standards/standard-counter", {
+    const response = await apiClient.get("/standards/standard-counter/", {
       headers: {
-        Authorization: `Token ${getToken()}`,
+        Authorization: `Bearer ${getToken()}`,
       },
     });
     return response.data;
@@ -33,7 +33,7 @@ const getFeeReport = async () => {
   try {
     const response = await apiClient.get("/fee-report/", {
       headers: {
-        Authorization: `Token ${getToken()}`,
+        Authorization: `Bearer ${getToken()}`,
       },
     });
     return response.data;

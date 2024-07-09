@@ -4,7 +4,7 @@ import { getToken } from "@/utils/token";
 const getHistoricalFeeList = async () => {
   let response = await apiClient.get("/historical-fees/search/", {
     headers: {
-      Authorization: `Token ${getToken()}`,
+      Authorization: `Bearer ${getToken()}`,
     },
   });
   return response.data;
@@ -13,7 +13,7 @@ const getHistoricalFeeList = async () => {
 const deleteHistoricalFee = async (historicalFeeId) => {
   return await apiClient.delete(`/historical-fees/${historicalFeeId}/delete/`, {
     headers: {
-      Authorization: `Token ${getToken()}`,
+      Authorization: `Bearer ${getToken()}`,
     },
   });
 };
@@ -21,7 +21,7 @@ const deleteHistoricalFee = async (historicalFeeId) => {
 const addHistoricalFee = async (data) => {
   return await apiClient.post(`/historical-fees/add/`, data, {
     headers: {
-      Authorization: `Token ${getToken()}`,
+      Authorization: `Bearer ${getToken()}`,
     },
   });
 };

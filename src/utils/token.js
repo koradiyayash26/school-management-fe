@@ -1,7 +1,8 @@
-const TOKEN_KEY = "Token";
+const TOKEN_KEY = "jwt_token";
 
 const getToken = () => {
-  return localStorage.getItem(TOKEN_KEY);
+  const jwt_token = JSON.parse(localStorage.getItem(TOKEN_KEY));
+  return jwt_token.access
 };
 
 const setToken = (token) => {

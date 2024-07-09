@@ -4,7 +4,7 @@ import { getToken } from "@/utils/token";
 const getStandard = async () => {
   let response = await apiClient.get("/standards/standard-counter/", {
     headers: {
-      Authorization: `Token ${getToken()}`,
+      Authorization: `Bearer ${getToken()}`,
     },
   });
   return response.data;
@@ -13,7 +13,7 @@ const getStandard = async () => {
 const deleteStandard = async (studentId) => {
   return await apiClient.delete(`/students/${studentId}/delete/`, {
     headers: {
-      Authorization: `Token ${getToken()}`,
+      Authorization: `Bearer ${getToken()}`,
     },
   });
 };
@@ -21,7 +21,7 @@ const deleteStandard = async (studentId) => {
 const fetchStandard = async (id) => {
   let response = await apiClient.get(`/standards/${id}/search/`, {
     headers: {
-      Authorization: `Token ${getToken()}`,
+      Authorization: `Bearer ${getToken()}`,
     },
   });
   return response.data;

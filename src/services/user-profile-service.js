@@ -4,7 +4,7 @@ import { getToken } from "@/utils/token";
 const updatePassword = async (formData) => {
   return await apiClient.patch(`/api-auth/change-password/`, formData, {
     headers: {
-      Authorization: `Token ${getToken()}`,
+      Authorization: `Bearer ${getToken()}`,
     },
   });
 };
@@ -12,7 +12,7 @@ const updatePassword = async (formData) => {
 const updateUsername = async (formData) => {
   return await apiClient.patch(`/api-auth/change-username/`, formData, {
     headers: {
-      Authorization: `Token ${getToken()}`,
+      Authorization: `Bearer ${getToken()}`,
     },
   });
 };
@@ -22,7 +22,7 @@ const getUserProfileUsername = async (token) => {
     `api-auth/user-profile-username/?token=${token}`,
     {
       headers: {
-        Authorization: `Token ${getToken()}`,
+        Authorization: `Bearer ${getToken()}`,
       },
     }
   );

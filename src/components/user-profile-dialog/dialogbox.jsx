@@ -73,10 +73,12 @@ const UserProfileDialogbox = () => {
   const Usermutation = useMutation({
     mutationFn: (formData) => updateUsername(formData),
     onSuccess: (res) => {
-      refetch();
       setIsOpen(false);
       localStorage.setItem("user", formData.new_username);
       toast.success(res.data.detail);
+      setTimeout(() => {
+        window.location.reload();
+      }, 1000);
     },
     onError: (error) => {
       toast.error(`Failed To Change Username: ${error.message}`);

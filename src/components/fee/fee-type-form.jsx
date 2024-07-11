@@ -28,6 +28,12 @@ import { z } from "zod";
 import { Input } from "../ui/input";
 
 const years = [
+  { _id: "2030", name: "2030" },
+  { _id: "2029", name: "2029" },
+  { _id: "2028", name: "2028" },
+  { _id: "2027", name: "2027" },
+  { _id: "2026", name: "2026" },
+  { _id: "2025", name: "2025" },
   { _id: "2024", name: "2024" },
   { _id: "2023", name: "2023" },
   { _id: "2022", name: "2022" },
@@ -54,7 +60,6 @@ const years = [
   { _id: "2001", name: "2001" },
   { _id: "2000", name: "2000" },
 ];
-
 const formSchema = z.object({
   amount: z.coerce.number().min(1, { message: "Enter Amount" }),
   year: z.string().min(1, { message: "Please select a year" }),

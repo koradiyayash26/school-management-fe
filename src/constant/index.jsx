@@ -66,6 +66,11 @@ export const MENU = [
     path: "/exam",
     icon: () => <Medal className="h-4 w-4" />,
   },
+  {
+    lable: "EXAM-TEMPLATE",
+    path: "/exam-template",
+    icon: () => <Medal className="h-4 w-4" />,
+  },
 ];
 
 export const studentDetail = {

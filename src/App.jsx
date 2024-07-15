@@ -38,6 +38,7 @@ import StudentUpdateStdYearPage from "./pages/student-update/student-update-std-
 import FeesAssingPage from "./pages/fee/fee-assing-page";
 import Setting from "./pages/settings/setting";
 import ExamTemplatePage from "./pages/exam-template/exam-page";
+import ExamTemplateEditPage from "./pages/exam-template/exam-edit-page";
 
 const App = () => {
   return (
@@ -130,6 +131,7 @@ const App = () => {
                   <Route element={<PaymentReceiptPage />} path="/receipt/:id" />
                   <Route element={<Setting />} path="/setting" />
                   <Route element={<ExamTemplatePage />} path="/exam-template" />
+                  <Route element={<ExamTemplateEditPage />} path="/exam-template/edit/:id" />
                   <Route element={<Notfound />} path="*" />
                 </Route>
               </Route>

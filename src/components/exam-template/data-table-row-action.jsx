@@ -16,8 +16,8 @@ const ActionsPopupExamTemplate = ({ id, openAlertDeleteBox }) => {
   const editexamtemplate = (id) => {
     navigate(`/exam-template/edit/${id}`);
   };
-  const assingExmaMarks = () => {
-    navigate(`/exam-template/mark-assign`);
+  const assingExmaMarks = (id) => {
+    navigate(`/exam-template/mark-assign/${id}`);
   };
 
   return (
@@ -33,7 +33,7 @@ const ActionsPopupExamTemplate = ({ id, openAlertDeleteBox }) => {
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end" className="w-[160px]">
-        <DropdownMenuItem onClick={() => assingExmaMarks()}>
+        <DropdownMenuItem onClick={() => assingExmaMarks(id)}>
             Assign
             <DropdownMenuShortcut>
               <SquareArrowOutUpRight className="h-4 w-4" />

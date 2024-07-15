@@ -36,9 +36,19 @@ const examTemplateIdAdd = async (data) => {
   });
 };
 
+
+const examTemplateDelete = async (examId) => {
+  return await apiClient.delete(`/exam-template/${examId}/delete/`, {
+    headers: {
+      Authorization: `Bearer ${getToken()}`,
+    },
+  });
+};
+
 export {
   examTemplateGet,
   examTemplateIdGet,
   examTemplateIdUpdate,
-  examTemplateIdAdd
+  examTemplateIdAdd,
+  examTemplateDelete
 };

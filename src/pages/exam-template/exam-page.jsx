@@ -30,7 +30,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
-import { UploadFileExamAdd, deleteExam } from "@/services/exam-service";
+import { UploadFileExamAdd} from "@/services/exam-service";
 import { useReactToPrint } from "react-to-print";
 import {
   Tooltip,
@@ -42,17 +42,9 @@ import {
 import ReactHTMLTableToExcel from "react-html-table-to-excel";
 import * as XLSX from "xlsx";
 import { format } from "date-fns";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
 import { useExamTemplateGet } from "@/hooks/use-exam-template";
 import ActionsPopupExamTemplate from "@/components/exam-template/data-table-row-action";
+import { examTemplateDelete } from "@/services/exam-template-service";
 
 const headers = [
   { label: "ID", value: "id" },
@@ -84,7 +76,7 @@ function ExamTemplatePage() {
   };
 
   const mutation = useMutation({
-    mutationFn: (examId) => deleteExam(examId),
+    mutationFn: (examId) => examTemplateDelete(examId),
     onSuccess: () => {
       refetch();
       setOpenAlert(false);
@@ -252,7 +244,7 @@ function ExamTemplatePage() {
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
-      <h1>EXAM MARKS</h1>
+      <h1>EXAM TEMPLATE</h1>
       <div className="block md:flex md:justify-between gap-2">
         <div className="w-full">
           <Input

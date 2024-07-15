@@ -28,8 +28,17 @@ const examTemplateIdUpdate = async (data, id) => {
   });
 };
 
+const examTemplateIdAdd = async (data) => {
+  return await apiClient.post(`/exam-template/add/`, data, {
+    headers: {
+      Authorization: `Bearer ${getToken()}`,
+    },
+  });
+};
+
 export {
   examTemplateGet,
   examTemplateIdGet,
-  examTemplateIdUpdate
+  examTemplateIdUpdate,
+  examTemplateIdAdd
 };

@@ -36,7 +36,6 @@ const examTemplateIdAdd = async (data) => {
   });
 };
 
-
 const examTemplateDelete = async (examId) => {
   return await apiClient.delete(`/exam-template/${examId}/delete/`, {
     headers: {
@@ -45,10 +44,36 @@ const examTemplateDelete = async (examId) => {
   });
 };
 
+const examTemplateGetStudents = async (id, std) => {
+  let response = await apiClient.get(
+    `/exam-template/exam-marks-assign/${std}/${id}/`,
+    {
+      headers: {
+        Authorization: `Bearer ${getToken()}`,
+      },
+    }
+  );
+  return response.data;
+};
+
+const examTemplateStudentMarkAssingPost = async (id,std,formattedMarks) => {
+  return await apiClient.post(
+    `/exam-template/exam-marks-assign/${std}/${id}/`,
+    formattedMarks,
+    {
+      headers: {
+        Authorization: `Bearer ${getToken()}`,
+      },
+    }
+  );
+};
+
 export {
   examTemplateGet,
   examTemplateIdGet,
   examTemplateIdUpdate,
   examTemplateIdAdd,
-  examTemplateDelete
+  examTemplateDelete,
+  examTemplateGetStudents,
+  examTemplateStudentMarkAssingPost,
 };

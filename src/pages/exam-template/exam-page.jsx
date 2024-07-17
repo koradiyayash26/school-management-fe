@@ -337,6 +337,7 @@ function ExamTemplatePage() {
                     <TableCell className="no-print sticky top-0 right-0 z-[1] bg-[#151518]">
                       <ActionsPopupExamTemplate
                         id={exam.id}
+                        standard={exam.standard}
                         openAlertDeleteBox={openAlertDeleteBox}
                       />
                     </TableCell>

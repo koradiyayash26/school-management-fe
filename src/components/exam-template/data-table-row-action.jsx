@@ -9,15 +9,15 @@ import {
 import { Ellipsis, SquareArrowOutUpRight, SquarePen, Trash2 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
-const ActionsPopupExamTemplate = ({ id, openAlertDeleteBox }) => {
+const ActionsPopupExamTemplate = ({ id,standard, openAlertDeleteBox }) => {
 
   const navigate = useNavigate();
 
   const editexamtemplate = (id) => {
     navigate(`/exam-template/edit/${id}`);
   };
-  const assingExmaMarks = (id) => {
-    navigate(`/exam-template/mark-assign/${id}`);
+  const assingExmaMarks = (id,standard) => {
+    navigate(`/exam-template/mark-assign/${standard}/${id}`);
   };
 
   return (
@@ -33,7 +33,7 @@ const ActionsPopupExamTemplate = ({ id, openAlertDeleteBox }) => {
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end" className="w-[160px]">
-        <DropdownMenuItem onClick={() => assingExmaMarks(id)}>
+        <DropdownMenuItem onClick={() => assingExmaMarks(id,standard)}>
             Assign
             <DropdownMenuShortcut>
               <SquareArrowOutUpRight className="h-4 w-4" />

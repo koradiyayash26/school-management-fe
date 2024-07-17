@@ -46,7 +46,13 @@ function ExamAssingMarkPage() {
   }, [students]);
 
   const handleInputChange = (e, studentId) => {
-    const value = e.target.value === "" ? "" : Math.max(0, Math.min(examDetail.total_marks, parseInt(e.target.value)));
+    const value =
+      e.target.value === ""
+        ? ""
+        : Math.max(
+            0,
+            Math.min(examDetail.total_marks, parseInt(e.target.value))
+          );
     setMarks((prevMarks) => ({
       ...prevMarks,
       [studentId]: value,
@@ -62,7 +68,9 @@ function ExamAssingMarkPage() {
       ),
     onSuccess: () => {
       navigate("/exam-template");
-      toast.success("Marks Assing SuccessFully");
+      setTimeout(() => {
+        toast.success("Marks Assigned Successfully");
+      }, 500);
     },
   });
 
@@ -176,7 +184,11 @@ function ExamAssingMarkPage() {
                       <Input
                         className="w-auto"
                         type="number"
-                        value={marks[student.id] === undefined ? "" : marks[student.id]}
+                        value={
+                          marks[student.id] === undefined
+                            ? ""
+                            : marks[student.id]
+                        }
                         onChange={(e) => handleInputChange(e, student.id)}
                         min="0"
                         max={examDetail.total_marks}

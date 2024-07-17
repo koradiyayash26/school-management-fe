@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useRef, useState } from "react";
 import {
   Table,
   TableBody,
@@ -30,18 +30,6 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
-import { UploadFileExamAdd} from "@/services/exam-service";
-import { useReactToPrint } from "react-to-print";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
-
-import ReactHTMLTableToExcel from "react-html-table-to-excel";
-import * as XLSX from "xlsx";
-import { format } from "date-fns";
 import { useExamTemplateGet } from "@/hooks/use-exam-template";
 import ActionsPopupExamTemplate from "@/components/exam-template/data-table-row-action";
 import { examTemplateDelete } from "@/services/exam-template-service";
@@ -103,103 +91,12 @@ function ExamTemplatePage() {
 
   const visibleStudents = filteredStudents?.slice(startIndex, endIndex);
 
-  const generatePDF = useReactToPrint({
-    content: () => componentPDF.current,
-    documentTitle: "Exam Template Marks",
-    onAfterPrint: () => alert("PDF generated successfully"),
-  });
-
-  const [uploaddata, setUploaddata] = useState([]);
-  const [fileLoader, setFileLoader] = useState(true);
-
-  const [file, setFile] = useState(null);
-  const fileInputRef = useRef(null);
-
-  const handleFileChange = (e) => {
-    setFile(e.target.files[0]);
-  };
-  const handleFileUpload = () => {
-    if (file) {
-      const reader = new FileReader();
-      reader.readAsBinaryString(file);
-      reader.onload = (e) => {
-        const data = e.target.result;
-        const workbook = XLSX.read(data, { type: "binary" });
-        const sheetName = workbook.SheetNames[0];
-        const sheet = workbook.Sheets[sheetName];
-        const parsedData = XLSX.utils.sheet_to_json(sheet, { raw: true });
-
-        const formattedData = parsedData.map((row) => {
-          if (row.Date) {
-            const dateCode = parseFloat(row.Date);
-            if (!isNaN(dateCode)) {
-              const date = XLSX.SSF.parse_date_code(dateCode);
-              row.Date = new Date(
-                date.y,
-                date.m - 1,
-                date.d
-              ).toLocaleDateString("en-GB");
-            }
-          }
-          row.Date = format(row.Date, "yyyy-MM-dd");
-          return row;
-        });
-
-        setUploaddata(formattedData);
-        setFileLoader(false);
-        // toast.success("File Upload Successfully");
-        if (fileInputRef.current) {
-          fileInputRef.current.value = null;
-        }
-        setFile(null);
-      };
-      reader.onerror = (error) => {
-        toast.error("Failed to read file: " + error);
-        setFileLoader(true);
-      };
-    } else {
-      setFileLoader(true);
-      toast.error("Please select a file first");
-    }
-  };
-  const uploadFilemutation = useMutation({
-    mutationFn: (uploaddata) => UploadFileExamAdd(uploaddata),
-    onSuccess: (res) => {
-      refetch();
-      toast.success(res.data.message);
-    },
-    onError: (error) => {
-      toast.error(`Failed To Upload File: ${error.errors}`);
-    },
-  });
-
-  useEffect(() => {
-    if (!fileLoader) {
-      uploadFilemutation.mutate(uploaddata);
-    }
-  }, [uploaddata, fileLoader]);
-
   if (isLoading) {
     return <>Loading...</>;
   }
 
   return (
     <>
-      <style>
-        {`
-          @media print {
-            .no-print {
-              display: none;
-            }
-            .title-table{
-              display: block;
-              text-align:center;
-              margin:20px 0px;
-              font-size:20px;
-            }
-          }
-        `}
-      </style>
       <Toaster
         position="top-center"
         reverseOrder={false}
@@ -257,45 +154,6 @@ function ExamTemplatePage() {
           <Link to="/exam-template/add">
             <Button>Add</Button>
           </Link>
-          {!students || filteredStudents.length === 0 ? (
-            <TooltipProvider>
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <Button className="cursor-not-allowed bg-[gray] hover:bg-[gray]">
-                    PDF
-                  </Button>
-                </TooltipTrigger>
-                <TooltipContent>
-                  <p>Not Print Empty Data</p>
-                </TooltipContent>
-              </Tooltip>
-            </TooltipProvider>
-          ) : (
-            <Button onClick={generatePDF}>PDF</Button>
-          )}
-          {!students || filteredStudents.length === 0 ? (
-            <TooltipProvider>
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <Button className="cursor-not-allowed bg-[gray] hover:bg-[gray]">
-                    Download as XLS
-                  </Button>
-                </TooltipTrigger>
-                <TooltipContent>
-                  <p className="">Not Print Empty Data</p>
-                </TooltipContent>
-              </Tooltip>
-            </TooltipProvider>
-          ) : (
-            <ReactHTMLTableToExcel
-              id="test-table-xls-button"
-              className="download-table-xls-button inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90 h-10 px-4 py-2"
-              table="print-excel"
-              filename="tablexls"
-              sheet="tablexls"
-              buttonText="Download as XLS"
-            />
-          )}
         </div>
       </div>
       <ScrollArea className="rounded-md border w-full h-[calc(80vh-120px)]">

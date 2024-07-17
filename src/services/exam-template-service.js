@@ -56,7 +56,7 @@ const examTemplateGetStudents = async (id, std) => {
   return response.data;
 };
 
-const examTemplateStudentMarkAssingPost = async (id,std,formattedMarks) => {
+const examTemplateStudentMarkAssingPost = async (id, std, formattedMarks) => {
   return await apiClient.post(
     `/exam-template/exam-marks-assign/${std}/${id}/`,
     formattedMarks,
@@ -68,6 +68,26 @@ const examTemplateStudentMarkAssingPost = async (id,std,formattedMarks) => {
   );
 };
 
+const examTemplateStudentGetForPatch = async (id, std) => {
+  let response = await apiClient.get(
+    `/exam-template/exam-marks-view/${std}/${id}/`,
+    {
+      headers: {
+        Authorization: `Bearer ${getToken()}`,
+      },
+    }
+  );
+  return response.data;
+};
+
+const examAssingMarkUpdatePatch = async (updatedMark) => {
+  return await apiClient.patch('/exam-template/update-mark/', updatedMark, {
+    headers: {
+      Authorization: `Bearer ${getToken()}`,
+    },
+  });
+};
+
 export {
   examTemplateGet,
   examTemplateIdGet,
@@ -76,4 +96,6 @@ export {
   examTemplateDelete,
   examTemplateGetStudents,
   examTemplateStudentMarkAssingPost,
+  examTemplateStudentGetForPatch,
+  examAssingMarkUpdatePatch,
 };

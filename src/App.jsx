@@ -41,6 +41,7 @@ import ExamTemplatePage from "./pages/exam-template/exam-page";
 import ExamTemplateEditPage from "./pages/exam-template/exam-edit-page";
 import ExamTemplateAddPage from "./pages/exam-template/exam-add-page";
 import ExamAssingMarkPage from "./pages/exam-template/exam-assing-mark-page";
+import ExamAssingMarkEditPage from "./pages/exam-template/exam-assing-mark-edit-page";
 
 const App = () => {
   return (
@@ -136,6 +137,7 @@ const App = () => {
                   <Route element={<ExamTemplateAddPage />} path="/exam-template/add" />
                   <Route element={<ExamTemplateEditPage />} path="/exam-template/edit/:id" />
                   <Route element={<ExamAssingMarkPage />} path="/exam-template/mark-assign/:std/:id" />
+                  <Route element={<ExamAssingMarkEditPage />} path="/exam-template/mark-assign-edit/:std/:id" />
                   <Route element={<Notfound />} path="*" />
                 </Route>
               </Route>

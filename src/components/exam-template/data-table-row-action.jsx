@@ -6,18 +6,27 @@ import {
   DropdownMenuShortcut,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Ellipsis, SquareArrowOutUpRight, SquarePen, Trash2 } from "lucide-react";
+import {
+  Ellipsis,
+  SquareArrowOutUpRight,
+  SquarePen,
+  Trash2,
+} from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
-const ActionsPopupExamTemplate = ({ id,standard, openAlertDeleteBox }) => {
-
+const ActionsPopupExamTemplate = ({ id, standard, openAlertDeleteBox }) => {
   const navigate = useNavigate();
 
   const editexamtemplate = (id) => {
     navigate(`/exam-template/edit/${id}`);
   };
-  const assingExmaMarks = (id,standard) => {
+
+  const assingExmaMarks = (id, standard) => {
     navigate(`/exam-template/mark-assign/${standard}/${id}`);
+  };
+
+  const assingExmaMarksEdit = (id, standard) => {
+    navigate(`/exam-template/mark-assign-edit/${standard}/${id}/`);
   };
 
   return (
@@ -33,10 +42,16 @@ const ActionsPopupExamTemplate = ({ id,standard, openAlertDeleteBox }) => {
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end" className="w-[160px]">
-        <DropdownMenuItem onClick={() => assingExmaMarks(id,standard)}>
-            Assign
+          <DropdownMenuItem onClick={() => assingExmaMarks(id, standard)}>
+            Assign Mark
             <DropdownMenuShortcut>
               <SquareArrowOutUpRight className="h-4 w-4" />
+            </DropdownMenuShortcut>
+          </DropdownMenuItem>
+          <DropdownMenuItem onClick={() => assingExmaMarksEdit(id, standard)}>
+            Assign Mark Edit
+            <DropdownMenuShortcut>
+              <SquarePen className="h-4 w-4" />
             </DropdownMenuShortcut>
           </DropdownMenuItem>
           <DropdownMenuItem onClick={() => editexamtemplate(id)}>

@@ -116,8 +116,8 @@ const PaymentFeeFormPage = () => {
     onSuccess: (res) => {
       form.reset();
       setOpenAlert(false);
-      toast.success("History Fee Delete Successfully");
       refetch();
+      toast.success("History Fee Delete Successfully");
     },
   });
 

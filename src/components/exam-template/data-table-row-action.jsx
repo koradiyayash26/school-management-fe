@@ -7,6 +7,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import {
+  ClipboardList,
   Ellipsis,
   SquareArrowOutUpRight,
   SquarePen,
@@ -49,9 +50,9 @@ const ActionsPopupExamTemplate = ({ id, standard, openAlertDeleteBox }) => {
             </DropdownMenuShortcut>
           </DropdownMenuItem>
           <DropdownMenuItem onClick={() => assingExmaMarksEdit(id, standard)}>
-            Assign Mark Edit
+            Mark List
             <DropdownMenuShortcut>
-              <SquarePen className="h-4 w-4" />
+              <ClipboardList className="h-4 w-4" />
             </DropdownMenuShortcut>
           </DropdownMenuItem>
           <DropdownMenuItem onClick={() => editexamtemplate(id)}>

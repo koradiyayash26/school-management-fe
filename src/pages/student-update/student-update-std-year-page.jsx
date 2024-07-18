@@ -103,7 +103,7 @@ function StudentUpdateStdYearPage() {
     );
   }
 
-  const students = data?.data;
+  const students = data?.data || [];
   const activeStudents = students.filter((student) => student.is_active);
   const inactiveStudents = students.filter((student) => !student.is_active);
 

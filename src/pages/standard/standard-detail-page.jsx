@@ -158,108 +158,115 @@ const StandardDetailPage = () => {
       <h1 className="uppercase">
         STUDENTS OF <span className="underline font-bold"> {id} </span>
       </h1>
-      <div className="flex flex-col md:flex-row items-center justify-between mb-4">
-        <Input
-          className="w-full md:max-w-sm mb-2 md:mb-0  md:mr-2"
-          placeholder="Search By Name"
-          onChange={(e) => setSearch(e.target.value)}
-        />
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="outline" className="w-[160px]">
-              {pageSize <= 10
-                ? "Items per page"
-                : pageSize == "9999"
-                ? "Show All"
-                : pageSize}
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent className="w-56">
-            <DropdownMenuRadioGroup
-              value={pageSize.toString()}
-              onValueChange={(value) => handlePageSizeChange(value)}
-            >
-              <DropdownMenuRadioItem value="10">10</DropdownMenuRadioItem>
-              <DropdownMenuRadioItem value="20">20</DropdownMenuRadioItem>
-              <DropdownMenuRadioItem value="30">30</DropdownMenuRadioItem>
-              <DropdownMenuRadioItem value="40">40</DropdownMenuRadioItem>
-              <DropdownMenuRadioItem value="50">50</DropdownMenuRadioItem>
-              <DropdownMenuRadioItem value="9999">
-                Show All
-              </DropdownMenuRadioItem>
-            </DropdownMenuRadioGroup>
-          </DropdownMenuContent>
-        </DropdownMenu>
-      </div>
+
       {visibleStudents.length !== 0 ? (
-        <ScrollArea className="rounded-md border w-full h-[calc(80vh-120px)]">
-          <Table className="relative">
-            <TableHeader>
-              <TableRow>
-                {headers.map((header, index) => (
-                  <TableHead key={index}>{header.label}</TableHead>
-                ))}
-                <TableHead className="">Actions</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {visibleStudents
-                .filter((student) => {
-                  return search.toLocaleLowerCase() === ""
-                    ? student
-                    : student.first_name.toLocaleLowerCase().includes(search) ||
-                        student.last_name
+        <div>
+          <div className="flex flex-col md:flex-row items-center justify-between mb-4">
+            <Input
+              className="w-full md:max-w-sm mb-2 md:mb-0  md:mr-2"
+              placeholder="Search By Name"
+              onChange={(e) => setSearch(e.target.value)}
+            />
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="outline" className="w-[160px]">
+                  {pageSize <= 10
+                    ? "Items per page"
+                    : pageSize == "9999"
+                    ? "Show All"
+                    : pageSize}
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent className="w-56">
+                <DropdownMenuRadioGroup
+                  value={pageSize.toString()}
+                  onValueChange={(value) => handlePageSizeChange(value)}
+                >
+                  <DropdownMenuRadioItem value="10">10</DropdownMenuRadioItem>
+                  <DropdownMenuRadioItem value="20">20</DropdownMenuRadioItem>
+                  <DropdownMenuRadioItem value="30">30</DropdownMenuRadioItem>
+                  <DropdownMenuRadioItem value="40">40</DropdownMenuRadioItem>
+                  <DropdownMenuRadioItem value="50">50</DropdownMenuRadioItem>
+                  <DropdownMenuRadioItem value="9999">
+                    Show All
+                  </DropdownMenuRadioItem>
+                </DropdownMenuRadioGroup>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </div>
+          <ScrollArea className="rounded-md border w-full h-[calc(80vh-120px)]">
+            <Table className="relative">
+              <TableHeader>
+                <TableRow>
+                  {headers.map((header, index) => (
+                    <TableHead key={index}>{header.label}</TableHead>
+                  ))}
+                  <TableHead className="">Actions</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {visibleStudents
+                  .filter((student) => {
+                    return search.toLocaleLowerCase() === ""
+                      ? student
+                      : student.first_name
                           .toLocaleLowerCase()
                           .includes(search) ||
-                        student.middle_name
-                          .toLocaleLowerCase()
-                          .includes(search);
-                })
-                .map((student) => (
-                  <TableRow key={student.id}>
-                    {headers.map((header) => (
-                      <TableCell key={header.value}>
-                        {student[header.value] == 13
-                          ? "Balvatika"
-                          : student[header.value] || "None"}
+                          student.last_name
+                            .toLocaleLowerCase()
+                            .includes(search) ||
+                          student.middle_name
+                            .toLocaleLowerCase()
+                            .includes(search);
+                  })
+                  .map((student) => (
+                    <TableRow key={student.id}>
+                      {headers.map((header) => (
+                        <TableCell key={header.value}>
+                          {student[header.value] == 13
+                            ? "Balvatika"
+                            : student[header.value] || "None"}
+                        </TableCell>
+                      ))}
+                      <TableCell className="">
+                        <ActionsPopup
+                          id={student.id}
+                          openAlertDeleteBox={openAlertDeleteBox}
+                        />
                       </TableCell>
-                    ))}
-                    <TableCell className="">
-                      <ActionsPopup
-                        id={student.id}
-                        openAlertDeleteBox={openAlertDeleteBox}
-                      />
-                    </TableCell>
-                  </TableRow>
-                ))}
-            </TableBody>
-          </Table>
-          <ScrollBar orientation="horizontal" />
-        </ScrollArea>
+                    </TableRow>
+                  ))}
+              </TableBody>
+            </Table>
+            <ScrollBar orientation="horizontal" />
+          </ScrollArea>
+        </div>
       ) : (
         "No Data Found"
       )}
-      <div className="flex items-center justify-end space-x-2 py-4">
-        <div className="flex-1 text-sm text-muted-foreground"></div>
-        <div className="space-x-2">
-          <Button
-            variant="outline"
-            onClick={() => setPage(Math.max(page - 1, 0))}
-            size="sm"
-            disabled={page === 0}
-          >
-            Previous
-          </Button>
-          <Button
-            variant="outline"
-            onClick={() => setPage(page + 1)}
-            size="sm"
-            disabled={endIndex >= students.length}
-          >
-            Next
-          </Button>
+      {visibleStudents.length && (
+        <div className="flex items-center justify-end space-x-2 py-4">
+          <div className="flex-1 text-sm text-muted-foreground"></div>
+          <div className="space-x-2">
+            <Button
+              variant="outline"
+              onClick={() => setPage(Math.max(page - 1, 0))}
+              size="sm"
+              disabled={page === 0}
+            >
+              Previous
+            </Button>
+            <Button
+              variant="outline"
+              onClick={() => setPage(page + 1)}
+              size="sm"
+              disabled={endIndex >= students.length}
+            >
+              Next
+            </Button>
+          </div>
         </div>
-      </div>
+      )}
     </>
   );
 };

@@ -19,7 +19,7 @@ const updateUsername = async (formData) => {
 
 const getUserProfileUsername = async (token) => {
   let response = await apiClient.get(
-    `api-auth/user-profile-username/?token=${token}`,
+    `/api-auth/user-profile-username/?token=${token}`,
     {
       headers: {
         Authorization: `Bearer ${getToken()}`,

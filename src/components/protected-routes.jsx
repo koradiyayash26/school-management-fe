@@ -16,7 +16,7 @@ function ProtectedRoutes() {
       }
 
       const response = await axios.get(
-        "http://127.0.0.1:8000/api-token-verify/",
+        "https://school-management-be-m1fo.onrender.com/api-token-verify/",
         {
           headers: {
             Authorization: `Bearer ${jwt_token.access}`,

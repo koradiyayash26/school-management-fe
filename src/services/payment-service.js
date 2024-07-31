@@ -47,7 +47,7 @@ const deletePaymentFee = async (paymentId) => {
 
 const patchPaymentFeeData = async (formattedData) => {
   console.log(formattedData);
-  return await apiClient.patch("payments/payment-collect/", formattedData, {
+  return await apiClient.patch("/payments/payment-collect/", formattedData, {
     headers: {
       Authorization: `Bearer ${getToken()}`,
     },

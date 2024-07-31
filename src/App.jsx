@@ -26,6 +26,22 @@ import PaymentsPage from "./pages/payment/payments-page";
 import FeesTypePage from "./pages/fee/fees-page";
 import FeetypeUpdatePage from "./pages/fee/fee-update-page";
 import FeeTypesAddPage from "./pages/fee/fee-add-page";
+import PaymentReceiptPage from "./pages/payment/payment-receipt-page";
+import PaymentFeeFormPage from "./pages/payment/payment-fee-form-page";
+import SchoolStudentPage from "./pages/school-student/school-student-page";
+import SchoolStudentAddPage from "./pages/school-student/school-student-add-page";
+import SchoolStudentUpdatePage from "./pages/school-student/school-student-update-page";
+import StudentHistoricalPage from "./pages/student-historical/student-historical-page";
+import StudentUpdatePage from "./pages/student-update/student-update-page";
+import StudentUpdateAddPage from "./pages/student-update/student-update-add-page";
+import StudentUpdateStdYearPage from "./pages/student-update/student-update-std-year-page";
+import FeesAssingPage from "./pages/fee/fee-assing-page";
+import Setting from "./pages/settings/setting";
+import ExamTemplatePage from "./pages/exam-template/exam-page";
+import ExamTemplateEditPage from "./pages/exam-template/exam-edit-page";
+import ExamTemplateAddPage from "./pages/exam-template/exam-add-page";
+import ExamAssingMarkPage from "./pages/exam-template/exam-assing-mark-page";
+import ExamAssingMarkEditPage from "./pages/exam-template/exam-assing-mark-edit-page";
 
 const App = () => {
   return (
@@ -61,6 +77,11 @@ const App = () => {
                     element={<FeetypeUpdatePage />}
                     path="/fee-type/edit/:id"
                   />
+                  <Route
+                    element={<FeesAssingPage />}
+                    path="/fee-type/:id/:std/:year/student-assign"
+                  />
+
                   <Route element={<ExamMarksPage />} path="/exam" />
                   <Route element={<ExamMarksAddPage />} path="/exam/add" />
                   <Route
@@ -80,7 +101,43 @@ const App = () => {
                     element={<ReportDetailsPage />}
                     path="/report/standard/:id"
                   />
+                  <Route
+                    element={<SchoolStudentPage />}
+                    path="/school-student"
+                  />
+                  <Route
+                    element={<SchoolStudentAddPage />}
+                    path="/school-student/add"
+                  />
+                  <Route
+                    element={<SchoolStudentUpdatePage />}
+                    path="/school-student/edit/:id"
+                  />
+                  <Route
+                    element={<StudentHistoricalPage />}
+                    path="/educational"
+                  />
+                  <Route element={<StudentUpdatePage />} path="/update" />
+                  <Route
+                    element={<StudentUpdateAddPage />}
+                    path="/update/add"
+                  />
+                  <Route
+                    element={<StudentUpdateStdYearPage />}
+                    path="/update/students/:std/:year"
+                  />
                   <Route element={<PaymentsPage />} path="/payment" />
+                  <Route
+                    element={<PaymentFeeFormPage />}
+                    path="/payment/:id/:year"
+                  />
+                  <Route element={<PaymentReceiptPage />} path="/receipt/:id" />
+                  <Route element={<Setting />} path="/setting" />
+                  <Route element={<ExamTemplatePage />} path="/exam-template" />
+                  <Route element={<ExamTemplateAddPage />} path="/exam-template/add" />
+                  <Route element={<ExamTemplateEditPage />} path="/exam-template/edit/:id" />
+                  <Route element={<ExamAssingMarkPage />} path="/exam-template/mark-assign/:std/:id" />
+                  <Route element={<ExamAssingMarkEditPage />} path="/exam-template/mark-assign-edit/:std/:id" />
                   <Route element={<Notfound />} path="*" />
                 </Route>
               </Route>

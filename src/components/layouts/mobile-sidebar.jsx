@@ -18,9 +18,10 @@ export const MobileSidebar = () => {
         <nav className="grid gap-2 text-lg font-medium">
           <Link
             to="/"
-            className="flex items-center gap-2 text-lg font-semibold"
+            className="flex items-center gap-2 text-sm font-semibold"
           >
             <Package2 className="h-6 w-6" />
+            THINKERS PVT LTD
             <span className="sr-only">Acme Inc</span>
           </Link>
 

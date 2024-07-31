@@ -1,5 +1,4 @@
-import React, { useState, useEffect } from "react";
-import axios from "axios";
+import React, { useState } from "react";
 import {
   Table,
   TableBody,
@@ -29,9 +28,11 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useMutation } from "@tanstack/react-query";
 import toast, { Toaster } from "react-hot-toast";
 import ActionsPopupFee from "@/components/fee/data-table-row-action";
+import { deleteFeeType } from "@/services/fees-service";
+import { useFeeType } from "@/hooks/use-fees";
 
 const headers = [
   { label: "ID", value: "id" },
@@ -41,54 +42,17 @@ const headers = [
   { label: "Amount", value: "amount" },
 ];
 
-const getFeeTypeData = async () => {
-  const token = localStorage.getItem("Token");
-
-  const config = {
-    headers: {
-      Authorization: `Token ${token}`,
-    },
-  };
-  const res = await axios.get(
-    "http://127.0.0.1:8000/fee-types/search/",
-    config
-  );
-  return res.data;
-};
-
-const deleteFeeType = async (feeTypeId) => {
-  const token = localStorage.getItem("Token");
-
-  const config = {
-    headers: {
-      Authorization: `Token ${token}`,
-    },
-  };
-  const res = await axios.delete(
-    `http://127.0.0.1:8000/fee-types/${feeTypeId}/delete/`,
-    config
-  );
-  return res.data;
-};
-
 function FeesTypePage() {
-  const queryClient = useQueryClient();
+  const { data, isLoading, error, refetch } = useFeeType();
   const [page, setPage] = useState(0);
   const [pageSize, setPageSize] = useState(10);
   const [search, setSearch] = useState("");
   const [openAlert, setOpenAlert] = useState(false);
   const [feeTypeId, setFeeTypeId] = useState();
 
-  const { data, isLoading } = useQuery({
-    queryKey: ["feetypes"],
-    queryFn: getFeeTypeData,
-  });
-
-  const students = data?.data;
+  const students = data?.data || [];
   const startIndex = page * pageSize;
   const endIndex = (page + 1) * pageSize;
-
-  const visibleStudents = students?.slice(startIndex, endIndex);
 
   const handlePageSizeChange = (value) => {
     setPageSize(parseInt(value));
@@ -103,19 +67,24 @@ function FeesTypePage() {
   const mutation = useMutation({
     mutationFn: deleteFeeType,
     onSuccess: () => {
-      queryClient.invalidateQueries("feetypes");
+      refetch();
       setOpenAlert(false);
       toast.success("FeeType Delete Successfully");
     },
   });
 
-  const handleDeleteStudent = () => {
-    mutation.mutate(feeTypeId);
-  };
+  const filteredStudents = students.filter((fee) => {
+    return search.toLowerCase() === ""
+      ? fee
+      : fee.year.toLowerCase().includes(search);
+  });
 
-  if (isLoading) {
-    return <>Loading...</>;
-  }
+  const visibleStudents = filteredStudents.slice(startIndex, endIndex);
+
+  if (isLoading) return <>Loading...</>;
+
+  if (error) return <>Error</>;
+
   return (
     <>
       <Toaster
@@ -154,7 +123,7 @@ function FeesTypePage() {
               Cancel
             </AlertDialogCancel>
             <AlertDialogAction
-              onClick={() => handleDeleteStudent(feeTypeId)}
+              onClick={() => mutation.mutate(feeTypeId)}
               className="bg-[red] text-white hover:bg-red-500"
             >
               Delete
@@ -163,12 +132,68 @@ function FeesTypePage() {
         </AlertDialogContent>
       </AlertDialog>
       <h1>FEE TYPE</h1>
-      <div className="flex flex-col md:flex-row items-center justify-between mb-4">
-        <Input
-          className="w-full md:max-w-sm mb-2 md:mb-0  md:mr-2"
-          placeholder="Search By Year"
-          onChange={(e) => setSearch(e.target.value)}
-        />
+      <div className="block md:flex md:justify-between gap-2">
+        <div className="w-full">
+          <Input
+            className="w-full md:max-w-sm mb-2 md:mb-0  md:mr-2"
+            placeholder="Search By Year"
+            onChange={(e) => setSearch(e.target.value)}
+          />
+        </div>
+        <div className="flex gap-2 md:m-0 mt-4">
+          <Link to="/fee-type/add">
+            <Button>Add</Button>
+          </Link>
+        </div>
+      </div>
+      <ScrollArea className="rounded-md border w-full h-[calc(80vh-120px)]">
+        <Table className="relative">
+          <TableHeader>
+            <TableRow>
+              {headers.map((header, index) => (
+                <TableHead key={index}>{header.label}</TableHead>
+              ))}
+              <TableHead className="bg-[#151518]">Actions</TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {!students || filteredStudents.length === 0 ? (
+              <TableRow className="text-center">
+                <TableCell
+                  colSpan={headers.length + 1}
+                  className="uppercase text-lg"
+                >
+                  No Data Found
+                </TableCell>
+              </TableRow>
+            ) : (
+              visibleStudents.map((fee) => (
+                <TableRow key={fee.id}>
+                  {headers.map((header) => (
+                    <TableCell key={header.value} className="capitalize">
+                      {header.value === "fee_master"
+                        ? fee.fee_master?.name || "None"
+                        : fee[header.value] === 13
+                        ? "Balvatika"
+                        : fee[header.value] || "None"}
+                    </TableCell>
+                  ))}
+                  <TableCell className="sticky top-0 right-0 z-[1] bg-[#151518]">
+                    <ActionsPopupFee
+                      id={fee.id}
+                      standard={fee.standard}
+                      year={fee.year}
+                      openAlertDeleteBox={openAlertDeleteBox}
+                    />
+                  </TableCell>
+                </TableRow>
+              ))
+            )}
+          </TableBody>
+        </Table>
+        <ScrollBar orientation="horizontal" />
+      </ScrollArea>
+      <div className="block text-center  md:flex md:items-center md:justify-end md:space-x-2 py-4">
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button variant="outline" className="w-[160px]">
@@ -195,55 +220,7 @@ function FeesTypePage() {
             </DropdownMenuRadioGroup>
           </DropdownMenuContent>
         </DropdownMenu>
-      </div>
-      <div>
-        <Link to="/fee-type/add">
-          <Button>Add</Button>
-        </Link>
-      </div>
-      <ScrollArea className="rounded-md border max-w-[1280px] h-[calc(80vh-120px)]">
-        <Table className="relative">
-          <TableHeader>
-            <TableRow>
-              {headers.map((header, index) => (
-                <TableHead key={index}>{header.label}</TableHead>
-              ))}
-              <TableHead className="">Actions</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {visibleStudents
-              .filter((fee) => {
-                return search.toLocaleLowerCase() === ""
-                  ? fee
-                  : fee.year.toLocaleLowerCase().includes(search);
-              })
-              .map((fee) => (
-                <TableRow key={fee.id}>
-                  {headers.map((header) => (
-                    <TableCell key={header.value} className="capitalize">
-                      {header.value === "fee_master"
-                        ? fee.fee_master?.name || "None"
-                        : fee[header.value] == 13
-                        ? "Balvatika"
-                        : fee[header.value] || "None"}
-                    </TableCell>
-                  ))}
-                  <TableCell className="">
-                    <ActionsPopupFee
-                      id={fee.id}
-                      openAlertDeleteBox={openAlertDeleteBox}
-                    />
-                  </TableCell>
-                </TableRow>
-              ))}
-          </TableBody>
-        </Table>
-        <ScrollBar orientation="horizontal" />
-      </ScrollArea>
-      <div className="flex items-center justify-end space-x-2 py-4">
-        <div className="flex-1 text-sm text-muted-foreground"></div>
-        <div className="space-x-2">
+        <div className="space-x-2 md:m-0 mt-2">
           <Button
             variant="outline"
             onClick={() => setPage(Math.max(page - 1, 0))}

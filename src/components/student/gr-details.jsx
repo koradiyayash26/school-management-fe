@@ -46,6 +46,10 @@ export const GrDetails = ({ form, categories }) => {
     { _id: "6", name: "6" },
     { _id: "7", name: "7" },
     { _id: "8", name: "8" },
+    { _id: "9", name: "9" },
+    { _id: "10", name: "10" },
+    { _id: "11", name: "11" },
+    { _id: "12", name: "12" },
   ];
 
   const section = [
@@ -61,6 +65,12 @@ export const GrDetails = ({ form, categories }) => {
   ];
 
   const years = [
+    { _id: "2030", name: "2030" },
+    { _id: "2029", name: "2029" },
+    { _id: "2028", name: "2028" },
+    { _id: "2027", name: "2027" },
+    { _id: "2026", name: "2026" },
+    { _id: "2025", name: "2025" },
     { _id: "2024", name: "2024" },
     { _id: "2023", name: "2023" },
     { _id: "2022", name: "2022" },

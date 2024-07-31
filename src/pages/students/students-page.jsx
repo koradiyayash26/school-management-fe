@@ -1,5 +1,4 @@
-import React, { useState, useEffect } from "react";
-import axios from "axios";
+import React, { useRef, useState } from "react";
 import {
   Table,
   TableBody,
@@ -11,7 +10,6 @@ import {
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
-// import ActionsPopup from "./data-table-row-actions";
 import {
   DropdownMenu,
   DropdownMenuTrigger,
@@ -28,10 +26,22 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-  AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import toast, { Toaster } from "react-hot-toast";
 import ActionsPopup from "@/components/ui/data-table-row-actions";
+import { useStudents } from "@/hooks/use-student";
+import { useMutation } from "@tanstack/react-query";
+import { deleteStudent } from "@/services/student-service";
+import { Link } from "react-router-dom";
+import { ClipboardList, Plus } from "lucide-react";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
+import ReactHTMLTableToExcel from "react-html-table-to-excel";
+import { useReactToPrint } from "react-to-print";
 
 const headers = [
   { label: "ID", value: "id" },
@@ -72,37 +82,30 @@ const headers = [
 ];
 
 function StudentsPage() {
-  const [students, setStudents] = useState([]);
+  const { data, isLoading, error, refetch } = useStudents();
+
   const [page, setPage] = useState(0);
   const [pageSize, setPageSize] = useState(10);
   const [search, setSearch] = useState("");
   const [openAlert, setOpenAlert] = useState(false);
   const [studentId, setStudentId] = useState();
 
-  const getData = () => {
-    const token = localStorage.getItem("Token");
-    const config = {
-      headers: {
-        Authorization: `Token ${token}`,
-      },
-    };
-    return axios
-      .get("http://127.0.0.1:8000/students/search/", config)
-      .then(function (response) {
-        setStudents(response.data.data);
-      })
-      .catch(function (error) {
-        console.log(error);
-      });
-  };
-  useEffect(() => {
-    getData();
-  }, []);
+  const componentPDF = useRef();
+
+  const students = data?.data;
 
   const startIndex = page * pageSize;
   const endIndex = (page + 1) * pageSize;
 
-  const visibleStudents = students.slice(startIndex, endIndex);
+  const filteredStudents = students?.filter((student) => {
+    return search.toLowerCase() === ""
+      ? student
+      : student.first_name.toLocaleLowerCase().includes(search) ||
+          student.last_name.toLocaleLowerCase().includes(search) ||
+          student.middle_name.toLocaleLowerCase().includes(search);
+  });
+
+  const visibleStudents = filteredStudents?.slice(startIndex, endIndex);
 
   const handlePageSizeChange = (value) => {
     setPageSize(parseInt(value));
@@ -114,29 +117,43 @@ function StudentsPage() {
     setOpenAlert(true);
   };
 
-  const handleDeleteStudent = async (studentId) => {
-    try {
-      const token = localStorage.getItem("Token");
-      const config = {
-        headers: {
-          Authorization: `Token ${token}`,
-        },
-      };
-      await axios.delete(
-        `http://127.0.0.1:8000/students/${studentId}/delete/`,
-        config
-      );
+  const mutation = useMutation({
+    mutationFn: (params) => deleteStudent(params.id),
+    onSuccess: () => {
+      refetch();
       setOpenAlert(false);
-      getData();
       toast.success("Student Delete Successfully");
-    } catch (error) {
-      console.log(error);
-      toast.error("Failed To Delete Student!");
-    }
-  };
+    },
+  });
+
+  const generatePDF = useReactToPrint({
+    content: () => componentPDF.current,
+    documentTitle: "GENERAL REGISTER",
+    onAfterPrint: () => alert("PDF generated successfully"),
+  });
+
+  if (isLoading) return <>Loading...</>;
+
+  if (error) return <>Error</>;
 
   return (
     <>
+      {" "}
+      <style>
+        {`
+      @media print {
+        .no-print {
+          display: none;
+        }
+        .title-table{
+          display: block;
+          text-align:center;
+          margin:20px 0px;
+          font-size:20px;
+        }
+      }
+    `}
+      </style>
       <Toaster
         position="top-center"
         reverseOrder={false}
@@ -176,7 +193,7 @@ function StudentsPage() {
               Cancel
             </AlertDialogCancel>
             <AlertDialogAction
-              onClick={() => handleDeleteStudent(studentId)}
+              onClick={() => mutation.mutate({ id: studentId })}
               className="bg-[red] text-white hover:bg-red-500"
             >
               Delete
@@ -185,12 +202,113 @@ function StudentsPage() {
         </AlertDialogContent>
       </AlertDialog>
       <h1>GENERAL REGISTER</h1>
-      <div className="flex flex-col md:flex-row items-center justify-between mb-4">
-        <Input
-          className="w-full md:max-w-sm mb-2 md:mb-0  md:mr-2"
-          placeholder="Search By Name"
-          onChange={(e) => setSearch(e.target.value)}
-        />
+      <div className="block md:flex md:justify-between gap-2">
+        <div className="w-full">
+          <Input
+            className="w-full md:max-w-sm mb-2 md:mb-0  md:mr-2"
+            placeholder="Search By Name"
+            onChange={(e) => setSearch(e.target.value)}
+          />
+        </div>
+        <div className="flex gap-2 md:m-0 mt-4">
+          <Link to="/student/add">
+            <Button>Add</Button>
+          </Link>
+          {!students || filteredStudents.length === 0 ? (
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Button className="cursor-not-allowed bg-[gray] hover:bg-[gray]">
+                    PDF
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent>
+                  <p>Not Print Empty Data</p>
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
+          ) : (
+            <Button onClick={generatePDF}>PDF</Button>
+          )}
+          {!students || filteredStudents.length === 0 ? (
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Button className="cursor-not-allowed bg-[gray] hover:bg-[gray]">
+                    Download as XLS
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent>
+                  <p className="">Not Print Empty Data</p>
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
+          ) : (
+            // <Button>
+            <ReactHTMLTableToExcel
+              id="test-table-xls-button"
+              className="download-table-xls-button inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90 h-10 px-4 py-2"
+              table="print-excel"
+              filename="tablexls"
+              sheet="tablexls"
+              buttonText="Download as XLS"
+            />
+            // </Button>
+          )}
+        </div>
+      </div>
+      <ScrollArea className="rounded-md border w-full h-[calc(80vh-120px)]">
+        <div ref={componentPDF} style={{ width: "100%" }}>
+          <h1 className="hidden title-table">THINKERS GENERAL REGISTER</h1>
+          <Table className="relative" id="print-excel">
+            <TableHeader>
+              <TableRow>
+                {headers.map((header, index) => (
+                  <TableHead className="whitespace-nowrap" key={index}>{header.label}</TableHead>
+                ))}
+                <TableHead className="no-print bg-[#151518]">
+                  Actions
+                </TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {!students || filteredStudents.length === 0 ? (
+                <TableRow className="text-center">
+                  <TableCell
+                    colSpan={headers.length + 1}
+                    className="uppercase text-lg"
+                  >
+                    No Data Found
+                  </TableCell>
+                </TableRow>
+              ) : (
+                visibleStudents.map((student) => (
+                  <TableRow key={student.id}>
+                    {headers.map((header) => (
+                      <TableCell key={header.value}>
+                        {(header.value === "standard" ||
+                          header.value === "admission_std") &&
+                        student[header.value] == 13
+                          ? "Balvatika"
+                          : student[header.value] || "None"}
+                      </TableCell>
+                    ))}
+
+                    <TableCell className="no-print sticky right-0 z-[1] bg-[#151518]">
+                      <ActionsPopup
+                        id={student.id}
+                        openAlertDeleteBox={openAlertDeleteBox}
+                      />
+                    </TableCell>
+                  </TableRow>
+                ))
+              )}
+            </TableBody>
+          </Table>
+        </div>
+        <ScrollBar orientation="horizontal" />
+      </ScrollArea>
+      <div className="block text-center  md:flex md:items-center md:justify-end md:space-x-2 py-4">
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button variant="outline" className="w-[160px]">
@@ -217,53 +335,7 @@ function StudentsPage() {
             </DropdownMenuRadioGroup>
           </DropdownMenuContent>
         </DropdownMenu>
-      </div>
-      <ScrollArea className="rounded-md border max-w-[1280px] h-[calc(80vh-120px)]">
-        <Table className="relative">
-          <TableHeader>
-            <TableRow>
-              {headers.map((header, index) => (
-                <TableHead key={index}>{header.label}</TableHead>
-              ))}
-              <TableHead className="">Actions</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {visibleStudents
-              .filter((student) => {
-                return search.toLocaleLowerCase() === ""
-                  ? student
-                  : student.first_name.toLocaleLowerCase().includes(search) ||
-                      student.last_name.toLocaleLowerCase().includes(search) ||
-                      student.middle_name.toLocaleLowerCase().includes(search);
-              })
-              .map((student) => (
-                <TableRow key={student.id}>
-                  {headers.map((header) => (
-                    <TableCell key={header.value}>
-                      {(header.value === "standard" ||
-                        header.value === "admission_std") &&
-                      student[header.value] == 13
-                        ? "Balvatika"
-                        : student[header.value] || "None"}
-                    </TableCell>
-                  ))}
-
-                  <TableCell className="">
-                    <ActionsPopup
-                      id={student.id}
-                      openAlertDeleteBox={openAlertDeleteBox}
-                    />
-                  </TableCell>
-                </TableRow>
-              ))}
-          </TableBody>
-        </Table>
-        <ScrollBar orientation="horizontal" />
-      </ScrollArea>
-      <div className="flex items-center justify-end space-x-2 py-4">
-        <div className="flex-1 text-sm text-muted-foreground"></div>
-        <div className="space-x-2">
+        <div className="space-x-2 md:m-0 mt-2">
           <Button
             variant="outline"
             onClick={() => setPage(Math.max(page - 1, 0))}

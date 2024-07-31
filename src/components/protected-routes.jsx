@@ -1,6 +1,7 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { Outlet, Navigate, useLocation } from "react-router-dom";
+import Spinner from "./spinner/spinner";
 
 function ProtectedRoutes() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -9,17 +10,27 @@ function ProtectedRoutes() {
 
   const getStudentCount = async () => {
     try {
-      const token = localStorage.getItem("Token");
+      const jwt_token = JSON.parse(localStorage.getItem("jwt_token"));
+      if (!jwt_token || !jwt_token.access) {
+        throw new Error("JWT token not found");
+      }
+
       const response = await axios.get(
-        "http://127.0.0.1:8000/api-token-verify/",
-        { params: { token } }
+        "https://school-management-be-m1fo.onrender.com/api-token-verify/",
+        {
+          headers: {
+            Authorization: `Bearer ${jwt_token.access}`,
+          },
+        }
       );
+
       if (response.status === 200) {
         setIsAuthenticated(true);
+        localStorage.setItem("user", response.data.user.username);
       }
     } catch (error) {
       setIsAuthenticated(false);
-      console.log(error);
+      console.error("Error verifying token:", error);
     } finally {
       setIsLoading(false);
     }
@@ -30,7 +41,11 @@ function ProtectedRoutes() {
   }, [location]);
 
   if (isLoading) {
-    return <div>Loading...</div>;
+    return (
+      <div>
+        <Spinner />
+      </div>
+    );
   }
 
   return isAuthenticated ? <Outlet /> : <Navigate to="/login" />;

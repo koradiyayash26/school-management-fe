@@ -1,5 +1,4 @@
-import React, { useState, useEffect } from "react";
-import axios from "axios";
+import React, { useState } from "react";
 import {
   Table,
   TableBody,
@@ -11,7 +10,6 @@ import {
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
-// import ActionsPopup from "./data-table-row-actions";
 import {
   DropdownMenu,
   DropdownMenuTrigger,
@@ -19,19 +17,9 @@ import {
   DropdownMenuRadioGroup,
   DropdownMenuRadioItem,
 } from "@/components/ui/dropdown-menu";
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-  AlertDialogTrigger,
-} from "@/components/ui/alert-dialog";
-import toast, { Toaster } from "react-hot-toast";
 import ActionsPopup from "@/components/ui/data-table-row-actions";
+import { useCertificate } from "@/hooks/use-certificate";
+import { SearchX } from "lucide-react";
 
 const headers = [
   { label: "ID", value: "id" },
@@ -39,83 +27,102 @@ const headers = [
   { label: "Last Name", value: "last_name" },
   { label: "First Name", value: "first_name" },
   { label: "Middle Name", value: "middle_name" },
-  //   { label: "Mother Name", value: "mother_name" },
   { label: "Gender", value: "gender" },
   { label: "Birth Date", value: "birth_date" },
-  //   { label: "Birth Place", value: "birth_place" },
-  //   { label: "Mobile Number", value: "mobile_no" },
-  //   { label: "Address", value: "address" },
-  //   { label: "City", value: "city" },
-  //   { label: "District", value: "district" },
   { label: "Standard", value: "standard" },
   { label: "Section", value: "section" },
-  //   { label: "Last School", value: "last_school" },
-  //   { label: "Admission Standard", value: "admission_std" },
-  //   { label: "Admission Date", value: "admission_date" },
-  //   { label: "Left School Standard", value: "left_school_std" },
-  //   { label: "Left School Date", value: "left_school_date" },
-  //   { label: "Religion", value: "religion" },
-  //   { label: "Category", value: "category" },
-  //   { label: "Caste", value: "caste" },
-  //   { label: "UDISE Number", value: "udise_no" },
-  //   { label: "Aadhar Number", value: "aadhar_no" },
-  //   { label: "Account Number", value: "account_no" },
-  //   { label: "Name on Passbook", value: "name_on_passbook" },
-  //   { label: "Bank Name", value: "bank_name" },
-  //   { label: "IFSC Code", value: "ifsc_code" },
-  //   { label: "Bank Address", value: "bank_address" },
-  //   { label: "Reason", value: "reason" },
-  //   { label: "Note", value: "note" },
-  //   { label: "Assessment", value: "assessment" },
-  //   { label: "Progress", value: "progress" },
   { label: "Status", value: "status" },
 ];
 
 function CertificatePage() {
-  const [students, setStudents] = useState([]);
+  const { data, isLoading, error, refetch } = useCertificate();
+  let students = data?.data || [];
+
   const [page, setPage] = useState(0);
   const [pageSize, setPageSize] = useState(10);
   const [search, setSearch] = useState("");
 
-  const getData = () => {
-    const token = localStorage.getItem("Token");
-    const config = {
-      headers: {
-        Authorization: `Token ${token}`,
-      },
-    };
-    return axios
-      .get("http://127.0.0.1:8000/students/search/", config)
-      .then(function (response) {
-        setStudents(response.data.data);
-      })
-      .catch(function (error) {
-        console.log(error);
-      });
-  };
-  useEffect(() => {
-    getData();
-  }, []);
-
   const startIndex = page * pageSize;
   const endIndex = (page + 1) * pageSize;
-
-  const visibleStudents = students.slice(startIndex, endIndex);
 
   const handlePageSizeChange = (value) => {
     setPageSize(parseInt(value));
     setPage(0);
   };
 
+  if (isLoading) {
+    return <>Loading...</>;
+  }
+
+  const filteredStudents = students.filter((student) => {
+    return search.toLocaleLowerCase() === ""
+      ? student
+      : student.first_name.toLocaleLowerCase().includes(search) ||
+          student.last_name.toLocaleLowerCase().includes(search) ||
+          student.middle_name.toLocaleLowerCase().includes(search);
+  });
+
+  const visibleStudents = filteredStudents.slice(startIndex, endIndex);
+
   return (
     <>
       <h1 className="uppercase">certificate</h1>
-      <div className="flex flex-col md:flex-row items-center justify-between mb-4">
+      <div className="flex flex-col md:flex-row items-center justify-between">
         <Input
-          className="w-full md:max-w-sm mb-2 md:mb-0  md:mr-2"
+          className="w-full md:max-w-sm mb-2 md:mb-0 md:mr-2"
           placeholder="Search By Name"
           onChange={(e) => setSearch(e.target.value)}
         />
+      </div>
+      <ScrollArea className="rounded-md border w-full h-[calc(80vh-120px)]">
+        <Table className="relative">
+          <TableHeader>
+            <TableRow>
+              {headers.map((header, index) => (
+                <TableHead key={index}>{header.label}</TableHead>
+              ))}
+              <TableHead className="bg-[#151518]">
+                Certificate
+              </TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {visibleStudents.length === 0 || !students ? (
+              <TableRow className="text-start md:text-center">
+                <TableCell
+                  colSpan={headers.length + 1}
+                  className="uppercase text-lg"
+                >
+                  No Data Found
+                </TableCell>
+              </TableRow>
+            ) : (
+              visibleStudents.map((student) => (
+                <TableRow key={student.id}>
+                  {headers.map((header) => (
+                    <TableCell key={header.value}>
+                      {(header.value === "standard" ||
+                        header.value === "admission_std") &&
+                      student[header.value] == 13
+                        ? "Balvatika"
+                        : student[header.value] || "None"}
+                    </TableCell>
+                  ))}
+                  <TableCell className="sticky top-0 right-0 z-[1] bg-[#151518]">
+                    <ActionsPopup
+                      Bonafide="Bonafide"
+                      Birth="Birth Certificate"
+                      id={student.id}
+                    />
+                  </TableCell>
+                </TableRow>
+              ))
+            )}
+          </TableBody>
+        </Table>
+        <ScrollBar orientation="horizontal" />
+      </ScrollArea>
+      <div className="block text-center  md:flex md:items-center md:justify-end md:space-x-2 py-4">
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button variant="outline" className="w-[160px]">
@@ -142,54 +149,7 @@ function CertificatePage() {
             </DropdownMenuRadioGroup>
           </DropdownMenuContent>
         </DropdownMenu>
-      </div>
-      <ScrollArea className="rounded-md border max-w-[1280px] h-[calc(80vh-120px)]">
-        <Table className="relative">
-          <TableHeader>
-            <TableRow>
-              {headers.map((header, index) => (
-                <TableHead key={index}>{header.label}</TableHead>
-              ))}
-              <TableHead className="">Certificate</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {visibleStudents
-              .filter((student) => {
-                return search.toLocaleLowerCase() === ""
-                  ? student
-                  : student.first_name.toLocaleLowerCase().includes(search) ||
-                      student.last_name.toLocaleLowerCase().includes(search) ||
-                      student.middle_name.toLocaleLowerCase().includes(search);
-              })
-              .map((student) => (
-                <TableRow key={student.id}>
-                  {headers.map((header) => (
-                    <TableCell key={header.value}>
-                      {(header.value === "standard" ||
-                        header.value === "admission_std") &&
-                      student[header.value] == 13
-                        ? "Balvatika"
-                        : student[header.value] || "None"}
-                    </TableCell>
-                  ))}
-
-                  <TableCell className="">
-                    <ActionsPopup
-                      Bonafide="Bonafide"
-                      Birth="Birth Certificate"
-                      id={student.id}
-                    />
-                  </TableCell>
-                </TableRow>
-              ))}
-          </TableBody>
-        </Table>
-        <ScrollBar orientation="horizontal" />
-      </ScrollArea>
-      <div className="flex items-center justify-end space-x-2 py-4">
-        <div className="flex-1 text-sm text-muted-foreground"></div>
-        <div className="space-x-2">
+        <div className="space-x-2 md:m-0 mt-2">
           <Button
             variant="outline"
             onClick={() => setPage(Math.max(page - 1, 0))}

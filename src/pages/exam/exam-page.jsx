@@ -1,5 +1,4 @@
-import React, { useState, useEffect } from "react";
-import axios from "axios";
+import React, { useEffect, useRef, useState } from "react";
 import {
   Table,
   TableBody,
@@ -9,13 +8,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Link } from "react-router-dom";
-
-import {
-  useMutation,
-  useMutationState,
-  useQuery,
-  useQueryClient,
-} from "@tanstack/react-query";
+import { useMutation } from "@tanstack/react-query";
 import toast, { Toaster } from "react-hot-toast";
 import {
   AlertDialog,
@@ -38,33 +31,28 @@ import {
 import { Button } from "@/components/ui/button";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import ActionsPopupExamMark from "@/components/exam/data-table-row-action";
+import { useExamList } from "@/hooks/use-exam";
+import { UploadFileExamAdd, deleteExam } from "@/services/exam-service";
+import { useReactToPrint } from "react-to-print";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 
-const deleteExamMarks = async (feeTypeId) => {
-  const token = localStorage.getItem("Token");
-
-  const config = {
-    headers: {
-      Authorization: `Token ${token}`,
-    },
-  };
-  const res = await axios.delete(
-    `http://127.0.0.1:8000/exams/${feeTypeId}/delete/`,
-    config
-  );
-  return res.data;
-};
-
-const getExamMarksData = async () => {
-  const token = localStorage.getItem("Token");
-
-  const config = {
-    headers: {
-      Authorization: `Token ${token}`,
-    },
-  };
-  const res = await axios.get("http://127.0.0.1:8000/exams/search/", config);
-  return res.data;
-};
+import ReactHTMLTableToExcel from "react-html-table-to-excel";
+import * as XLSX from "xlsx";
+import { format } from "date-fns";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 
 const headers = [
   { label: "ID", value: "id" },
@@ -77,24 +65,19 @@ const headers = [
 ];
 
 function ExamMarksPage() {
-  const queryClient = useQueryClient();
-
   const [page, setPage] = useState(0);
   const [pageSize, setPageSize] = useState(10);
   const [search, setSearch] = useState("");
   const [openAlert, setOpenAlert] = useState(false);
-  const [feeTypeId, setFeeTypeId] = useState();
+  const [examId, setExamId] = useState();
 
-  const { data, isLoading } = useQuery({
-    queryKey: ["exammarks"],
-    queryFn: getExamMarksData,
-  });
+  const componentPDF = useRef();
+
+  const { data, isLoading, refetch } = useExamList();
 
   const students = data?.data;
   const startIndex = page * pageSize;
   const endIndex = (page + 1) * pageSize;
-
-  const visibleStudents = students?.slice(startIndex, endIndex);
 
   const handlePageSizeChange = (value) => {
     setPageSize(parseInt(value));
@@ -102,27 +85,134 @@ function ExamMarksPage() {
   };
 
   const mutation = useMutation({
-    mutationFn: deleteExamMarks,
+    mutationFn: (examId) => deleteExam(examId),
     onSuccess: () => {
-      queryClient.invalidateQueries("exammarks");
+      refetch();
       setOpenAlert(false);
-      toast.success("ExamMarks Delete Successfully");
+      toast.success("Exam Delete Successfully");
     },
   });
 
   const openAlertDeleteBox = (id) => {
-    setFeeTypeId(id);
+    setExamId(id);
     setOpenAlert(true);
   };
+
   const handleDeleteStudent = () => {
-    mutation.mutate(feeTypeId);
+    mutation.mutate(examId);
   };
+
+  const filteredStudents = students?.filter((exam) => {
+    return search.toLocaleLowerCase() === ""
+      ? exam
+      : exam.date.toLocaleLowerCase().includes(search) ||
+          exam.sub.toLocaleLowerCase().includes(search) ||
+          exam.std.toLocaleLowerCase().includes(search) ||
+          exam.marks.toLocaleLowerCase().includes(search);
+  });
+
+  const visibleStudents = filteredStudents?.slice(startIndex, endIndex);
+
+  const generatePDF = useReactToPrint({
+    content: () => componentPDF.current,
+    documentTitle: "Exam Marks",
+    onAfterPrint: () => alert("PDF generated successfully"),
+  });
+
+  const [uploaddata, setUploaddata] = useState([]);
+  const [fileLoader, setFileLoader] = useState(true);
+
+  const [file, setFile] = useState(null);
+  const fileInputRef = useRef(null);
+
+  const handleFileChange = (e) => {
+    setFile(e.target.files[0]);
+  };
+  const handleFileUpload = () => {
+    if (file) {
+      const reader = new FileReader();
+      reader.readAsBinaryString(file);
+      reader.onload = (e) => {
+        const data = e.target.result;
+        const workbook = XLSX.read(data, { type: "binary" });
+        const sheetName = workbook.SheetNames[0];
+        const sheet = workbook.Sheets[sheetName];
+        const parsedData = XLSX.utils.sheet_to_json(sheet, { raw: true });
+
+        const formattedData = parsedData.map((row) => {
+          if (row.Date) {
+            const dateCode = parseFloat(row.Date);
+            if (!isNaN(dateCode)) {
+              const date = XLSX.SSF.parse_date_code(dateCode);
+              row.Date = new Date(
+                date.y,
+                date.m - 1,
+                date.d
+              ).toLocaleDateString("en-GB");
+            }
+          }
+          row.Date = format(row.Date, "yyyy-MM-dd");
+          return row;
+        });
+
+        setUploaddata(formattedData);
+        setFileLoader(false);
+        // toast.success("File Upload Successfully");
+        if (fileInputRef.current) {
+          fileInputRef.current.value = null;
+        }
+        setFile(null);
+      };
+      reader.onerror = (error) => {
+        toast.error("Failed to read file: " + error);
+        setFileLoader(true);
+      };
+    } else {
+      setFileLoader(true);
+      toast.error("Please select a file first");
+    }
+  };
+  const uploadFilemutation = useMutation({
+    mutationFn: (uploaddata) => UploadFileExamAdd(uploaddata),
+    onSuccess: (res) => {
+      refetch();
+      toast.success(res.data.message);
+    },
+    onError: (error) => {
+      toast.error(`Failed To Upload File: ${error.errors}`);
+    },
+  });
+
+  useEffect(() => {
+    if (!fileLoader) {
+      uploadFilemutation.mutate(uploaddata);
+    }
+  }, [uploaddata, fileLoader]);
+
+  const selectedPages = JSON.parse(localStorage.getItem("selectedPages")) || [];
+  const showUploadDialog = selectedPages.includes("Exam");
 
   if (isLoading) {
     return <>Loading...</>;
   }
+
   return (
     <>
+      <style>
+        {`
+          @media print {
+            .no-print {
+              display: none;
+            }
+            .title-table{
+              display: block;
+              text-align:center;
+              margin:20px 0px;
+              font-size:20px;
+            }
+          }
+        `}
+      </style>
       <Toaster
         position="top-center"
         reverseOrder={false}
@@ -159,7 +249,7 @@ function ExamMarksPage() {
               Cancel
             </AlertDialogCancel>
             <AlertDialogAction
-              onClick={() => handleDeleteStudent(feeTypeId)}
+              onClick={() => handleDeleteStudent(examId)}
               className="bg-[red] text-white hover:bg-red-500"
             >
               Delete
@@ -168,12 +258,148 @@ function ExamMarksPage() {
         </AlertDialogContent>
       </AlertDialog>
       <h1>EXAM MARKS</h1>
-      <div className="flex flex-col md:flex-row items-center justify-between mb-4">
-        <Input
-          className="w-full md:max-w-sm mb-2 md:mb-0  md:mr-2"
-          placeholder="Search"
-          onChange={(e) => setSearch(e.target.value)}
-        />
+      <div className="block md:flex md:justify-between gap-2">
+        <div className="w-full">
+          <Input
+            className="w-full md:max-w-sm mb-2 md:mb-0 md:mr-2"
+            placeholder="Search"
+            onChange={(e) => setSearch(e.target.value)}
+          />
+        </div>
+        {showUploadDialog && (
+          <div className="flex gap-2">
+            <Dialog>
+              <DialogTrigger asChild>
+                <Button className="mt-1 md:mt-0">Upload Excel</Button>
+              </DialogTrigger>
+              <DialogContent className="sm:max-w-[425px]">
+                <DialogHeader>
+                  <DialogTitle>Edit profile</DialogTitle>
+                  <DialogDescription>
+                    Make changes to your profile here. Click save when you're
+                    done.
+                  </DialogDescription>
+                </DialogHeader>
+                <div className="w-full py-4">
+                  <div className="w-full">
+                    <Input
+                      className="mb-2 cursor-pointer  md:mb-0 md:mr-2"
+                      id="picture"
+                      onChange={handleFileChange}
+                      ref={fileInputRef}
+                      type="file"
+                    />
+                  </div>
+                </div>
+                <DialogFooter>
+                  <Button type="button" onClick={handleFileUpload}>
+                    Upload
+                  </Button>
+                </DialogFooter>
+              </DialogContent>
+            </Dialog>
+          </div>
+        )}
+        <div className="flex gap-2 md:m-0 mt-4">
+          <Link to="/exam/add">
+            <Button>Add</Button>
+          </Link>
+          {!students || filteredStudents.length === 0 ? (
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Button className="cursor-not-allowed bg-[gray] hover:bg-[gray]">
+                    PDF
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent>
+                  <p>Not Print Empty Data</p>
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
+          ) : (
+            <Button onClick={generatePDF}>PDF</Button>
+          )}
+          {!students || filteredStudents.length === 0 ? (
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Button className="cursor-not-allowed bg-[gray] hover:bg-[gray]">
+                    Download as XLS
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent>
+                  <p className="">Not Print Empty Data</p>
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
+          ) : (
+            <ReactHTMLTableToExcel
+              id="test-table-xls-button"
+              className="download-table-xls-button inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90 h-10 px-4 py-2"
+              table="print-excel"
+              filename="tablexls"
+              sheet="tablexls"
+              buttonText="Download as XLS"
+            />
+          )}
+        </div>
+      </div>
+      <ScrollArea className="rounded-md border w-full h-[calc(80vh-120px)]">
+        <div ref={componentPDF} style={{ width: "100%" }}>
+          <h1 className="hidden title-table">
+            THINKERS MARKS SHEET / 2005-02-02
+          </h1>
+          <Table className="relative" id="print-excel">
+            <TableHeader>
+              <TableRow>
+                {headers.map((header, index) => (
+                  <TableHead key={index}>{header.label}</TableHead>
+                ))}
+                <TableHead className="no-print bg-[#151518]">Actions</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {!students || filteredStudents.length === 0 ? (
+                <TableRow className="text-center align-middle">
+                  <TableCell
+                    colSpan={headers.length + 1}
+                    className="uppercase text-lg"
+                  >
+                    No Data Found
+                  </TableCell>
+                </TableRow>
+              ) : (
+                visibleStudents.map((exam) => (
+                  <TableRow key={exam.id}>
+                    {headers.map((header) => (
+                      <TableCell key={header.value} className="capitalize">
+                        {header.value === "student"
+                          ? (exam.student?.first_name || "None") +
+                            " " +
+                            (exam.student?.last_name || "None")
+                          : header.value === "std"
+                          ? exam[header.value] === "13"
+                            ? "Balvatika"
+                            : exam[header.value] || "None"
+                          : exam[header.value] || "None"}
+                      </TableCell>
+                    ))}
+                    <TableCell className="no-print sticky top-0 right-0 z-[1] bg-[#151518]">
+                      <ActionsPopupExamMark
+                        id={exam.id}
+                        openAlertDeleteBox={openAlertDeleteBox}
+                      />
+                    </TableCell>
+                  </TableRow>
+                ))
+              )}
+            </TableBody>
+          </Table>
+        </div>
+        <ScrollBar orientation="horizontal" />
+      </ScrollArea>
+      <div className="block text-center  md:flex md:items-center md:justify-end md:space-x-2 py-4">
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button variant="outline" className="w-[160px]">
@@ -200,62 +426,7 @@ function ExamMarksPage() {
             </DropdownMenuRadioGroup>
           </DropdownMenuContent>
         </DropdownMenu>
-      </div>
-      <div>
-        <Link to="/exam/add">
-          <Button>Add</Button>
-        </Link>
-      </div>
-      <ScrollArea className="rounded-md border max-w-[1280px] h-[calc(80vh-120px)]">
-        <Table className="relative">
-          <TableHeader>
-            <TableRow>
-              {headers.map((header, index) => (
-                <TableHead key={index}>{header.label}</TableHead>
-              ))}
-              <TableHead className="">Actions</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {visibleStudents
-              .filter((exam) => {
-                return search.toLocaleLowerCase() === ""
-                  ? exam
-                  : exam.date.toLocaleLowerCase().includes(search) ||
-                      exam.sub.toLocaleLowerCase().includes(search) ||
-                      exam.std.toLocaleLowerCase().includes(search) ||
-                      exam.marks.toLocaleLowerCase().includes(search);
-              })
-              .map((exam) => (
-                <TableRow key={exam.id}>
-                  {headers.map((header) => (
-                    <TableCell key={header.value} className="capitalize">
-                      {header.value === "student"
-                        ? (exam.student?.first_name || "None") +
-                          " " +
-                          (exam.student?.last_name || "None")
-                        : header.value === "std"
-                        ? exam[header.value] === "13"
-                          ? "Balvatika"
-                          : exam[header.value] || "None"
-                        : exam[header.value] || "None"}
-                    </TableCell>
-                  ))}
-                  <TableCell className="">
-                    <ActionsPopupExamMark
-                      id={exam.id}
-                      openAlertDeleteBox={openAlertDeleteBox}
-                    />
-                  </TableCell>
-                </TableRow>
-              ))}
-          </TableBody>
-        </Table>
-        <ScrollBar orientation="horizontal" />
-      </ScrollArea>
-      <div className="flex items-center justify-end space-x-2 py-4">
-        <div className="flex-1 text-sm text-muted-foreground"></div>
-        <div className="space-x-2">
+        <div className="space-x-2 md:m-0 mt-2">
           <Button
             variant="outline"
             onClick={() => setPage(Math.max(page - 1, 0))}

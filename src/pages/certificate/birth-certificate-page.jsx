@@ -10,11 +10,14 @@ import {
   ContextMenuTrigger,
 } from "@/components/ui/context-menu";
 import { Printer } from "lucide-react";
+import { useCertificateGetData } from "@/hooks/use-certificate";
 
 const BirthCertificatePage = () => {
   const { id } = useParams();
-  const [studentData, setStudentData] = useState({});
-  const [isLoading, setIsLoading] = useState(true);
+
+  const { data, isLoading, error } = useCertificateGetData(id);
+  const studentData = data?.data || {};
+
   const [todayDate, setTodayDate] = useState(format(new Date(), "dd-MM-yyyy"));
 
   const dateToWords = (dateStr) => {
@@ -26,28 +29,6 @@ const BirthCertificatePage = () => {
 
     return `${yearWords} - ${monthWords} - ${dayWords}`;
   };
-  const getData = () => {
-    const token = localStorage.getItem("Token");
-    const config = {
-      headers: {
-        Authorization: `Token ${token}`,
-      },
-    };
-    setIsLoading(true);
-    return axios
-      .get(`http://127.0.0.1:8000/students/${id}/search/`, config)
-      .then(function (response) {
-        setStudentData(response.data.data);
-        setIsLoading(false);
-      })
-      .catch(function (error) {
-        console.log(error);
-      });
-  };
-
-  useEffect(() => {
-    getData();
-  }, [id]);
 
   const handleDownloadPdf = () => {
     alert("PDF Downloaded");
@@ -55,6 +36,10 @@ const BirthCertificatePage = () => {
 
   if (isLoading) {
     return <>Loading</>;
+  }
+
+  if (error) {
+    return <>Error: {error.message}</>;
   }
   return (
     <>
@@ -66,7 +51,7 @@ const BirthCertificatePage = () => {
               <figcaption className="lg:flex md:flex items-center justify-between block  w-full mb-4  ">
                 <div className="mb-6">BIRTH CERTIFICATE</div>
                 <div className="flex items-center">
-                  <div className="w-10 h-10 uppercase bg-gray-400 rounded-full flex items-center justify-center text-white text-sm font-bold">
+                  <div className="w-10 h-10 uppercase p-[20px] bg-gray-400 rounded-full flex items-center justify-center text-white text-sm font-bold">
                     {studentData.middle_name[0]}
                   </div>
                   <div className="space-y-0.5 font-medium dark:text-white text-left rtl:text-right ms-3">

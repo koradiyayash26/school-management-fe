@@ -1,7 +1,6 @@
-import axios from "axios";
+import React, { useState } from "react";
 import { format } from "date-fns";
 import numWords from "num-words";
-import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import {
   ContextMenu,
@@ -10,14 +9,16 @@ import {
   ContextMenuTrigger,
 } from "@/components/ui/context-menu";
 import { Printer } from "lucide-react";
+import { useCertificateGetData } from "@/hooks/use-certificate";
 
 const BonafideCertificatePage = () => {
   const { id } = useParams();
-  const [studentData, setStudentData] = useState({});
-  const [isLoading, setIsLoading] = useState(true);
-  const [todayDate, setTodayDate] = useState(format(new Date(), "dd-MM-yyyy"));
+  const [todayDate] = useState(format(new Date(), "dd-MM-yyyy"));
+  const { data, isLoading, error } = useCertificateGetData(id);
+  const studentData = data?.data || {};
 
   const dateToWords = (dateStr) => {
+    if (!dateStr) return "";
     const [year, month, day] = dateStr.split("-");
 
     const yearWords = numWords(parseInt(year));
@@ -26,57 +27,39 @@ const BonafideCertificatePage = () => {
 
     return `${yearWords} - ${monthWords} - ${dayWords}`;
   };
-  const getData = () => {
-    const token = localStorage.getItem("Token");
-    const config = {
-      headers: {
-        Authorization: `Token ${token}`,
-      },
-    };
-    setIsLoading(true);
-    return axios
-      .get(`http://127.0.0.1:8000/students/${id}/search/`, config)
-      .then(function (response) {
-        setStudentData(response.data.data);
-        setIsLoading(false);
-      })
-      .catch(function (error) {
-        console.log(error);
-      });
-  };
-
-  useEffect(() => {
-    getData();
-  }, [id]);
 
   const handleDownloadPdf = () => {
     alert("PDF Downloaded");
   };
 
   if (isLoading) {
-    return <>Loading</>;
+    return <>Loading...</>;
   }
+
+  if (error) {
+    return <>Error: {error.message}</>;
+  }
+
   return (
     <>
       <h1>BONAFIDE CERTIFICATE</h1>
       <ContextMenu>
         <ContextMenuTrigger>
-          <div className="border border-white-200 rounded-lg shadow-sm    ">
+          <div className="border border-white-200 rounded-lg shadow-sm">
             <figure className="flex flex-col items-center justify-center p-8 border-b rounded-t-lg md:rounded-t-none md:rounded-ss-lg md:border-e">
-              <figcaption className="lg:flex md:flex items-center justify-between block  w-full mb-4  ">
+              <figcaption className="lg:flex md:flex items-center justify-between block w-full mb-4">
                 <div className="mb-6">BONAFIDE CERTIFICATE</div>
                 <div className="flex items-center">
-                  <div className="w-10 h-10 uppercase bg-gray-400 rounded-full flex items-center justify-center text-white text-sm font-bold">
-                    {studentData.middle_name[0]}
+                  <div className="w-10 h-10 uppercase p-[20px] bg-gray-400 rounded-full flex items-center justify-center text-white text-sm font-bold">
+                    {studentData.middle_name?.[0] || "N/A"}
                   </div>
                   <div className="space-y-0.5 font-medium dark:text-white text-left rtl:text-right ms-3">
                     <div>
-                      {studentData.first_name}&nbsp; {studentData.middle_name}
-                      &nbsp;{studentData.last_name}
+                      {studentData.first_name || "N/A"}&nbsp;{studentData.middle_name || "N/A"}&nbsp;{studentData.last_name || "N/A"}
                     </div>
-                    <div className="text-sm text-gray-500 dark:text-gray-400 ">
+                    <div className="text-sm text-gray-500 dark:text-gray-400">
                       Birth Date - &nbsp;
-                      {studentData.birth_date}
+                      {studentData.birth_date || "N/A"}
                     </div>
                   </div>
                 </div>
@@ -95,21 +78,19 @@ const BonafideCertificatePage = () => {
                   </span>
                   &nbsp;
                   <span className="underline">
-                    {studentData.first_name}&nbsp;
-                    {studentData.middle_name}&nbsp;
-                    {studentData.last_name}
+                    {studentData.first_name || "N/A"}&nbsp;
+                    {studentData.middle_name || "N/A"}&nbsp;
+                    {studentData.last_name || "N/A"}
                   </span>
                   &nbsp; is studying in this school in present standard -&nbsp;
                   <span className="underline">
-                    {studentData.standard == 13
-                      ? "Balvatika"
-                      : studentData.standard}
+                    {studentData.standard == 13 ? "Balvatika" : studentData.standard || "N/A"}
                   </span>
                   . As per GR No -{" "}
-                  <span className="underline">{studentData.grno} </span>
+                  <span className="underline">{studentData.grno || "N/A"} </span>
                   of our school his date is&nbsp;
                   <span className="underline">
-                    {studentData.birth_date}
+                    {studentData.birth_date || "N/A"}
                   </span>{" "}
                   and&nbsp;
                   <span className="underline">
@@ -117,8 +98,7 @@ const BonafideCertificatePage = () => {
                   </span>
                   . His caste is{" "}
                   <span className="underline">
-                    {studentData.religion}
-                    {studentData.caste}
+                    {studentData.religion || "N/A"}&nbsp;{studentData.caste || "N/A"}
                   </span>
                   . For the assurance of which this certificate is written.
                 </p>

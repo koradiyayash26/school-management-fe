@@ -1,4 +1,3 @@
-
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import {
   Table,
@@ -8,28 +7,11 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { useQuery } from "@tanstack/react-query";
-import axios from "axios";
+import { useReport } from "@/hooks/use-report";
 import React from "react";
 import { useParams } from "react-router-dom";
 
-const getReportStandardData = async (id) => {
-  const token = localStorage.getItem("Token");
-
-  const config = {
-    headers: {
-      Authorization: `Token ${token}`,
-    },
-  };
-  const res = await axios.get(
-    `http://127.0.0.1:8000/report/standard/${id}`,
-    config
-  );
-  return res.data;
-};
-
 const headers = [
-  //   { label: "name", value: "name" },
   { label: "GR Number", value: "student__grno" },
   { label: "First Name", value: "student__first_name" },
   { label: "Middle Name", value: "student__middle_name" },
@@ -47,20 +29,18 @@ const ReportDetailsPage = () => {
   if (id === "balvatika") {
     id = 13;
   }
-
-  const { data, isLoading } = useQuery({
-    queryKey: ["reportdata", id],
-    queryFn: () => getReportStandardData(id),
-  });
+  const { data, isLoading, error } = useReport(id);
 
   if (isLoading) {
     return <>Loading...</>;
   }
 
-  // Combine the names and calculate the due amount for each student
-  const students = data?.data.map((student) => ({
+  if (error) {
+    return <>Error fetching data</>;
+  }
+
+  const students = data.data.map((student) => ({
     ...student,
-    // name: `${student.student__first_name} ${student.student__middle_name} ${student.student__last_name}`,
     due: student.total - student.paid - student.waived,
   }));
 
@@ -85,9 +65,9 @@ const ReportDetailsPage = () => {
                   {headers.map((header) => (
                     <TableCell key={header.value}>
                       {header.value === "student__standard" &&
-                      data[header.value] == 13
+                      data[header.value] === "13"
                         ? "Balvatika"
-                        : data[header.value]}
+                        : data[header.value] || 0}
                     </TableCell>
                   ))}
                 </TableRow>

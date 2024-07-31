@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
-import axios from "axios";
 import { FaFemale, FaMale } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import {
@@ -14,42 +13,91 @@ import {
 import { Label } from "@/components/ui/label";
 import { Progress } from "@/components/ui/progress";
 import { ClipboardList } from "lucide-react";
+import { useStandard } from "@/hooks/use-standard";
 
 const StandardPage = () => {
-  const [standardDataCount, setStandardDataCount] = useState();
-  const getStudentCount = async () => {
-    try {
-      const token = localStorage.getItem("Token");
-      const config = { headers: { Authorization: `Token ${token}` } };
-      const response = await axios.get(
-        "http://127.0.0.1:8000/standards/standard-counter/",
-        config
-      );
-      setStandardDataCount(response.data.data);
-    } catch (error) {
-      console.log(error);
+  const { data, isLoading, refetch } = useStandard();
+  let standardDataCount = data?.data;
+
+  const calculateProgress = (boysCount, girlsCount, totalCount, gender) => {
+    if (gender === "MALE") {
+      return (boysCount * 100) / totalCount;
+    } else {
+      return (girlsCount * 100) / totalCount;
     }
   };
+
+  const [progressValues, setProgressValues] = useState({});
 
   useEffect(() => {
-    getStudentCount();
-  }, []);
+    if (standardDataCount) {
+      const initialProgressValues = {};
+      standardDataCount.standards.forEach((standard, index) => {
+        initialProgressValues[index] = { male: 0, female: 0 };
+      });
+      setProgressValues(initialProgressValues);
 
-  const handleCalculate = (standard, gender) => {
-    const boys_count = standard.boys_count;
-    const girls_count = standard.girls_count;
-    const total_count = boys_count + girls_count;
-    if (gender === "MALE") {
-      return (boys_count * 100) / total_count;
-    } else {
-      return (girls_count * 100) / total_count;
+      const timer = setTimeout(() => {
+        const updatedProgressValues = {};
+        standardDataCount.standards.forEach((standard, index) => {
+          updatedProgressValues[index] = {
+            male: calculateProgress(
+              standard.boys_count,
+              standard.girls_count,
+              standard.boys_count + standard.girls_count,
+              "MALE"
+            ),
+            female: calculateProgress(
+              standard.boys_count,
+              standard.girls_count,
+              standard.boys_count + standard.girls_count,
+              "FEMALE"
+            ),
+          };
+        });
+        setProgressValues(updatedProgressValues);
+      }, 500);
+
+      return () => clearTimeout(timer);
     }
-  };
+  }, [standardDataCount]);
+
+  const [boysProgress, setBoysProgress] = useState(0);
+  const [girlsProgress, setGirlsProgress] = useState(0);
+
+  useEffect(() => {
+    if (standardDataCount) {
+      const totalBoys = standardDataCount.total_boys;
+      const totalGirls = standardDataCount.total_girls;
+      const totalStudents = standardDataCount.total_students;
+
+      const boysCalculatedValue = (totalBoys / totalStudents) * 100;
+      const girlsCalculatedValue = (totalGirls / totalStudents) * 100;
+
+      const boysTimeout = setTimeout(() => {
+        setBoysProgress(boysCalculatedValue);
+      }, 500);
+
+      const girlsTimeout = setTimeout(() => {
+        setGirlsProgress(girlsCalculatedValue);
+      }, 500);
+
+      // Cleanup the timeouts if the component unmounts or if the dependencies change
+      return () => {
+        clearTimeout(boysTimeout);
+        clearTimeout(girlsTimeout);
+      };
+    }
+  }, [standardDataCount]);
+
+  if (isLoading) {
+    return <>Loading...</>;
+  }
 
   return (
     <>
       <h1 className="uppercase">STANDARD'S INFORMATION</h1>
-      {/* Total Student COunt */}
+      {/* Total Student Count */}
       <Card className="">
         <CardHeader>
           <CardTitle>Total</CardTitle>
@@ -63,16 +111,7 @@ const StandardPage = () => {
                 <Label htmlFor="Boys">Total Male</Label> -&nbsp;
                 {standardDataCount ? standardDataCount.total_boys : "0"}
               </span>
-              <Progress
-                value={
-                  standardDataCount
-                    ? (standardDataCount.total_boys /
-                        standardDataCount.total_students) *
-                      100
-                    : 0
-                }
-                className="w-full"
-              />
+              <Progress value={boysProgress} className="w-full" />
             </div>
             <div className="flex flex-col space-y-1.5">
               <span className="text-sm text-muted-foreground">
@@ -80,16 +119,7 @@ const StandardPage = () => {
                 <Label htmlFor="Girls">Total Female</Label> -&nbsp;
                 {standardDataCount ? standardDataCount.total_girls : "0"}
               </span>
-              <Progress
-                value={
-                  standardDataCount
-                    ? (standardDataCount.total_girls /
-                        standardDataCount.total_students) *
-                      100
-                    : 0
-                }
-                className="w-full"
-              />
+              <Progress value={girlsProgress} className="w-full" />
             </div>
             <div className="flex flex-col space-y-1.5">
               <Label htmlFor="Total">Total Student's</Label>
@@ -108,7 +138,7 @@ const StandardPage = () => {
           </Link>
         </CardFooter>
       </Card>
-      {/* Each Standard  Student COunt */}
+      {/* Each Standard Student Count */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {standardDataCount &&
           standardDataCount.standards.map((standard, index) => (
@@ -133,7 +163,7 @@ const StandardPage = () => {
                         {standard.boys_count}
                       </span>
                       <Progress
-                        value={handleCalculate(standard, "MALE")}
+                        value={progressValues[index]?.male || 0}
                         className="w-[60%]"
                       />
                     </div>
@@ -144,7 +174,7 @@ const StandardPage = () => {
                         {standard.girls_count}
                       </span>
                       <Progress
-                        value={handleCalculate(standard, "FEMALE")}
+                        value={progressValues[index]?.female || 0}
                         className="w-[60%]"
                       />
                     </div>

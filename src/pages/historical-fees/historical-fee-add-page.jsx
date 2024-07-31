@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import {
@@ -8,7 +8,6 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-  useFormField,
 } from "@/components/ui/form";
 import {
   Select,
@@ -35,10 +34,17 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { addHistoricalFee } from "@/services/historical-fee-service";
+import { useMutation } from "@tanstack/react-query";
 
 const years = [
+  { _id: "2030", name: "2030" },
+  { _id: "2029", name: "2029" },
+  { _id: "2028", name: "2028" },
+  { _id: "2027", name: "2027" },
+  { _id: "2026", name: "2026" },
+  { _id: "2025", name: "2025" },
   { _id: "2024", name: "2024" },
   { _id: "2023", name: "2023" },
   { _id: "2022", name: "2022" },
@@ -98,8 +104,6 @@ const HistoricalFeesAddPage = () => {
 
   const navigate = useNavigate();
 
-  const [studentName, setStudentName] = useState([]);
-
   const [loading, setLoading] = useState(false);
 
   const [standards] = useState([
@@ -118,47 +122,15 @@ const HistoricalFeesAddPage = () => {
     "12",
   ]);
 
-  const getStudentData = () => {
-    const token = localStorage.getItem("Token");
-
-    const config = {
-      headers: {
-        Authorization: `Token ${token}`,
-      },
-    };
-
-    setLoading(true);
-
-    return axios
-      .get(`http://127.0.0.1:8000/students/search`, config)
-      .then((response) => {
-        setStudentName(response.data.data);
-        setLoading(false);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-  };
-
-  useEffect(() => {
-    getStudentData();
-  }, []);
+  const mutation = useMutation({
+    mutationFn: (data) => addHistoricalFee(data),
+    onSuccess: () => {
+      navigate("/historical-fee");
+    },
+  });
 
   const onSubmit = (data) => {
-    const token = localStorage.getItem("Token");
-
-    axios
-      .post("http://127.0.0.1:8000/historical-fees/add/", data, {
-        headers: {
-          Authorization: `token ${token}`,
-        },
-      })
-      .then(function (response) {
-        navigate("/historical-fee");
-      })
-      .catch(function (error) {
-        console.log(error);
-      });
+    mutation.mutate(data);
   };
 
   const form = useForm({

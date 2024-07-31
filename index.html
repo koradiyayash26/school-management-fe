@@ -10,4 +10,12 @@
     <div id="root"></div>
     <script type="module" src="/src/main.jsx"></script>
   </body>
+  <script>
+    var themeValue = localStorage.getItem("vite-ui-theme");
+    var body = document.body;
+    if (themeValue) {
+      body.classList.remove("dark", "light", "system");
+      body.classList.add(themeValue); 
+    }
+  </script>
 </html>

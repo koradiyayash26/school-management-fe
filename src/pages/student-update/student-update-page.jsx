@@ -65,6 +65,9 @@ function StudentUpdatePage() {
           />
         </div>
         <div className="flex gap-2 md:m-0 mt-4">
+          <Link to="/educational">
+            <Button>Update History</Button>
+          </Link>
           <Link to="/update/add">
             <Button>Add</Button>
           </Link>

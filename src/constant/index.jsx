@@ -31,23 +31,23 @@ export const MENU = [
     path: "/update",
     icon: () => <UsersRound className="h-4 w-4" />,
   },
-  {
-    lable: "STUDENT HISTORICAL",
-    path: "/educational",
-    icon: () => <NotebookPen className="h-4 w-4" />,
-  },
-  {
-    lable: "HISTORICAL FEE",
-    path: "/historical-fee",
-    icon: () => <IndianRupee className="h-4 w-4" />,
-  },
+  // {
+  //   lable: "STUDENT HISTORICAL",
+  //   path: "/educational",
+  //   icon: () => <NotebookPen className="h-4 w-4" />,
+  // },
+  // {
+  //   lable: "HISTORICAL FEE",
+  //   path: "/historical-fee",
+  //   icon: () => <IndianRupee className="h-4 w-4" />,
+  // },
   {
     lable: "FEES",
     path: "/fee-type",
     icon: () => <Calculator className="h-4 w-4" />,
   },
   {
-    lable: "SCHOOL STUDENT",
+    lable: "FEES STUDENT",
     path: "/school-student",
     icon: () => <UsersRound className="h-4 w-4" />,
   },
@@ -61,13 +61,13 @@ export const MENU = [
     path: "/report",
     icon: () => <StickyNote className="h-4 w-4" />,
   },
+  // {
+  //   lable: "EXAM",
+  //   path: "/exam",
+  //   icon: () => <Medal className="h-4 w-4" />,
+  // },
   {
     lable: "EXAM",
-    path: "/exam",
-    icon: () => <Medal className="h-4 w-4" />,
-  },
-  {
-    lable: "EXAM-TEMPLATE",
     path: "/exam-template",
     icon: () => <Medal className="h-4 w-4" />,
   },

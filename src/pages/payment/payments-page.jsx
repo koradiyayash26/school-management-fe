@@ -1,4 +1,5 @@
 import ActionsPopupPaymentFee from "@/components/payment/data-table-row-action";
+import Spinner from "@/components/spinner/spinner";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -163,7 +164,7 @@ const PaymentsPage = () => {
   };
 
   if (isLoading || paymentFeeLoading) {
-    return <>Loading...</>;
+    return <><Spinner/></>;
   }
 
   return (

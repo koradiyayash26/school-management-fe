@@ -6,6 +6,7 @@ import { useFeeTypeList, useFeetypeGetdata } from "@/hooks/use-fees";
 import FeeTypeForm from "@/components/fee/fee-type-form";
 import { useMutation } from "@tanstack/react-query";
 import { feeTypeUpdate } from "@/services/fees-service";
+import Spinner from "@/components/spinner/spinner";
 
 const FeetypeUpdatePage = () => {
   const navigate = useNavigate();
@@ -53,7 +54,7 @@ const FeetypeUpdatePage = () => {
   };
 
   if (isLoading || feeTyoeLoading) {
-    return <>Loading</>;
+    return <><Spinner/></>;
   }
   if (error || feeTypeErro) {
     return <>Error</>;

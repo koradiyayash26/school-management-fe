@@ -20,6 +20,7 @@ import {
 import { Link } from "react-router-dom";
 import ActionsPopupSchoolStudent from "@/components/school-student/data-table-row-action";
 import { useSchoolStudents } from "@/hooks/use-school-student";
+import Spinner from "@/components/spinner/spinner";
 
 const headers = [
   { label: "ID", value: "id" },
@@ -57,7 +58,7 @@ function SchoolStudentPage() {
     setPage(0);
   };
 
-  if (isLoading) return <>Loading...</>;
+  if (isLoading) return <><Spinner/></>;
 
   if (error) return <>Error</>;
 

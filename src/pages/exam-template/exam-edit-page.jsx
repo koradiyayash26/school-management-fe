@@ -11,6 +11,7 @@ import { useMutation } from "@tanstack/react-query";
 import ExamTemplateForm from "@/components/exam-template/exam-template-from";
 import { useExamTemplateIdGet } from "@/hooks/use-exam-template";
 import { examTemplateIdUpdate } from "@/services/exam-template-service";
+import Spinner from "@/components/spinner/spinner";
 
 const ExamTemplateEditPage = () => {
   const { id } = useParams();
@@ -44,7 +45,7 @@ const ExamTemplateEditPage = () => {
   };
 
   if (isLoading) {
-    return <>Loading...</>;
+    return <><Spinner/></>;
   }
 
   return (

@@ -20,6 +20,7 @@ import {
 import ActionsPopup from "@/components/ui/data-table-row-actions";
 import { useCertificate } from "@/hooks/use-certificate";
 import { SearchX } from "lucide-react";
+import Spinner from "@/components/spinner/spinner";
 
 const headers = [
   { label: "ID", value: "id" },
@@ -51,7 +52,7 @@ function CertificatePage() {
   };
 
   if (isLoading) {
-    return <>Loading...</>;
+    return <Spinner />;
   }
 
   const filteredStudents = students.filter((student) => {

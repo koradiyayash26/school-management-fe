@@ -1,4 +1,5 @@
 import ActionsPopupReport from "@/components/report/data-table-row-action";
+import Spinner from "@/components/spinner/spinner";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import {
   Table,
@@ -79,7 +80,7 @@ const ReportsPage = () => {
   }, [standardDataCount, feeReportData]);
 
   if (isLoading || reportLoading) {
-    return <>Loading....</>;
+    return <><Spinner/></>;
   }
 
   if (error || reportError) {

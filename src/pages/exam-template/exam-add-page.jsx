@@ -10,6 +10,7 @@ import { useNavigate } from "react-router-dom";
 import { useMutation } from "@tanstack/react-query";
 import ExamTemplateForm from "@/components/exam-template/exam-template-from";
 import { examTemplateIdAdd } from "@/services/exam-template-service";
+import Spinner from "@/components/spinner/spinner";
 
 const ExamTemplateAddPage = () => {
   const defaultValues = {
@@ -36,7 +37,7 @@ const ExamTemplateAddPage = () => {
   var isLoading = false;
 
   if (isLoading) {
-    return <>Loading...</>;
+    return <><Spinner/></>;
   }
 
   return (

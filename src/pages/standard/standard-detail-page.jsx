@@ -33,6 +33,7 @@ import toast, { Toaster } from "react-hot-toast";
 import { useMutation } from "@tanstack/react-query";
 import { deleteStandard } from "@/services/standard-service";
 import { useGetStandard } from "@/hooks/use-standard";
+import Spinner from "@/components/spinner/spinner";
 
 const headers = [
   { label: "ID", value: "id" },
@@ -100,7 +101,7 @@ const StandardDetailPage = () => {
   };
 
   if (isLoading) {
-    return <>Loading...</>;
+    return <><Spinner/></>;
   }
   if (error) {
     return <>Error</>;

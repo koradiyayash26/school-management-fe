@@ -17,6 +17,7 @@ import {
 } from "@/components/ui/table";
 import { usePaymentReceiptDetailsBytid } from "@/hooks/use-payment";
 import numWords from "num-words";
+import Spinner from "@/components/spinner/spinner";
 
 const PaymentReceiptPage = () => {
   const { id } = useParams();
@@ -35,7 +36,11 @@ const PaymentReceiptPage = () => {
   };
 
   if (isLoading) {
-    return <>Loading...</>;
+    return (
+      <>
+        <Spinner />
+      </>
+    );
   }
 
   return (
@@ -80,7 +85,8 @@ const PaymentReceiptPage = () => {
                   <div className="block lg:flex justify-between">
                     <h3 className="mb-2">
                       <span className="text-white font-semibold">GR.NO :</span>
-                      <span className="text-[#9ca3af]">&nbsp;
+                      <span className="text-[#9ca3af]">
+                        &nbsp;
                         {studentData.receipt.student.grno}
                       </span>
                     </h3>
@@ -89,7 +95,9 @@ const PaymentReceiptPage = () => {
                         Standard :&nbsp;
                       </span>
                       <span className="text-[#9ca3af]">
-                        {studentData.fee_type.standard === 13 ? "Balvatika":studentData.fee_type.standard}
+                        {studentData.fee_type.standard === 13
+                          ? "Balvatika"
+                          : studentData.fee_type.standard}
                       </span>
                     </h3>
                   </div>
@@ -107,6 +115,11 @@ const PaymentReceiptPage = () => {
                         <TableHead className="text-white text-center border">
                           Amount
                         </TableHead>
+                        {studentData.amount_waived !== 0 && (
+                          <TableHead className="text-white text-center border">
+                            Waived
+                          </TableHead>
+                        )}
                       </TableRow>
                     </TableHeader>
                     <TableBody>
@@ -118,14 +131,25 @@ const PaymentReceiptPage = () => {
                         <TableCell className="border text-center">
                           {studentData.amount_paid}
                         </TableCell>
+                        {studentData.amount_waived !== 0 && (
+                          <TableCell className="border text-center">
+                            {studentData.amount_waived}
+                          </TableCell>
+                        )}
                       </TableRow>
                       <TableRow>
                         <TableCell className="text-end" colSpan="2">
                           Total
                         </TableCell>
-                        <TableCell className="border text-center">
-                          {studentData.total_fee}
-                        </TableCell>
+                        {studentData.amount_waived !== 0 ? (
+                          <TableCell colSpan="2" className="border text-center">
+                            {studentData.total_fee}
+                          </TableCell>
+                        ) : (
+                          <TableCell className="border text-center">
+                            {studentData.total_fee}
+                          </TableCell>
+                        )}
                       </TableRow>
                     </TableBody>
                   </Table>

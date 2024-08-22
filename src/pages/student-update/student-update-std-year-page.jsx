@@ -20,6 +20,7 @@ import {
 } from "@/services/student-update";
 import { Check, X } from "lucide-react";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import Spinner from "@/components/spinner/spinner";
 
 const headers = [
   { label: "Grno", value: "grno" },
@@ -63,7 +64,7 @@ function StudentUpdateStdYearPage() {
     },
   });
 
-  if (isLoading) return <>Loading...</>;
+  if (isLoading) return <><Spinner/></>;
 
   if (error) {
     return (

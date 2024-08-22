@@ -42,6 +42,7 @@ import {
 } from "@/components/ui/tooltip";
 import ReactHTMLTableToExcel from "react-html-table-to-excel";
 import { useReactToPrint } from "react-to-print";
+import Spinner from "@/components/spinner/spinner";
 
 const headers = [
   { label: "ID", value: "id" },
@@ -132,7 +133,7 @@ function StudentsPage() {
     onAfterPrint: () => alert("PDF generated successfully"),
   });
 
-  if (isLoading) return <>Loading...</>;
+  if (isLoading) return <><Spinner/></>;
 
   if (error) return <>Error</>;
 

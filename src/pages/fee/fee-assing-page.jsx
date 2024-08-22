@@ -15,6 +15,7 @@ import { useFeeStudentAssignUnAssignData } from "@/hooks/use-fees";
 import { useMutation } from "@tanstack/react-query";
 import toast, { Toaster } from "react-hot-toast";
 import { assignStudentUpdatePatch } from "@/services/fees-service";
+import Spinner from "@/components/spinner/spinner";
 
 const headers = [
   { label: "Id", value: "id" },
@@ -57,7 +58,7 @@ function FeesAssingPage() {
   });
 
   if (isLoading) {
-    return <>Loading...</>;
+    return <><Spinner/></>;
   }
   if (error) {
     return <>Error</>;

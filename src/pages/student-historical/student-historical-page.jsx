@@ -32,6 +32,7 @@ import toast, { Toaster } from "react-hot-toast";
 import ActionsPopupStudentHistorical from "@/components/student-historical/data-table-row-action";
 import { useMutation } from "@tanstack/react-query";
 import { deleteStudentHistorical } from "@/services/student-historical-service";
+import Spinner from "@/components/spinner/spinner";
 
 const headers = [
   { label: "Name", value: "name" },
@@ -81,7 +82,7 @@ function StudentHistoricalPage() {
     },
   });
 
-  if (isLoading) return <>Loading...</>;
+  if (isLoading) return <><Spinner/></>;
 
   if (error) return <>Error</>;
 

@@ -33,6 +33,7 @@ import toast, { Toaster } from "react-hot-toast";
 import ActionsPopupFee from "@/components/fee/data-table-row-action";
 import { deleteFeeType } from "@/services/fees-service";
 import { useFeeType } from "@/hooks/use-fees";
+import Spinner from "@/components/spinner/spinner";
 
 const headers = [
   { label: "ID", value: "id" },
@@ -81,7 +82,7 @@ function FeesTypePage() {
 
   const visibleStudents = filteredStudents.slice(startIndex, endIndex);
 
-  if (isLoading) return <>Loading...</>;
+  if (isLoading) return <><Spinner/></>;
 
   if (error) return <>Error</>;
 

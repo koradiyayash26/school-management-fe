@@ -1,3 +1,4 @@
+import Spinner from "@/components/spinner/spinner";
 import StudentForm from "@/components/student";
 import { studentDetail } from "@/constant";
 import { useStudent } from "@/hooks/use-student";
@@ -39,7 +40,7 @@ const StudentEditPage = () => {
     ])
   );
 
-  if (isLoading) return <>Loading...</>;
+  if (isLoading) return <><Spinner/></>;
   if (error) return <>Error</>;
   return <StudentForm defaultValues={cleanedData} onSubmit={onSubmit} />;
 };

@@ -11,6 +11,7 @@ import {
 } from "@/components/ui/context-menu";
 import { Printer } from "lucide-react";
 import { useCertificateGetData } from "@/hooks/use-certificate";
+import Spinner from "@/components/spinner/spinner";
 
 const BirthCertificatePage = () => {
   const { id } = useParams();
@@ -35,7 +36,7 @@ const BirthCertificatePage = () => {
   };
 
   if (isLoading) {
-    return <>Loading</>;
+    return <><Spinner/></>;
   }
 
   if (error) {

@@ -5,6 +5,7 @@ import { useSchoolStudentsName } from "@/hooks/use-school-student";
 import { useNavigate } from "react-router-dom";
 import { useMutation } from "@tanstack/react-query";
 import { schoolStudentPost } from "@/services/school-student-service";
+import Spinner from "@/components/spinner/spinner";
 
 const SchoolStudentAddPage = () => {
   const navigate = useNavigate();
@@ -47,7 +48,7 @@ const SchoolStudentAddPage = () => {
   };
 
   if (isLoading) {
-    return <>Loading...</>;
+    return <><Spinner/></>;
   }
 
   if (error) {

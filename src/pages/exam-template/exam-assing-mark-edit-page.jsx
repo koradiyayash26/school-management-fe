@@ -15,6 +15,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { examAssingMarkUpdatePatch } from "@/services/exam-template-service";
 import { useMutation } from "@tanstack/react-query";
+import Spinner from "@/components/spinner/spinner";
 
 const headers = [
   { label: "Id", value: "ids" },
@@ -84,7 +85,7 @@ function ExamAssingMarkEditPage() {
   };
 
   if (isLoading) {
-    return <>Loading...</>;
+    return <><Spinner/></>;
   }
 
   if (error) {

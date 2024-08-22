@@ -20,6 +20,7 @@ import {
 import { useStudentUpdateStdYearTemplate } from "@/hooks/use-student-update";
 import { Link } from "react-router-dom";
 import ActionsPopupStudentUpdate from "@/components/student-update/data-table-row-action";
+import Spinner from "@/components/spinner/spinner";
 
 const headers = [
   { label: "Year", value: "year" },
@@ -49,7 +50,7 @@ function StudentUpdatePage() {
     setPage(0);
   };
 
-  if (isLoading) return <>Loading...</>;
+  if (isLoading) return <><Spinner/></>;
 
   if (error) return <>Error</>;
 

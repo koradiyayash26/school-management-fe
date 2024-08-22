@@ -6,6 +6,7 @@ import FeeTypeForm from "@/components/fee/fee-type-form";
 import { useFeeTypeList } from "@/hooks/use-fees";
 import { useMutation } from "@tanstack/react-query";
 import { FeeTypeadd } from "@/services/fees-service";
+import Spinner from "@/components/spinner/spinner";
 
 const FeeTypesAddPage = () => {
   const defaultValues = {
@@ -43,7 +44,7 @@ const FeeTypesAddPage = () => {
   };
 
   if (isLoading) {
-    return <>loading....</>;
+    return <><Spinner/></>;
   }
 
   return (

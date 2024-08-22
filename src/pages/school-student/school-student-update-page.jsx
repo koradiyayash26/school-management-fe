@@ -11,6 +11,7 @@ import {
   schoolStudentPatch,
   schoolStudentPost,
 } from "@/services/school-student-service";
+import Spinner from "@/components/spinner/spinner";
 
 const SchoolStudentUpdatePage = () => {
   const navigate = useNavigate();
@@ -63,7 +64,7 @@ const SchoolStudentUpdatePage = () => {
   };
 
   if (isLoading || idDataLoading) {
-    return <>Loading...</>;
+    return <><Spinner/></>;
   }
 
   if (error || idDataErro) {

@@ -1,3 +1,4 @@
+import Spinner from "@/components/spinner/spinner";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import {
   Table,
@@ -32,7 +33,7 @@ const ReportDetailsPage = () => {
   const { data, isLoading, error } = useReport(id);
 
   if (isLoading) {
-    return <>Loading...</>;
+    return <><Spinner/></>;
   }
 
   if (error) {

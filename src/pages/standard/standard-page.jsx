@@ -14,6 +14,7 @@ import { Label } from "@/components/ui/label";
 import { Progress } from "@/components/ui/progress";
 import { ClipboardList } from "lucide-react";
 import { useStandard } from "@/hooks/use-standard";
+import Spinner from "@/components/spinner/spinner";
 
 const StandardPage = () => {
   const { data, isLoading, refetch } = useStandard();
@@ -91,7 +92,7 @@ const StandardPage = () => {
   }, [standardDataCount]);
 
   if (isLoading) {
-    return <>Loading...</>;
+    return <><Spinner/></>;
   }
 
   return (

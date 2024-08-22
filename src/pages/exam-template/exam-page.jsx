@@ -33,6 +33,7 @@ import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import { useExamTemplateGet } from "@/hooks/use-exam-template";
 import ActionsPopupExamTemplate from "@/components/exam-template/data-table-row-action";
 import { examTemplateDelete } from "@/services/exam-template-service";
+import Spinner from "@/components/spinner/spinner";
 
 const headers = [
   { label: "ID", value: "id" },
@@ -92,7 +93,7 @@ function ExamTemplatePage() {
   const visibleStudents = filteredStudents?.slice(startIndex, endIndex);
 
   if (isLoading) {
-    return <>Loading...</>;
+    return <><Spinner/></>;
   }
 
   return (

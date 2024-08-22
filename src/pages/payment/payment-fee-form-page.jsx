@@ -1,4 +1,5 @@
 import ActionsPopupPaymentFee from "@/components/payment/data-table-row-action";
+import Spinner from "@/components/spinner/spinner";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -114,12 +115,12 @@ const PaymentFeeFormPage = () => {
   const mutationFeeList = useMutation({
     mutationFn: (paymentId) => deletePaymentFee(paymentId),
     onSuccess: (res) => {
+      setTimeout(() => {
+        form.reset();
+      }, 500);
+      refetch();
       setOpenAlert(false);
       toast.success("History Fee Deleted Successfully");
-      form.reset();
-      setTimeout(() => {
-        refetch();
-      }, 500);
     },
   });
 
@@ -129,7 +130,11 @@ const PaymentFeeFormPage = () => {
   };
 
   if (isLoading) {
-    return <>Loading...</>;
+    return (
+      <>
+        <Spinner />
+      </>
+    );
   }
 
   if (error) {
@@ -297,6 +302,12 @@ const PaymentFeeFormPage = () => {
                             // name="amount_paid"
                             name={`i.${index}.amount_paid`}
                             defaultValue={i.amount_paid}
+                            disabled={
+                              i.fee_type__amount -
+                                i.amount_paid -
+                                i.amount_waived ===
+                              0
+                            }
                             render={({ field }) => (
                               <FormItem>
                                 <FormControl>
@@ -320,6 +331,12 @@ const PaymentFeeFormPage = () => {
                             defaultValue={i.amount_waived}
                             // name="amount_waived"
                             name={`i.${index}.amount_waived`}
+                            disabled={
+                              i.fee_type__amount -
+                                i.amount_paid -
+                                i.amount_waived ===
+                              0
+                            }
                             render={({ field }) => (
                               <FormItem>
                                 <FormControl>
@@ -464,11 +481,17 @@ const PaymentFeeFormPage = () => {
               <TableRow key={student.id}>
                 {headers.map((header) => (
                   <TableCell key={header.value} className="text-center border">
-                    {header.value === "standard"
-                      ? student.standard || "None"
-                      : student[header.value] == 13
-                      ? "Balvatika"
-                      : student[header.value] || "None"}
+                    {header.value === "standard" ? (
+                      student.standard || "None"
+                    ) : header.value === "paid" ? (
+                      <>{student.paid + student.waived}</>
+                    ) : header.value === "fee_paid_date" ? (
+                      format(new Date(student.fee_paid_date), "dd-MM-yyyy")
+                    ) : student[header.value] == 13 ? (
+                      "Balvatika"
+                    ) : (
+                      student[header.value] || "None"
+                    )}
                   </TableCell>
                 ))}
                 <TableCell className="text-center border">

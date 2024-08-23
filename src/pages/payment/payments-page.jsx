@@ -97,7 +97,6 @@ const years = [
   { value: "2000", label: "2000" },
 ];
 
-
 const PaymentsPage = () => {
   const { data, isLoading } = usePayment();
 
@@ -164,7 +163,11 @@ const PaymentsPage = () => {
   };
 
   if (isLoading || paymentFeeLoading) {
-    return <><Spinner/></>;
+    return (
+      <>
+        <Spinner />
+      </>
+    );
   }
 
   return (
@@ -345,6 +348,8 @@ const PaymentsPage = () => {
                     <TableCell key={header.value} className="capitalize">
                       {header.value === "standard"
                         ? payment.standard || "None"
+                        : header.value === "paid"
+                        ? (payment.paid || 0) + (payment.waived || 0)
                         : payment[header.value] == 13
                         ? "Balvatika"
                         : payment[header.value] || "None"}

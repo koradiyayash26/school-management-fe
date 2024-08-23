@@ -94,14 +94,16 @@ const PaymentFeeFormPage = () => {
       fee_paid_date: data.fee_paid_date
         ? format(new Date(data.fee_paid_date), "yyyy-MM-dd")
         : null,
-      fees: data.i.map((item, index) => ({
-        ...item,
-        fee_type__id: studentFeeDetail[index]?.fee_type__id || null,
-        amount_paid: Number(item.amount_paid),
-        amount_waived: Number(item.amount_waived),
-      })),
+      fees: data.i
+        .map((item, index) => ({
+          ...item,
+          fee_type__id: studentFeeDetail[index]?.fee_type__id || null,
+          amount_paid: Number(item.amount_paid) || 0,
+          amount_waived: Number(item.amount_waived) || 0,
+        }))
+        .filter(item => !isNaN(item.amount_paid) && !isNaN(item.amount_waived)),
       student_id: studentDetail?.id || null,
-      note: data.note, // Keep the note field if needed
+      note: data.note,
     };
     console.log(formattedData);
     mutation.mutate(formattedData);

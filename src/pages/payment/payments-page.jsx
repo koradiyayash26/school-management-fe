@@ -11,7 +11,7 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
-
+import { Calendar } from "@/components/ui/calendar";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -43,6 +43,11 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
 import { usePayment, usePaymentFeeList } from "@/hooks/use-payment";
 import { deletePaymentFee } from "@/services/payment-service";
 import { useMutation } from "@tanstack/react-query";
@@ -50,6 +55,7 @@ import { Info } from "lucide-react";
 import React, { useState } from "react";
 import toast, { Toaster } from "react-hot-toast";
 import { Link } from "react-router-dom";
+import { format, isWithinInterval, parseISO } from 'date-fns';
 
 const headers = [
   { label: "Fee Paid Date", value: "fee_paid_date" },
@@ -117,20 +123,46 @@ const PaymentsPage = () => {
 
   const [selectedYear, setSelectedYear] = useState("");
 
+  const [startDate, setStartDate] = useState(null);
+  const [endDate, setEndDate] = useState(null);
+  const [isFilterApplied, setIsFilterApplied] = useState(false);
+
   let studentsSearch = data?.data || [];
   let paymentFeeList = paymentFeeData?.data || [];
 
   const startIndex = page * pageSize;
   const endIndex = (page + 1) * pageSize;
 
+  const applyFilter = () => {
+    setIsFilterApplied(true);
+  };
+
+  const clearFilter = () => {
+    setSearch("");
+    setStartDate(null);
+    setEndDate(null);
+    setIsFilterApplied(false);
+  };
+
   const filteredStudents = paymentFeeList?.filter((payment) => {
-    return search.toLowerCase() === ""
-      ? payment
-      : payment.student__standard.toLocaleLowerCase().includes(search) ||
-          payment.student__first_name.toLocaleLowerCase().includes(search) ||
-          payment.student__last_name.toLocaleLowerCase().includes(search) ||
-          payment.student__middle_name.toLocaleLowerCase().includes(search) ||
-          payment.fee_paid_date.toLocaleLowerCase().includes(search);
+    if (!isFilterApplied) return true;
+    
+    const searchLower = search.toLowerCase();
+    const matchesSearch = (
+      (payment.student__standard?.toString().toLowerCase().includes(searchLower) || false) ||
+      (payment.student__first_name?.toLowerCase().includes(searchLower) || false) ||
+      (payment.student__last_name?.toLowerCase().includes(searchLower) || false) ||
+      (payment.student__middle_name?.toLowerCase().includes(searchLower) || false) ||
+      (payment.fee_paid_date?.toLowerCase().includes(searchLower) || false) ||
+      (payment.id?.toString().includes(search) || false)
+    );
+
+    const paymentDate = parseISO(payment.fee_paid_date);
+    const isWithinDateRange = startDate && endDate ? 
+      isWithinInterval(paymentDate, { start: startDate, end: endDate }) : 
+      true;
+
+    return matchesSearch && isWithinDateRange;
   });
 
   const visibleStudents = filteredStudents?.slice(startIndex, endIndex);
@@ -312,13 +344,46 @@ const PaymentsPage = () => {
         </AlertDialogContent>
       </AlertDialog>
       <h1>FEE HISTORY</h1>
-      <div className="block md:flex md:justify-between gap-2">
-        <div className="w-full">
+      <div className="space-y-4">
+        <div className="flex flex-col md:flex-row gap-4">
           <Input
-            className="w-full md:max-w-sm mb-2 md:mb-0  md:mr-2"
+            className="w-full md:w-1/3"
             placeholder="Search"
+            value={search}
             onChange={(e) => setSearch(e.target.value)}
           />
+          <Popover>
+            <PopoverTrigger asChild>
+              <Button variant="outline">
+                {startDate ? format(startDate, "yyyy-MM-dd") : "Start Date"}
+              </Button>
+            </PopoverTrigger>
+            <PopoverContent className="w-auto p-0">
+              <Calendar
+                mode="single"
+                selected={startDate}
+                onSelect={setStartDate}
+                initialFocus
+              />
+            </PopoverContent>
+          </Popover>
+          <Popover>
+            <PopoverTrigger asChild>
+              <Button variant="outline">
+                {endDate ? format(endDate, "yyyy-MM-dd") : "End Date"}
+              </Button>
+            </PopoverTrigger>
+            <PopoverContent className="w-auto p-0">
+              <Calendar
+                mode="single"
+                selected={endDate}
+                onSelect={setEndDate}
+                initialFocus
+              />
+            </PopoverContent>
+          </Popover>
+          <Button onClick={applyFilter}>Apply Filter</Button>
+          <Button onClick={clearFilter} variant="outline">Clear Filter</Button>
         </div>
       </div>
       <ScrollArea className="rounded-md border w-full h-[calc(80vh-120px)]">

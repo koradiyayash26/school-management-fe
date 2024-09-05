@@ -1,58 +1,35 @@
-import { Checkbox } from "@/components/ui/checkbox";
-import { Label } from "@/components/ui/label";
+import CardItem from "@/components/home/card-item";
+import { Calculator, Users } from "lucide-react";
 import React, { useEffect, useState } from "react";
 
 const Setting = () => {
-  const pageName = [
-    { id: 1, name: "Exam" },
-    { id: 2, name: "General Register" },
-    { id: 3, name: "Student" },
-    { id: 4, name: "Historical Fee" },
-    { id: 5, name: "Fee History" },
+  const card = [
+    {
+      title: "Standard Master",
+      path: "/setting/standard-master",
+      icon: Users,
+    },
+    {
+      title: "Fee Type Master",
+      path: "/setting/fee-type-master",
+      icon: Calculator,
+    },
   ];
 
-  const [selectedPages, setSelectedPages] = useState(() => {
-    const storedPages = localStorage.getItem("selectedPages");
-    return storedPages ? JSON.parse(storedPages) : [];
-  });
-  const handlePage = (name) => {
-    const index = selectedPages.indexOf(name);
-    if (index !== -1) {
-      setSelectedPages((prevPages) =>
-        prevPages.filter((page) => page !== name)
-      );
-    } else {
-      setSelectedPages((prevPages) => [...prevPages, name]);
-    }
-  };
-
-  useEffect(() => {
-    localStorage.setItem("selectedPages", JSON.stringify(selectedPages));
-  }, [selectedPages]);
-
   return (
-    <div className="w-full">
-      <h1>SETTINGS</h1>
-      <div className="mt-8">
-        <h5 className="capitalize text-[16px]">
-          Enable for excel file to upload option.
-        </h5>
-        <div className="flex items-center space-x-2 mt-4">
-          <ul>
-            {pageName.map((page) => (
-              <li key={page.id}>
-                <Checkbox
-                  id={page.name}
-                  checked={selectedPages.includes(page.name)}
-                  onClick={() => handlePage(page.name)}
-                  className="mr-2"
-                />
-                <Label htmlFor={page.name} className="text-center align-middle">
-                  {page.name}
-                </Label>
-              </li>
-            ))}
-          </ul>
+    <div className="w-full p-4">
+      <h1 className="text-2xl font-bold mb-6">SETTINGS</h1>
+      
+      <div className="flex flex-1 flex-col gap-3 py-4  items-center md:gap-8 md:p-8">
+        <div className="w-full grid gap-4 xl:grid-cols-4 lg:grid-cols-3 md:grid-cols-2 grid-cols-1 md:gap-8">
+          {card.map((item, index) => (
+            <CardItem
+              key={index}
+              icon={item.icon}
+              title={item.title}
+              path={item.path}
+            />
+          ))}
         </div>
       </div>
     </div>

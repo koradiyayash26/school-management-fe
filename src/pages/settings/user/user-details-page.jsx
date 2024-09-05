@@ -40,7 +40,7 @@ const UserDetailsPage = () => {
     mutationFn: (userId) => userDelete(userId),
     onSuccess: () => {
       navigate("/setting");
-      toast.success("Exam Delete Successfully");
+      toast.success("User Delete Successfully");
     },
   });
 
@@ -59,6 +59,7 @@ const UserDetailsPage = () => {
 
   return (
     <div className="container mx-auto px-4 py-6 sm:py-8 bg-[#27272a] text-white min-h-screen">
+        
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 sm:mb-8 space-y-4 sm:space-y-0">
         <h1 className="text-2xl sm:text-3xl font-bold text-white">
           Manage User - {user.username}
@@ -214,7 +215,7 @@ const ChangePasswordModal = ({ userId, onClose }) => {
       await changePasswordOfUser({
         old_password: currentPassword,
         new_password: newPassword,
-      });
+      },userId);
       toast({
         title: "Success",
         description: "Password changed successfully.",

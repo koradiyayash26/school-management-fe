@@ -35,8 +35,8 @@ const userDelete = async (id) => {
   });
 };
 
-const changePasswordOfUser = async (data) => {
-  return await apiClient.post(`/api/user/change-password/`, data, {
+const changePasswordOfUser = async (data,id) => {
+  return await apiClient.post(`/api/user/change-password/${id}/`, data, {
     headers: {
       Authorization: `Bearer ${getToken()}`,
     },

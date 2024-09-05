@@ -1,13 +1,8 @@
 import React from "react";
-
 import { Card } from "@/components/ui/card";
 import { useNavigate } from "react-router-dom";
-import FeeTypeForm from "@/components/fee/fee-type-form";
-import { useFeeTypeList } from "@/hooks/use-fees";
 import { useMutation } from "@tanstack/react-query";
-import { FeeTypeadd } from "@/services/fees-service";
-import Spinner from "@/components/spinner/spinner";
-import StandardMasterForm from "./standard-master-form";
+import StandardMasterForm from "./standard-master-form-page";
 import { postStandardMaster } from "@/services/standard-master-service";
 
 const StandardMasterAdd = () => {

@@ -61,7 +61,7 @@ function StandardMasterList() {
                   </TableCell>
                 ))}
                 <TableCell>
-                  <ActionsPopupSettings id={std.id} />
+                  <ActionsPopupSettings id={std.id} mode="standard" />
                 </TableCell>
               </TableRow>
             ))}

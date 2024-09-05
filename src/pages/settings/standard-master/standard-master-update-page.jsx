@@ -3,7 +3,7 @@ import { Card } from "@/components/ui/card";
 import { useNavigate, useParams } from "react-router-dom";
 import { useMutation } from "@tanstack/react-query";
 import Spinner from "@/components/spinner/spinner";
-import StandardMasterForm from "./standard-master-form";
+import StandardMasterForm from "./standard-master-form-page";
 import { updateStandardMaster } from "@/services/standard-master-service";
 import { useStandardMasterGet } from "@/hooks/use-standard-master";
 const StandardMasterUpdate = () => {

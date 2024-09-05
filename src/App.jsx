@@ -42,9 +42,12 @@ import ExamTemplateEditPage from "./pages/exam-template/exam-edit-page";
 import ExamTemplateAddPage from "./pages/exam-template/exam-add-page";
 import ExamAssingMarkPage from "./pages/exam-template/exam-assing-mark-page";
 import ExamAssingMarkEditPage from "./pages/exam-template/exam-assing-mark-edit-page";
-import StandardMasterList from "./pages/settings/standard-master/standard-master-list";
-import StandardMasterAdd from "./pages/settings/standard-master/standard-master-add";
-import StandardMasterUpdate from "./pages/settings/standard-master/standard-master-update";
+import StandardMasterList from "./pages/settings/standard-master/standard-master-list-page";
+import StandardMasterAdd from "./pages/settings/standard-master/standard-master-add-page";
+import StandardMasterUpdate from "./pages/settings/standard-master/standard-master-update-page";
+import FeeTypeMasterList from "./pages/settings/fee-type-master/fee-type-master-list-page";
+import FeeTypeMasterAddPage from "./pages/settings/fee-type-master/fee-type-master-add-page";
+import FeeTypeMasterUpdate from "./pages/settings/fee-type-master/fee-type-master-update-page";
 
 const App = () => {
   return (
@@ -136,14 +139,47 @@ const App = () => {
                   />
                   <Route element={<PaymentReceiptPage />} path="/receipt/:id" />
                   <Route element={<Setting />} path="/setting" />
-                  <Route element={<StandardMasterList />} path="/setting/standard-master" />
-                  <Route element={<StandardMasterAdd />} path="/setting/standard-master/add" />
-                  <Route element={<StandardMasterUpdate />} path="/setting/standard-master/edit/:id" />
+                  <Route
+                    element={<StandardMasterList />}
+                    path="/setting/standard-master"
+                  />
+                  <Route
+                    element={<StandardMasterAdd />}
+                    path="/setting/standard-master/add"
+                  />
+                  <Route
+                    element={<StandardMasterUpdate />}
+                    path="/setting/standard-master/edit/:id"
+                  />
+                  <Route
+                    element={<FeeTypeMasterList />}
+                    path="/setting/fee-type-master"
+                  />
+                  <Route
+                    element={<FeeTypeMasterAddPage />}
+                    path="/setting/fee-type-master/add"
+                  />
+                  <Route
+                    element={<FeeTypeMasterUpdate />}
+                    path="/setting/fee-type-master/edit/:id"
+                  />
                   <Route element={<ExamTemplatePage />} path="/exam-template" />
-                  <Route element={<ExamTemplateAddPage />} path="/exam-template/add" />
-                  <Route element={<ExamTemplateEditPage />} path="/exam-template/edit/:id" />
-                  <Route element={<ExamAssingMarkPage />} path="/exam-template/mark-assign/:std/:id" />
-                  <Route element={<ExamAssingMarkEditPage />} path="/exam-template/mark-assign-edit/:std/:id" />
+                  <Route
+                    element={<ExamTemplateAddPage />}
+                    path="/exam-template/add"
+                  />
+                  <Route
+                    element={<ExamTemplateEditPage />}
+                    path="/exam-template/edit/:id"
+                  />
+                  <Route
+                    element={<ExamAssingMarkPage />}
+                    path="/exam-template/mark-assign/:std/:id"
+                  />
+                  <Route
+                    element={<ExamAssingMarkEditPage />}
+                    path="/exam-template/mark-assign-edit/:std/:id"
+                  />
                   <Route element={<Notfound />} path="*" />
                 </Route>
               </Route>

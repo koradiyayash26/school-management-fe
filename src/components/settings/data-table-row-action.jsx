@@ -11,11 +11,15 @@ import { Ellipsis, SquarePen } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 
-const ActionsPopupSettings = ({ id }) => {
+const ActionsPopupSettings = ({ id,mode }) => {
   const navigate = useNavigate();
 
-  const editSettingsData = (id) => {
-    navigate(`/setting/standard-master/edit/${id}`);
+  const editSettingsData = (id,mode) => {
+    if(mode === "standard"){  
+      navigate(`/setting/standard-master/edit/${id}`);
+    }else if(mode === "fee-type"){
+      navigate(`/setting/fee-type-master/edit/${id}`);
+    }
   };
 
   return (
@@ -31,7 +35,7 @@ const ActionsPopupSettings = ({ id }) => {
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end" className="w-[160px]">
-          <DropdownMenuItem onClick={() => editSettingsData(id)}>
+          <DropdownMenuItem onClick={() => editSettingsData(id,mode)}>
             Edit
             <DropdownMenuShortcut>
               <SquarePen className="h-4 w-4" />

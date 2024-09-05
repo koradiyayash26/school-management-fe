@@ -2,21 +2,22 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import { Outlet, Navigate, useLocation } from "react-router-dom";
 import Spinner from "./spinner/spinner";
+import apiClient from "@/lib/api-client";
 
 function ProtectedRoutes() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const location = useLocation();
 
-  const getStudentCount = async () => {
+  const ApiTokenVerify = async () => {
     try {
       const jwt_token = JSON.parse(localStorage.getItem("jwt_token"));
       if (!jwt_token || !jwt_token.access) {
         throw new Error("JWT token not found");
       }
 
-      const response = await axios.get(
-        "https://school-management-be-m1fo.onrender.com/api-token-verify/",
+      const response = await apiClient.get(
+        "/api-token-verify/",
         {
           headers: {
             Authorization: `Bearer ${jwt_token.access}`,
@@ -37,7 +38,7 @@ function ProtectedRoutes() {
   };
 
   useEffect(() => {
-    getStudentCount();
+    ApiTokenVerify();
   }, [location]);
 
   if (isLoading) {

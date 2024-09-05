@@ -14,7 +14,7 @@ export default function LoginPage() {
 
   const loginUser = ({ email, password }) => {
     axios
-      .post("https://school-management-be-m1fo.onrender.com/api-token-auth/", {
+      .post("http://127.0.0.1:8000/api-token-auth/", {
         username: email,
         password: password,
       })

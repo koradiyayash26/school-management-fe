@@ -1,5 +1,5 @@
 import CardItem from "@/components/home/card-item";
-import { Cake, Calculator, NotepadText, Plus } from "lucide-react";
+import { Cake, Calculator, ClipboardList, Medal, NotepadText, Plus } from "lucide-react";
 
 function HomePage() {
   const card = [
@@ -7,6 +7,11 @@ function HomePage() {
       title: "New Admission Form",
       path: "/student/add",
       icon: Plus,
+    },
+    {
+      title: "General Register",
+      path: "/student",
+      icon: ClipboardList,
     },
     {
       title: "Birth Certificate",
@@ -22,6 +27,11 @@ function HomePage() {
       title: "Fee",
       path: "/fee-type",
       icon: Calculator,
+    },
+    {
+      title: "Exam",
+      path: "/exam-template",
+      icon: Medal,
     },
   ];
   return (

@@ -48,6 +48,8 @@ import StandardMasterUpdate from "./pages/settings/standard-master/standard-mast
 import FeeTypeMasterList from "./pages/settings/fee-type-master/fee-type-master-list-page";
 import FeeTypeMasterAddPage from "./pages/settings/fee-type-master/fee-type-master-add-page";
 import FeeTypeMasterUpdate from "./pages/settings/fee-type-master/fee-type-master-update-page";
+import UserAddPage from "./pages/settings/user/user-add-page";
+import UserDetailsPage from "./pages/settings/user/user-details-page";
 
 const App = () => {
   return (
@@ -163,6 +165,8 @@ const App = () => {
                     element={<FeeTypeMasterUpdate />}
                     path="/setting/fee-type-master/edit/:id"
                   />
+                  <Route element={<UserAddPage />} path="/setting/user/add" />
+                  <Route element={<UserDetailsPage />} path="/setting/user/details/:id" />
                   <Route element={<ExamTemplatePage />} path="/exam-template" />
                   <Route
                     element={<ExamTemplateAddPage />}

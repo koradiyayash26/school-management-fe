@@ -43,4 +43,22 @@ const changePasswordOfUser = async (data,id) => {
   });
 };
 
-export { getUserList, postUser, getDataUser, userDelete, changePasswordOfUser };
+
+const getUserPermittionGroupData = async (id) => {
+  let response = await apiClient.get(`/api/user/${id}/groups/`, {
+    headers: {
+      Authorization: `Bearer ${getToken()}`,
+    },
+  });
+  return response.data;
+};
+
+const patchUserPermittionGroupData = async (id,data) => {
+  return await apiClient.post(`/api/user/${id}/assign-groups/`, data, {
+    headers: {
+      Authorization: `Bearer ${getToken()}`,
+    },
+  });
+};
+
+export { getUserList, postUser, getDataUser, userDelete, changePasswordOfUser,getUserPermittionGroupData,patchUserPermittionGroupData };

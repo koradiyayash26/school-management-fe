@@ -9,9 +9,64 @@ import {
   getDataUser,
   userDelete,
   changePasswordOfUser,
+  patchUserPermittionGroupData,
 } from "@/services/settings-service";
 import toast, { Toaster } from "react-hot-toast";
 import { useMutation } from "@tanstack/react-query";
+import Spinner from "@/components/spinner/spinner";
+import { useUserPermittionGroupData } from "@/hooks/use-settings";
+import { Checkbox } from "@/components/ui/checkbox";
+
+const PermissionsCheckboxes = ({ permissions, onSubmit, disabled }) => {
+  const [selectedPermissions, setSelectedPermissions] = useState([]);
+
+  useEffect(() => {
+    const initialSelected = permissions
+      .filter((perm) => perm.assigned)
+      .map((perm) => perm.id);
+    setSelectedPermissions(initialSelected);
+  }, [permissions]);
+
+  const handleCheckboxChange = (permissionId) => {
+    setSelectedPermissions((prev) =>
+      prev.includes(permissionId)
+        ? prev.filter((id) => id !== permissionId)
+        : [...prev, permissionId]
+    );
+  };
+
+  const handleSubmit = () => {
+    onSubmit(selectedPermissions);
+  };
+
+  return (
+    <div className="space-y-4">
+      {permissions.map((permission) => (
+        <div key={permission.id} className="flex items-center  space-x-2">
+          <Checkbox
+            id={`permission-${permission.id}`}
+            checked={selectedPermissions.includes(permission.id)}
+            onCheckedChange={() => handleCheckboxChange(permission.id)}
+            disabled={disabled}
+          />
+          <label
+            htmlFor={`permission-${permission.id}`}
+            className="text-sm font-medium peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+          >
+            {permission.name}
+          </label>
+        </div>
+      ))}
+      <Button
+        onClick={handleSubmit}
+        className="mt-4 w-full sm:w-auto"
+        disabled={disabled}
+      >
+        Update Permissions
+      </Button>
+    </div>
+  );
+};
 
 const UserDetailsPage = () => {
   const { id } = useParams();
@@ -20,6 +75,14 @@ const UserDetailsPage = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [showPasswordModal, setShowPasswordModal] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
+
+  const {
+    data: userData,
+    isLoading: userIsLoading,
+    error: userError,
+    refetch: userRefetch,
+  } = useUserPermittionGroupData(id);
+  let userGroupData = userData || [];
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -59,7 +122,40 @@ const UserDetailsPage = () => {
     }
   };
 
-  if (isLoading) return <div className="text-white">Loading...</div>;
+  const UpdateGropuPermitionMutation = useMutation({
+    mutationFn: (userId, data) => patchUserPermittionGroupData(userId, data),
+    onSuccess: () => {
+      setTimeout(() => {
+        toast.success("User Permission Update Successfully");
+      }, 1000);
+      userRefetch();
+    },
+    onError: (error) => {
+      toast.error(error.message);
+    },
+  });
+
+  const handleUpdatePermissions = async (selectedGroups) => {
+    console.log("Selected groups before API call:", selectedGroups);
+    const toastId = toast.loading("Updating permissions...");
+    try {
+      const response = await patchUserPermittionGroupData(user.id, {
+        group_ids: selectedGroups,
+      });
+      if (response.status === 200) {
+        toast.success("Permissions updated successfully", { id: toastId });
+      } else {
+        throw new Error("Failed to update permissions");
+      }
+    } catch (error) {
+      console.error("Error updating permissions:", error);
+      toast.error("Failed to update permissions. Please try again.", {
+        id: toastId,
+      });
+    }
+  };
+
+  if (isLoading || userIsLoading) return <Spinner />;
   if (!user) return <div className="text-red-400">Error: User not found</div>;
 
   return (
@@ -160,14 +256,23 @@ const UserDetailsPage = () => {
             </CardTitle>
           </CardHeader>
           <CardContent className="p-4 sm:p-6">
-            <Button
-              variant="destructive"
-              onClick={() => setShowDeleteModal(true)}
-              disabled={user.is_superuser}
-              className="bg-red-600 text-white hover:bg-red-700 w-full sm:w-auto"
-            >
-              Delete User
-            </Button>
+            <div className="flex flex-col md:flex-row md:justify-between w-full space-y-4">
+              <PermissionsCheckboxes
+                permissions={userGroupData}
+                onSubmit={handleUpdatePermissions}
+                disabled={user.is_superuser}
+              />
+              <div className="mt-6 flex md:self-end">
+                <Button
+                  variant="destructive"
+                  onClick={() => setShowDeleteModal(true)}
+                  disabled={user.is_superuser}
+                  className="bg-red-600 text-white hover:bg-red-700 w-full sm:w-auto"
+                >
+                  Delete User
+                </Button>
+              </div>
+            </div>
           </CardContent>
         </Card>
 

@@ -51,7 +51,7 @@ const PermissionsCheckboxes = ({ permissions, onSubmit, disabled }) => {
           />
           <label
             htmlFor={`permission-${permission.id}`}
-            className="text-sm font-medium peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+            className="text-sm font-medium cursor-pointer peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
           >
             {permission.name}
           </label>
@@ -122,19 +122,6 @@ const UserDetailsPage = () => {
     }
   };
 
-  const UpdateGropuPermitionMutation = useMutation({
-    mutationFn: (userId, data) => patchUserPermittionGroupData(userId, data),
-    onSuccess: () => {
-      setTimeout(() => {
-        toast.success("User Permission Update Successfully");
-      }, 1000);
-      userRefetch();
-    },
-    onError: (error) => {
-      toast.error(error.message);
-    },
-  });
-
   const handleUpdatePermissions = async (selectedGroups) => {
     console.log("Selected groups before API call:", selectedGroups);
     const toastId = toast.loading("Updating permissions...");
@@ -170,62 +157,55 @@ const UserDetailsPage = () => {
           },
         }}
       />
-      <div className="container mx-auto px-4 py-6 sm:py-8 bg-[#27272a] text-white min-h-screen">
+      <div className="container  mx-auto px-4 py-6 sm:py-8 text-white min-h-screen">
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 sm:mb-8 space-y-4 sm:space-y-0">
           <h1 className="text-2xl sm:text-3xl font-bold text-white">
             Manage User - {user.username}
           </h1>
-          <Link
-            to="/setting"
-            className="bg-gray-700 text-white px-3 py-2 sm:px-4 sm:py-2 rounded-md hover:bg-gray-600 transition duration-300 flex items-center text-sm sm:text-base"
-          >
-            <svg
-              className="w-4 h-4 mr-2"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth="2"
-                d="M10 19l-7-7m0 0l7-7m-7 7h18"
-              ></path>
-            </svg>
-            Back to Settings
+          <Link to="/setting">
+            <Button>
+              <svg
+                className="w-4 h-4 mr-2"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2"
+                  d="M10 19l-7-7m0 0l7-7m-7 7h18"
+                ></path>
+              </svg>
+              Back to Settings
+            </Button>
           </Link>
         </div>
         {/* user details */}
-        <Card className="mb-6 sm:mb-8 bg-[#323234] border-gray-700">
-          <CardHeader className="bg-[#3f3f46] border-b border-gray-600 flex flex-col sm:flex-row justify-between items-start sm:items-center space-y-4 sm:space-y-0">
+        <Card className="mb-6 sm:mb-8 ">
+          <CardHeader className="bg-[#27272a66] rounded-t-lg border-b flex flex-col sm:flex-row justify-between items-start sm:items-center space-y-4 sm:space-y-0">
             <CardTitle className="text-xl sm:text-2xl font-semibold text-white">
               User Details
             </CardTitle>
-            <Button
-              onClick={() => setShowPasswordModal(true)}
-              variant="outline"
-              className="bg-gray-700 text-white hover:bg-gray-600 text-sm sm:text-base"
-            >
+            <Button onClick={() => setShowPasswordModal(true)}>
               Change Password
             </Button>
           </CardHeader>
           <CardContent className="p-4 sm:p-6">
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
               <InfoItem
-                icon={<User className="w-5 h-5 sm:w-6 sm:h-6 text-gray-400" />}
+                icon={<User className="w-5 h-5 sm:w-6 sm:h-6" />}
                 label="Username"
                 value={user.username}
               />
               <InfoItem
-                icon={<Mail className="w-5 h-5 sm:w-6 sm:h-6 text-gray-400" />}
+                icon={<Mail className="w-5 h-5 sm:w-6 sm:h-6" />}
                 label="Email"
                 value={user.email || "None"}
               />
               <InfoItem
-                icon={
-                  <Shield className="w-5 h-5 sm:w-6 sm:h-6 text-gray-400" />
-                }
+                icon={<Shield className="w-5 h-5 sm:w-6 sm:h-6" />}
                 label="Role"
                 value={
                   <Badge
@@ -237,7 +217,7 @@ const UserDetailsPage = () => {
                 }
               />
               <InfoItem
-                icon={<Clock className="w-5 h-5 sm:w-6 sm:h-6 text-gray-400" />}
+                icon={<Clock className="w-5 h-5 sm:w-6 sm:h-6" />}
                 label="Last Login"
                 value={
                   user.last_login
@@ -249,9 +229,9 @@ const UserDetailsPage = () => {
           </CardContent>
         </Card>
         {/* group permissions */}
-        <Card className="bg-[#323234] border-gray-700">
+        <Card className="">
           <CardHeader>
-            <CardTitle className="text-xl sm:text-2xl font-semibold text-white">
+            <CardTitle className="text-xl sm:text-2xl font-semibold">
               Group Permissions
             </CardTitle>
           </CardHeader>
@@ -295,14 +275,14 @@ const UserDetailsPage = () => {
 };
 
 const InfoItem = ({ icon, label, value }) => (
-  <div className="flex items-center bg-[#3f3f46] p-3 sm:p-4 rounded-lg">
+  <div className="flex items-center dark:bg-[#3f3f46] dark:border-none border-black border p-3 sm:p-4 rounded-lg">
     <div className="flex-shrink-0">{icon}</div>
     <div className="ml-3 sm:ml-4 flex flex-col">
       <span className="text-xs sm:text-sm font-medium text-gray-400">
         {label}
       </span>
       {typeof value === "string" ? (
-        <span className="text-sm sm:text-lg font-semibold text-white">
+        <span className="text-sm sm:text-lg font-semibold ">
           {value}
         </span>
       ) : (

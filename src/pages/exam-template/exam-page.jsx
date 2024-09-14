@@ -22,18 +22,27 @@ import {
 } from "@/components/ui/alert-dialog";
 import { Input } from "@/components/ui/input";
 import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuRadioGroup,
-  DropdownMenuRadioItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import { useExamTemplateGet } from "@/hooks/use-exam-template";
 import ActionsPopupExamTemplate from "@/components/exam-template/data-table-row-action";
 import { examTemplateDelete } from "@/services/exam-template-service";
 import Spinner from "@/components/spinner/spinner";
+import {
+  Pagination,
+  PaginationContent,
+  PaginationEllipsis,
+  PaginationItem,
+  PaginationLink,
+  PaginationNext,
+  PaginationPrevious,
+} from "@/components/ui/pagination";
 
 const headers = [
   { label: "ID", value: "id" },
@@ -45,7 +54,7 @@ const headers = [
 ];
 
 function ExamTemplatePage() {
-  const [page, setPage] = useState(0);
+  const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
   const [search, setSearch] = useState("");
   const [openAlert, setOpenAlert] = useState(false);
@@ -55,14 +64,20 @@ function ExamTemplatePage() {
 
   const { data, isLoading, refetch } = useExamTemplateGet();
 
-  const students = data?.data;
-  const startIndex = page * pageSize;
-  const endIndex = (page + 1) * pageSize;
+  const exams = data?.data || [];
 
-  const handlePageSizeChange = (value) => {
-    setPageSize(parseInt(value));
-    setPage(0);
-  };
+  const filteredExams = exams.filter((exam) => {
+    return search.toLowerCase() === ""
+      ? exam
+      : exam.date.toLowerCase().includes(search) ||
+          exam.subject.toLowerCase().includes(search) ||
+          exam.standard.toLowerCase().includes(search);
+  });
+
+  const totalPages = Math.ceil(filteredExams.length / pageSize);
+  const startIndex = (page - 1) * pageSize;
+  const endIndex = startIndex + pageSize;
+  const visibleExams = filteredExams.slice(startIndex, endIndex);
 
   const mutation = useMutation({
     mutationFn: (examId) => examTemplateDelete(examId),
@@ -78,49 +93,27 @@ function ExamTemplatePage() {
     setOpenAlert(true);
   };
 
-  const handleDeleteStudent = () => {
+  const handleDeleteExam = () => {
     mutation.mutate(examId);
   };
 
-  const filteredStudents = students?.filter((exam) => {
-    return search.toLocaleLowerCase() === ""
-      ? exam
-      : exam.date.toLocaleLowerCase().includes(search) ||
-          exam.subject.toLocaleLowerCase().includes(search) ||
-          exam.standard.toLocaleLowerCase().includes(search);
-  });
+  const handlePageChange = (newPage) => {
+    setPage(newPage);
+  };
 
-  const visibleStudents = filteredStudents?.slice(startIndex, endIndex);
+  const handlePageSizeChange = (newSize) => {
+    setPageSize(parseInt(newSize));
+    setPage(1);
+  };
 
   if (isLoading) {
-    return <><Spinner/></>;
+    return <Spinner />;
   }
 
   return (
     <>
-      <Toaster
-        position="top-center"
-        reverseOrder={false}
-        gutter={8}
-        containerClassName=""
-        containerStyle={{}}
-        toastOptions={{
-          className: "",
-          duration: 5000,
-          style: {
-            background: "#363636",
-            color: "#fff",
-          },
-          success: {
-            duration: 3000,
-            theme: {
-              primary: "green",
-              secondary: "black",
-            },
-          },
-        }}
-      />
-      <AlertDialog open={openAlert}>
+      <Toaster position="top-center" reverseOrder={false} />
+      <AlertDialog open={openAlert} onOpenChange={setOpenAlert}>
         <AlertDialogContent>
           <AlertDialogHeader>
             <AlertDialogTitle>Are you sure?</AlertDialogTitle>
@@ -130,128 +123,174 @@ function ExamTemplatePage() {
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel onClick={() => setOpenAlert(false)}>
-              Cancel
-            </AlertDialogCancel>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
             <AlertDialogAction
-              onClick={() => handleDeleteStudent(examId)}
-              className="bg-[red] text-white hover:bg-red-500"
+              onClick={handleDeleteExam}
+              className="bg-red-600 hover:bg-red-700"
             >
               Delete
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
-      <h1>EXAM TEMPLATE</h1>
-      <div className="block md:flex md:justify-between gap-2">
-        <div className="w-full">
+
+      <div className="space-y-4">
+        <h1 className="text-2xl font-bold">EXAM TEMPLATE</h1>
+        <div className="flex flex-col sm:flex-row justify-between items-center space-y-2 sm:space-y-0 sm:space-x-2">
           <Input
-            className="w-full md:max-w-sm mb-2 md:mb-0 md:mr-2"
-            placeholder="Search"
+            className="w-full sm:w-64"
+            placeholder="Search exams..."
+            value={search}
             onChange={(e) => setSearch(e.target.value)}
           />
-        </div>
-        <div className="flex gap-2 md:m-0 mt-4">
           <Link to="/exam-template/add">
-            <Button>Add</Button>
+            <Button>Add Exam Template</Button>
           </Link>
         </div>
-      </div>
-      <ScrollArea className="rounded-md border w-full h-[calc(80vh-120px)]">
-        <div ref={componentPDF} style={{ width: "100%" }}>
-          <h1 className="hidden title-table">
-            THINKERS MARKS SHEET / 2005-02-02
-          </h1>
-          <Table className="relative" id="print-excel">
+
+        <ScrollArea className="h-[calc(100vh-250px)] rounded-md border">
+          <Table>
             <TableHeader>
               <TableRow>
-                {headers.map((header, index) => (
-                  <TableHead key={index}>{header.label}</TableHead>
+                {headers.map((header) => (
+                  <TableHead key={header.value}>{header.label}</TableHead>
                 ))}
-                <TableHead className="no-print bg-[#151518]">Actions</TableHead>
+                <TableHead>Actions</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
-              {!students || filteredStudents.length === 0 ? (
-                <TableRow className="text-center align-middle">
-                  <TableCell
-                    colSpan={headers.length + 1}
-                    className="uppercase text-lg"
-                  >
-                    No Data Found
+              {visibleExams.map((exam) => (
+                <TableRow key={exam.id}>
+                  {headers.map((header) => (
+                    <TableCell
+                      key={`${exam.id}-${header.value}`}
+                      className="capitalize whitespace-nowrap"
+                    >
+                      {header.value === "standard"
+                        ? exam[header.value] === "13"
+                          ? "Balvatika"
+                          : exam[header.value] || "None"
+                        : exam[header.value] || "None"}
+                    </TableCell>
+                  ))}
+                  <TableCell className="sticky right-0">
+                    <ActionsPopupExamTemplate
+                      id={exam.id}
+                      standard={exam.standard}
+                      openAlertDeleteBox={openAlertDeleteBox}
+                    />
                   </TableCell>
                 </TableRow>
-              ) : (
-                visibleStudents.map((exam) => (
-                  <TableRow key={exam.id}>
-                    {headers.map((header) => (
-                      <TableCell key={header.value} className="capitalize">
-                        {header.value === "standard"
-                          ? exam[header.value] === "13"
-                            ? "Balvatika"
-                            : exam[header.value] || "None"
-                          : exam[header.value] || "None"}
-                      </TableCell>
-                    ))}
-                    <TableCell className="no-print sticky top-0 right-0 z-[1] bg-[#151518]">
-                      <ActionsPopupExamTemplate
-                        id={exam.id}
-                        standard={exam.standard}
-                        openAlertDeleteBox={openAlertDeleteBox}
-                      />
-                    </TableCell>
-                  </TableRow>
-                ))
-              )}
+              ))}
             </TableBody>
           </Table>
-        </div>
-        <ScrollBar orientation="horizontal" />
-      </ScrollArea>
-      <div className="block text-center  md:flex md:items-center md:justify-end md:space-x-2 py-4">
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="outline" className="w-[160px]">
-              {pageSize <= 10
-                ? "Items per page"
-                : pageSize == "9999"
-                ? "Show All"
-                : pageSize}
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent className="w-56">
-            <DropdownMenuRadioGroup
+          <ScrollBar orientation="horizontal" />
+        </ScrollArea>
+
+        <div className="flex flex-col gap-4 md:gap-0 md:flex-row items-center justify-between space-y-0 md:space-y-0 md:space-x-2 py-4">
+          <div className="text-sm font-medium dark:text-muted-foreground order-2 md:order-1">
+            {filteredExams?.length > 0
+              ? `Showing ${Math.min(
+                  (page - 1) * pageSize + 1,
+                  filteredExams.length
+                )} to ${Math.min(
+                  page * pageSize,
+                  filteredExams.length
+                )} of ${filteredExams.length} entries`
+              : "No entries to show"}
+          </div>
+          <div className="flex items-center space-x-2 order-1 md:order-2">
+            <p className="text-sm font-medium hidden sm:inline">
+              Rows per page
+            </p>
+            <Select
               value={pageSize.toString()}
-              onValueChange={(value) => handlePageSizeChange(value)}
+              onValueChange={handlePageSizeChange}
             >
-              <DropdownMenuRadioItem value="10">10</DropdownMenuRadioItem>
-              <DropdownMenuRadioItem value="20">20</DropdownMenuRadioItem>
-              <DropdownMenuRadioItem value="30">30</DropdownMenuRadioItem>
-              <DropdownMenuRadioItem value="40">40</DropdownMenuRadioItem>
-              <DropdownMenuRadioItem value="50">50</DropdownMenuRadioItem>
-              <DropdownMenuRadioItem value="9999">
-                Show All
-              </DropdownMenuRadioItem>
-            </DropdownMenuRadioGroup>
-          </DropdownMenuContent>
-        </DropdownMenu>
-        <div className="space-x-2 md:m-0 mt-2">
-          <Button
-            variant="outline"
-            onClick={() => setPage(Math.max(page - 1, 0))}
-            size="sm"
-            disabled={page === 0}
-          >
-            Previous
-          </Button>
-          <Button
-            variant="outline"
-            onClick={() => setPage(page + 1)}
-            size="sm"
-            disabled={endIndex >= students.length}
-          >
-            Next
-          </Button>
+              <SelectTrigger className="h-8 w-[70px]">
+                <SelectValue placeholder={pageSize} />
+              </SelectTrigger>
+              <SelectContent side="top">
+                {[10, 20, 30, 40, 50].map((size) => (
+                  <SelectItem key={size} value={size.toString()}>
+                    {size}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+          {totalPages > 1 && (
+            <div className="order-3 w-full md:w-auto">
+              <Pagination>
+                <PaginationContent>
+                  <PaginationItem>
+                    <PaginationPrevious
+                      onClick={() => handlePageChange(Math.max(1, page - 1))}
+                      disabled={page === 1}
+                    />
+                  </PaginationItem>
+                  <div className="flex md:hidden items-center">
+                    <PaginationItem>
+                      <PaginationLink isActive>{page}</PaginationLink>
+                    </PaginationItem>
+                  </div>
+                  <div className="hidden md:flex items-center">
+                    <PaginationItem>
+                      <PaginationLink
+                        onClick={() => handlePageChange(1)}
+                        isActive={page === 1}
+                      >
+                        1
+                      </PaginationLink>
+                    </PaginationItem>
+                    {page > 3 && <PaginationEllipsis />}
+                    {page > 2 && (
+                      <PaginationItem>
+                        <PaginationLink
+                          onClick={() => handlePageChange(page - 1)}
+                        >
+                          {page - 1}
+                        </PaginationLink>
+                      </PaginationItem>
+                    )}
+                    {page !== 1 && page !== totalPages && (
+                      <PaginationItem>
+                        <PaginationLink isActive>{page}</PaginationLink>
+                      </PaginationItem>
+                    )}
+                    {page < totalPages - 1 && (
+                      <PaginationItem>
+                        <PaginationLink
+                          onClick={() => handlePageChange(page + 1)}
+                        >
+                          {page + 1}
+                        </PaginationLink>
+                      </PaginationItem>
+                    )}
+                    {page < totalPages - 2 && <PaginationEllipsis />}
+                    {totalPages > 1 && (
+                      <PaginationItem>
+                        <PaginationLink
+                          onClick={() => handlePageChange(totalPages)}
+                          isActive={page === totalPages}
+                        >
+                          {totalPages}
+                        </PaginationLink>
+                      </PaginationItem>
+                    )}
+                  </div>
+                  <PaginationItem>
+                    <PaginationNext
+                      onClick={() =>
+                        handlePageChange(Math.min(totalPages, page + 1))
+                      }
+                      disabled={page === totalPages}
+                    />
+                  </PaginationItem>
+                </PaginationContent>
+              </Pagination>
+            </div>
+          )}
         </div>
       </div>
     </>

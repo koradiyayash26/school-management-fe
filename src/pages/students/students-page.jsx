@@ -382,7 +382,7 @@ function StudentsPage() {
             </div>
             <ScrollBar orientation="horizontal" />
           </ScrollArea>
-          <div className="flex flex-col gap-4 md:gap-0 md:flex-col-2 lg:flex-row items-center justify-between space-y-0 sm:space-y-0 sm:space-x-2 py-4">
+          <div className="flex flex-col gap-4 md:gap-0 md:flex-col-2 lg:flex-row items-center justify-between space-y-0 sm:space-y-0 sm:space-x-2">
             <div className="text-sm font-medium dark:text-muted-foreground order-2 sm:order-1">
               {filteredStudents?.length > 0
                 ? `Showing ${Math.min(

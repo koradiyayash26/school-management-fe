@@ -187,8 +187,8 @@ function ExamTemplatePage() {
           <ScrollBar orientation="horizontal" />
         </ScrollArea>
 
-        <div className="flex flex-col gap-4 md:gap-0 md:flex-row items-center justify-between space-y-0 md:space-y-0 md:space-x-2 py-4">
-          <div className="text-sm font-medium dark:text-muted-foreground order-2 md:order-1">
+        <div className="flex flex-col gap-4 md:gap-0 md:flex-row items-center justify-between space-y-0 md:space-y-0 md:space-x-2">
+          <div className="text-sm dark:text-white text-black font-medium order-2 md:order-1">
             {filteredExams?.length > 0
               ? `Showing ${Math.min(
                   (page - 1) * pageSize + 1,
@@ -196,11 +196,11 @@ function ExamTemplatePage() {
                 )} to ${Math.min(
                   page * pageSize,
                   filteredExams.length
-                )} of ${filteredExams.length} entries`
+                )} of ${filteredExams.length}.`
               : "No entries to show"}
           </div>
           <div className="flex items-center space-x-2 order-1 md:order-2">
-            <p className="text-sm font-medium hidden sm:inline">
+            <p className="text-sm font-medium hidden md:hidden lg:inline sm:inline ">
               Rows per page
             </p>
             <Select

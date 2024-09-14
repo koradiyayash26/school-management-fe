@@ -29,8 +29,8 @@ const ActionsPopup = ({ id, openAlertDeleteBox, Birth, Bonafide }) => {
       <DropdownMenu className="">
         <DropdownMenuTrigger asChild>
           <Button
-            variant="ghost"
-            className="flex h-8 w-8 p-0 data-[state=open]:bg-muted"
+            variant="outline"
+            className="flex h-8 w-8 p-0 data-[state=open]:bg-muted  border"
           >
             <Ellipsis className="h-6 w-6 rotate-90" />
             <span className="sr-only">Open menu</span>

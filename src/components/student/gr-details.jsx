@@ -105,14 +105,12 @@ export const GrDetails = ({ form, categories }) => {
 
   return (
     <>
-      <div className="flex items-center justify-between"></div>
-
-      <div className="md:grid md:grid-cols-3 gap-8">
+      <div className="md:grid md:grid-cols-3 space-y-4 gap-8">
         <FormField
           control={form.control}
           name="grno"
           render={({ field }) => (
-            <FormItem>
+            <FormItem className="flex flex-col self-end">
               <FormLabel>Grno*</FormLabel>
               <FormControl>
                 <Input
@@ -528,7 +526,7 @@ export const GrDetails = ({ form, categories }) => {
           name="birth_date"
           render={({ field }) => (
             <FormItem className="flex flex-col self-end">
-              <FormLabel>Date of birth*</FormLabel>
+              <FormLabel>Date Of Birth*</FormLabel>
               <Popover>
                 <PopoverTrigger asChild>
                   <FormControl>
@@ -572,7 +570,7 @@ export const GrDetails = ({ form, categories }) => {
           name="admission_date"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>admission_date*</FormLabel>
+              <FormLabel>Admission Date*</FormLabel>
               <Select
                 disabled={loading}
                 onValueChange={field.onChange}

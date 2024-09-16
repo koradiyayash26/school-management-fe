@@ -23,7 +23,7 @@ export const SchoolLeaveDetails = ({ form }) => {
 
   return (
     <>
-      <div className="md:grid md:grid-cols-3 gap-8">
+      <div className="md:grid md:grid-cols-3 gap-8 space-y-4">
       <FormField
         control={form.control}
         name="left_school_date"

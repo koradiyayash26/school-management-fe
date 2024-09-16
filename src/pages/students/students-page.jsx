@@ -17,8 +17,6 @@ import {
   DropdownMenuTrigger,
   DropdownMenuContent,
   DropdownMenuCheckboxItem,
-  DropdownMenuRadioGroup,
-  DropdownMenuRadioItem,
 } from "@/components/ui/dropdown-menu";
 import {
   AlertDialog,
@@ -43,16 +41,11 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import ReactHTMLTableToExcel from "react-html-table-to-excel";
-import { useReactToPrint } from "react-to-print";
 import Spinner from "@/components/spinner/spinner";
 import {
   Pagination,
   PaginationContent,
-  PaginationEllipsis,
   PaginationItem,
-  PaginationLink,
-  PaginationNext,
-  PaginationPrevious,
 } from "@/components/ui/pagination";
 import {
   Select,
@@ -61,6 +54,12 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import {
+  ChevronLeft,
+  ChevronRight,
+  ChevronsLeft,
+  ChevronsRight,
+} from "lucide-react";
 
 const headers = [
   { label: "ID", value: "id" },
@@ -161,6 +160,7 @@ function StudentsPage() {
       refetch();
       setOpenAlert(false);
       toast.success("Student Delete Successfully");
+      handlePageChange(1);
     },
   });
 
@@ -257,7 +257,9 @@ function StudentsPage() {
               </AlertDialogFooter>
             </AlertDialogContent>
           </AlertDialog>
-          <h1 className="uppercase text-2xl font-bold mb-4">GENERAL REGISTER</h1>
+          <h1 className="uppercase text-2xl font-bold mb-4">
+            GENERAL REGISTER
+          </h1>
           <div className="block md:flex md:justify-between gap-2 mb-4">
             <div className="w-full md:w-auto">
               <Input
@@ -382,8 +384,8 @@ function StudentsPage() {
             </div>
             <ScrollBar orientation="horizontal" />
           </ScrollArea>
-          <div className="flex flex-col gap-4 md:gap-0 md:flex-col-2 lg:flex-row items-center justify-between space-y-0 sm:space-y-0 sm:space-x-2">
-            <div className="text-sm dark:text-white text-black font-medium order-2 md:order-1">
+          <div className="flex w-full flex-col-reverse items-center justify-between gap-4 overflow-auto p-1 sm:flex-row sm:gap-8">
+            <div className="whitespace-nowrap text-sm dark:text-white text-black font-medium order-2 md:order-1">
               {filteredStudents?.length > 0
                 ? `Showing ${Math.min(
                     (page - 1) * pageSize + 1,
@@ -395,7 +397,7 @@ function StudentsPage() {
                 : "No entries to show"}
             </div>
             <div className="flex items-center space-x-2 order-1 sm:order-2">
-              <p className="text-sm font-medium hidden sm:inline">
+              <p className="whitespace-nowrap text-sm font-medium hidden sm:inline">
                 Rows per page
               </p>
               <Select
@@ -418,74 +420,52 @@ function StudentsPage() {
               <Pagination>
                 <PaginationContent>
                   <PaginationItem>
-                    <PaginationPrevious
-                      onClick={() => handlePageChange(Math.max(1, page - 1))}
-                      disabled={page === 1}
-                    />
-                  </PaginationItem>
-                  <div className="flex md:hidden items-center">
-                    <PaginationItem>
-                      <PaginationLink isActive>{page}</PaginationLink>
-                    </PaginationItem>
-                  </div>
-                  <PaginationItem className="hidden sm:inline-flex">
-                    <PaginationLink
+                    <Button
+                      aria-label="Go to last page"
+                      variant="outline"
+                      size="icon"
+                      className="size-8 lg:flex"
                       onClick={() => handlePageChange(1)}
-                      isActive={page === 1}
+                      disabled={page === 1}
                     >
-                      1
-                    </PaginationLink>
+                      <ChevronsLeft className="size-4" aria-hidden="true" />
+                    </Button>
                   </PaginationItem>
-                  {page > 3 && (
-                    <PaginationItem className="hidden sm:inline-flex">
-                      <PaginationEllipsis />
-                    </PaginationItem>
-                  )}
-                  {page > 2 && (
-                    <PaginationItem className="hidden sm:inline-flex">
-                      <PaginationLink
-                        onClick={() => handlePageChange(page - 1)}
-                      >
-                        {page - 1}
-                      </PaginationLink>
-                    </PaginationItem>
-                  )}
-                  {page !== 1 && page !== totalPages && (
-                    <PaginationItem className="hidden sm:inline-flex">
-                      <PaginationLink isActive>{page}</PaginationLink>
-                    </PaginationItem>
-                  )}
-                  {page < totalPages - 1 && (
-                    <PaginationItem className="hidden sm:inline-flex">
-                      <PaginationLink
-                        onClick={() => handlePageChange(page + 1)}
-                      >
-                        {page + 1}
-                      </PaginationLink>
-                    </PaginationItem>
-                  )}
-                  {page < totalPages - 2 && (
-                    <PaginationItem className="hidden sm:inline-flex">
-                      <PaginationEllipsis />
-                    </PaginationItem>
-                  )}
-                  {totalPages > 1 && (
-                    <PaginationItem className="hidden sm:inline-flex">
-                      <PaginationLink
-                        onClick={() => handlePageChange(totalPages)}
-                        isActive={page === totalPages}
-                      >
-                        {totalPages}
-                      </PaginationLink>
-                    </PaginationItem>
-                  )}
+                  <Button
+                    aria-label="Go to last page"
+                    variant="outline"
+                    size="icon"
+                    className="size-8 lg:flex"
+                    onClick={() => handlePageChange(Math.max(1, page - 1))}
+                    disabled={page === 1}
+                  >
+                    <ChevronLeft className="size-4" aria-hidden="true" />
+                  </Button>
+                  <Button
+                    aria-label="Go to last page"
+                    variant="outline"
+                    size="icon"
+                    className="size-8 lg:flex"
+                    onClick={() =>
+                      handlePageChange(Math.min(totalPages, page + 1))
+                    }
+                    disabled={page === totalPages}
+                  >
+                    <ChevronRight className="size-4" aria-hidden="true" />
+                  </Button>
                   <PaginationItem>
-                    <PaginationNext
+                    <Button
+                      aria-label="Go to last page"
+                      variant="outline"
+                      size="icon"
+                      className="size-8 lg:flex"
                       onClick={() =>
-                        handlePageChange(Math.min(totalPages, page + 1))
+                        handlePageChange(Math.min(totalPages, totalPages))
                       }
                       disabled={page === totalPages}
-                    />
+                    >
+                      <ChevronsRight className="size-4" aria-hidden="true" />
+                    </Button>
                   </PaginationItem>
                 </PaginationContent>
               </Pagination>

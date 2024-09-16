@@ -134,8 +134,8 @@ function ExamTemplatePage() {
         </AlertDialogContent>
       </AlertDialog>
 
+      <h1 className="uppercase mb-4 text-2xl font-bold">EXAM TEMPLATE</h1>
       <div className="space-y-4">
-        <h1 className="text-2xl font-bold">EXAM TEMPLATE</h1>
         <div className="flex flex-col sm:flex-row justify-between items-center space-y-2 sm:space-y-0 sm:space-x-2">
           <Input
             className="w-full sm:w-64"

@@ -53,8 +53,10 @@ const headers = [
   { label: "Last Name", value: "last_name" },
   { label: "First Name", value: "first_name" },
   { label: "Middle Name", value: "middle_name" },
+  { label: "Mother Name", value: "mother_name" },
   { label: "Gender", value: "gender" },
   { label: "Birth Date", value: "birth_date" },
+  { label: "Birth Place", value: "birth_place" },
   { label: "Mobile Number", value: "mobile_no" },
   { label: "Address", value: "address" },
   { label: "City", value: "city" },
@@ -64,12 +66,23 @@ const headers = [
   { label: "Last School", value: "last_school" },
   { label: "Admission Standard", value: "admission_std" },
   { label: "Admission Date", value: "admission_date" },
+  { label: "Left School Standard", value: "left_school_std" },
+  { label: "Left School Date", value: "left_school_date" },
   { label: "Religion", value: "religion" },
   { label: "Category", value: "category" },
   { label: "Caste", value: "caste" },
   { label: "UDISE Number", value: "udise_no" },
   { label: "Aadhar Number", value: "aadhar_no" },
   { label: "Account Number", value: "account_no" },
+  { label: "Name on Passbook", value: "name_on_passbook" },
+  { label: "Bank Name", value: "bank_name" },
+  { label: "IFSC Code", value: "ifsc_code" },
+  { label: "Bank Address", value: "bank_address" },
+  { label: "Reason", value: "reason" },
+  { label: "Note", value: "note" },
+  { label: "Assessment", value: "assessment" },
+  { label: "Progress", value: "progress" },
+  { label: "Status", value: "status" },
 ];
 
 const StandardDetailPage = () => {
@@ -184,7 +197,10 @@ const StandardDetailPage = () => {
         </AlertDialogContent>
       </AlertDialog>
       <h1 className="uppercase mb-4 text-2xl font-bold">
-        STUDENTS OF <span className="underline font-bold"> {id} </span>
+        STUDENTS OF{" "}
+        <span className="underline font-bold">
+          {id == "13" ? "Balvatika" : id}
+        </span>
       </h1>
 
       {visibleStudents.length !== 0 ? (
@@ -199,16 +215,24 @@ const StandardDetailPage = () => {
               <DropdownMenuTrigger asChild>
                 <Button variant="outline">Columns</Button>
               </DropdownMenuTrigger>
-              <DropdownMenuContent>
-                {headers.map((header) => (
-                  <DropdownMenuCheckboxItem
-                    key={header.value}
-                    checked={visibleColumns.includes(header.value)}
-                    onCheckedChange={() => toggleColumnVisibility(header.value)}
-                  >
-                    {header.label}
-                  </DropdownMenuCheckboxItem>
-                ))}
+              <DropdownMenuContent className="w-56">
+                <ScrollArea className="h-[300px] overflow-y-auto">
+                  <div className="p-2">
+                    <h4 className="mb-2 font-semibold">Toggle Columns</h4>
+                    {headers.map((header) => (
+                      <DropdownMenuCheckboxItem
+                        key={header.value}
+                        className="capitalize"
+                        checked={visibleColumns.includes(header.value)}
+                        onCheckedChange={() =>
+                          toggleColumnVisibility(header.value)
+                        }
+                      >
+                        {header.label}
+                      </DropdownMenuCheckboxItem>
+                    ))}
+                  </div>
+                </ScrollArea>
               </DropdownMenuContent>
             </DropdownMenu>
           </div>

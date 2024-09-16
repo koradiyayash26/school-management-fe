@@ -89,7 +89,7 @@ const ReportsPage = () => {
 
   return (
     <>
-      <h1 className="uppercase">Report</h1>
+      <h1 className="uppercase text-2xl font-bold mb-4">Report</h1>
       <div>
         <ScrollArea className="rounded-md border max-w-[1280px]">
           <Table className="relative text-center">

@@ -21,7 +21,7 @@ const ActionsPopupReport = ({ id, openAlertDeleteBox }) => {
       <DropdownMenu className="">
         <DropdownMenuTrigger asChild>
           <Button
-            variant="ghost"
+            variant="outline"
             className="flex h-8 w-8 p-0 data-[state=open]:bg-muted"
           >
             <Ellipsis className="h-6 w-6 rotate-90" />

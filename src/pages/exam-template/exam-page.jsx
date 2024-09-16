@@ -193,10 +193,9 @@ function ExamTemplatePage() {
               ? `Showing ${Math.min(
                   (page - 1) * pageSize + 1,
                   filteredExams.length
-                )} to ${Math.min(
-                  page * pageSize,
+                )} - ${Math.min(page * pageSize, filteredExams.length)} of ${
                   filteredExams.length
-                )} of ${filteredExams.length}.`
+                }.`
               : "No entries to show"}
           </div>
           <div className="flex items-center space-x-2 order-1 md:order-2">
@@ -234,7 +233,7 @@ function ExamTemplatePage() {
                       <PaginationLink isActive>{page}</PaginationLink>
                     </PaginationItem>
                   </div>
-                  <div className="hidden md:flex items-center">
+                  <div className="hidden md:flex space-x-1 items-center">
                     <PaginationItem>
                       <PaginationLink
                         onClick={() => handlePageChange(1)}

@@ -383,15 +383,15 @@ function StudentsPage() {
             <ScrollBar orientation="horizontal" />
           </ScrollArea>
           <div className="flex flex-col gap-4 md:gap-0 md:flex-col-2 lg:flex-row items-center justify-between space-y-0 sm:space-y-0 sm:space-x-2">
-            <div className="text-sm font-medium dark:text-muted-foreground order-2 sm:order-1">
+            <div className="text-sm dark:text-white text-black font-medium order-2 md:order-1">
               {filteredStudents?.length > 0
                 ? `Showing ${Math.min(
                     (page - 1) * pageSize + 1,
                     filteredStudents.length
-                  )} to ${Math.min(
+                  )} - ${Math.min(
                     page * pageSize,
                     filteredStudents.length
-                  )} of ${filteredStudents.length} entries`
+                  )} of ${filteredStudents.length}.`
                 : "No entries to show"}
             </div>
             <div className="flex items-center space-x-2 order-1 sm:order-2">

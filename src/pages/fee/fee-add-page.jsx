@@ -49,7 +49,6 @@ const FeeTypesAddPage = () => {
 
   return (
     <>
-      <h1>ADD FEE TYPE</h1>
       <Card className="">
         <FeeTypeForm
           defaultValues={defaultValues}

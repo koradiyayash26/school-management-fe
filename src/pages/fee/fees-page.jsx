@@ -16,6 +16,7 @@ import {
   DropdownMenuContent,
   DropdownMenuRadioGroup,
   DropdownMenuRadioItem,
+  DropdownMenuItem,
 } from "@/components/ui/dropdown-menu";
 import { Link } from "react-router-dom";
 import {
@@ -34,6 +35,21 @@ import ActionsPopupFee from "@/components/fee/data-table-row-action";
 import { deleteFeeType } from "@/services/fees-service";
 import { useFeeType } from "@/hooks/use-fees";
 import Spinner from "@/components/spinner/spinner";
+import {
+  ChevronLeft,
+  ChevronRight,
+  ChevronsLeft,
+  ChevronsRight,
+  ChevronDown,
+} from "lucide-react";
+import {
+  Pagination,
+  PaginationContent,
+  PaginationItem,
+  PaginationLink,
+  PaginationNext,
+  PaginationPrevious,
+} from "@/components/ui/pagination";
 
 const headers = [
   { label: "ID", value: "id" },
@@ -82,7 +98,43 @@ function FeesTypePage() {
 
   const visibleStudents = filteredStudents.slice(startIndex, endIndex);
 
-  if (isLoading) return <><Spinner/></>;
+  const totalPages = Math.ceil(filteredStudents.length / pageSize);
+
+  const renderPageNumbers = () => {
+    const pageNumbers = [];
+    const maxVisiblePages = 5;
+    let startPage = Math.max(1, page + 1 - Math.floor(maxVisiblePages / 2));
+    let endPage = Math.min(totalPages, startPage + maxVisiblePages - 1);
+
+    if (endPage - startPage + 1 < maxVisiblePages) {
+      startPage = Math.max(1, endPage - maxVisiblePages + 1);
+    }
+
+    for (let i = startPage; i <= endPage; i++) {
+      pageNumbers.push(
+        <button
+          key={i}
+          onClick={() => setPage(i - 1)}
+          className={`px-3 py-1 rounded-md ${
+            page === i - 1
+              ? "bg-primary text-primary-foreground"
+              : "bg-background hover:bg-accent"
+          }`}
+        >
+          {i}
+        </button>
+      );
+    }
+
+    return pageNumbers;
+  };
+
+  if (isLoading)
+    return (
+      <>
+        <Spinner />
+      </>
+    );
 
   if (error) return <>Error</>;
 
@@ -132,7 +184,7 @@ function FeesTypePage() {
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
-      <h1>FEE TYPE</h1>
+      <h1 className="uppercase mb-4 text-2xl font-bold">FEE TYPE</h1>
       <div className="block md:flex md:justify-between gap-2">
         <div className="w-full">
           <Input
@@ -154,7 +206,7 @@ function FeesTypePage() {
               {headers.map((header, index) => (
                 <TableHead key={index}>{header.label}</TableHead>
               ))}
-              <TableHead className="bg-[#151518]">Actions</TableHead>
+              <TableHead className="">Actions</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -179,7 +231,7 @@ function FeesTypePage() {
                         : fee[header.value] || "None"}
                     </TableCell>
                   ))}
-                  <TableCell className="sticky top-0 right-0 z-[1] bg-[#151518]">
+                  <TableCell className="sticky right-0 z-[1]">
                     <ActionsPopupFee
                       id={fee.id}
                       standard={fee.standard}
@@ -194,50 +246,81 @@ function FeesTypePage() {
         </Table>
         <ScrollBar orientation="horizontal" />
       </ScrollArea>
-      <div className="block text-center  md:flex md:items-center md:justify-end md:space-x-2 py-4">
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="outline" className="w-[160px]">
-              {pageSize <= 10
-                ? "Items per page"
-                : pageSize == "9999"
-                ? "Show All"
-                : pageSize}
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent className="w-56">
-            <DropdownMenuRadioGroup
-              value={pageSize.toString()}
-              onValueChange={(value) => handlePageSizeChange(value)}
-            >
-              <DropdownMenuRadioItem value="10">10</DropdownMenuRadioItem>
-              <DropdownMenuRadioItem value="20">20</DropdownMenuRadioItem>
-              <DropdownMenuRadioItem value="30">30</DropdownMenuRadioItem>
-              <DropdownMenuRadioItem value="40">40</DropdownMenuRadioItem>
-              <DropdownMenuRadioItem value="50">50</DropdownMenuRadioItem>
-              <DropdownMenuRadioItem value="9999">
-                Show All
-              </DropdownMenuRadioItem>
-            </DropdownMenuRadioGroup>
-          </DropdownMenuContent>
-        </DropdownMenu>
-        <div className="space-x-2 md:m-0 mt-2">
-          <Button
-            variant="outline"
-            onClick={() => setPage(Math.max(page - 1, 0))}
-            size="sm"
-            disabled={page === 0}
-          >
-            Previous
-          </Button>
-          <Button
-            variant="outline"
-            onClick={() => setPage(page + 1)}
-            size="sm"
-            disabled={endIndex >= students.length}
-          >
-            Next
-          </Button>
+      <div className="w-full flex flex-col sm:flex-row items-center justify-between space-y-4 sm:space-y-0 py-4 text-sm">
+        <div className="w-full sm:w-auto flex items-center justify-center sm:justify-start text-muted-foreground">
+          <span className="text-sm dark:text-white text-black font-medium order-2 md:order-1">
+            Showing {startIndex + 1}-
+            {Math.min(endIndex, filteredStudents?.length)} of{" "}
+            {filteredStudents?.length}.
+          </span>
+        </div>
+        <div className="flex items-center space-x-2">
+          <span className="text-sm font-medium hidden md:hidden lg:inline sm:inline ">
+            Rows per page
+          </span>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="outline" size="sm" className="h-8 w-[70px]">
+                {pageSize}
+                <ChevronDown className="ml-2 h-4 w-4" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              {[10, 20, 30, 40, 50].map((size) => (
+                <DropdownMenuItem
+                  key={size}
+                  onSelect={() => handlePageSizeChange(size)}
+                >
+                  {size}
+                </DropdownMenuItem>
+              ))}
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </div>
+        <div className="w-full sm:w-auto flex justify-center sm:justify-end">
+          <Pagination>
+            <PaginationContent>
+              <PaginationItem>
+                <PaginationPrevious
+                  onClick={() => setPage(Math.max(page - 1, 0))}
+                  disabled={page === 0}
+                />
+              </PaginationItem>
+              <PaginationItem>
+                <PaginationLink
+                  onClick={() => setPage(0)}
+                  isActive={page === 0}
+                >
+                  1
+                </PaginationLink>
+              </PaginationItem>
+              {page > 1 && <PaginationEllipsis className="hidden sm:flex" />}
+              {page !== 0 && page !== totalPages - 1 && (
+                <PaginationItem>
+                  <PaginationLink isActive>{page + 1}</PaginationLink>
+                </PaginationItem>
+              )}
+              {page < totalPages - 2 && (
+                <PaginationEllipsis className="hidden sm:flex" />
+              )}
+              {totalPages > 1 && (
+                <PaginationItem>
+                  <PaginationLink
+                    onClick={() => setPage(totalPages - 1)}
+                    isActive={page === totalPages - 1}
+                  >
+                    {totalPages}
+                  </PaginationLink>
+                </PaginationItem>
+              )}
+              <PaginationItem>
+                <PaginationNext
+                  onClick={() => setPage(Math.min(page + 1, totalPages - 1))}
+                  disabled={page === totalPages - 1}
+                />
+              </PaginationItem>
+            </PaginationContent>
+          </Pagination>
         </div>
       </div>
     </>

@@ -62,11 +62,11 @@ const FeetypeUpdatePage = () => {
 
   return (
     <>
-      <h1>UPDATE FEE TYPE</h1>
       <Card className="">
         <FeeTypeForm
           defaultValues={defaultValues}
           onSubmit={onSubmit}
+          id={id}
           isLoadin={isLoading}
           feeMaster={feeMaster}
           standard={standard}

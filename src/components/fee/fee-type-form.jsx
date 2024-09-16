@@ -73,6 +73,7 @@ const FeeTypeForm = ({
   standard,
   onSubmit,
   isLoading,
+  id,
 }) => {
   const form = useForm({
     resolver: zodResolver(formSchema),
@@ -87,13 +88,17 @@ const FeeTypeForm = ({
         className="space-y-2 w-full"
       >
         <CardHeader>
-          <CardTitle>FEE TYPE FORM</CardTitle>
+          {id ? (
+            <CardTitle>UPDATE FEE TYPE</CardTitle>
+          ) : (
+            <CardTitle>ADD FEE TYPE FORM</CardTitle>
+          )}
           <CardDescription>
             All Fields Are Required in This Form.
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="md:grid md:grid-cols-3 gap-8">
+          <div className="md:grid md:grid-cols-3 gap-8 space-y-4 md:space-y-0">
             <FormField
               className=""
               control={form.control}

@@ -84,7 +84,11 @@ function ExamAssingMarkPage() {
   };
 
   if (isLoading) {
-    return <><Spinner/></>;
+    return (
+      <>
+        <Spinner />
+      </>
+    );
   }
 
   if (error) {

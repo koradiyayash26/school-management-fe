@@ -270,11 +270,11 @@ function StudentUpdateStdYearPage() {
                   {headers.map((header) => (
                     <TableCell
                       key={header.value}
-                      className="capitalize text-center"
+                      className="capitalize text-center whitespace-nowrap"
                     >
                       {header.value === "standard" && student.standard === "13"
                         ? "Balvatika"
-                        : student[header.value] || "None"}
+                        : student[header.value] || "-"}
                     </TableCell>
                   ))}
                 </TableRow>
@@ -346,11 +346,11 @@ function StudentUpdateStdYearPage() {
                   {headers.map((header) => (
                     <TableCell
                       key={header.value}
-                      className="capitalize text-center"
+                      className="capitalize text-center whitespace-nowrap"
                     >
                       {header.value === "standard" && student.standard === "13"
                         ? "Balvatika"
-                        : student[header.value] || "None"}
+                        : student[header.value] || "-"}
                     </TableCell>
                   ))}
                 </TableRow>

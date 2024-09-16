@@ -43,6 +43,12 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from "@/components/ui/pagination";
+import {
+  ChevronLeft,
+  ChevronRight,
+  ChevronsLeft,
+  ChevronsRight,
+} from "lucide-react";
 
 const headers = [
   { label: "ID", value: "id" },
@@ -187,8 +193,8 @@ function ExamTemplatePage() {
           <ScrollBar orientation="horizontal" />
         </ScrollArea>
 
-        <div className="flex flex-col gap-4 md:gap-0 md:flex-row items-center justify-between space-y-0 md:space-y-0 md:space-x-2">
-          <div className="text-sm dark:text-white text-black font-medium order-2 md:order-1">
+        <div className="flex w-full flex-col-reverse items-center justify-between gap-4 overflow-auto p-1 sm:flex-row sm:gap-8">
+          <div className="whitespace-nowrap text-sm dark:text-white text-black font-medium order-2 md:order-1">
             {filteredExams?.length > 0
               ? `Showing ${Math.min(
                   (page - 1) * pageSize + 1,
@@ -198,15 +204,21 @@ function ExamTemplatePage() {
                 }.`
               : "No entries to show"}
           </div>
-          <div className="flex items-center space-x-2 order-1 md:order-2">
-            <p className="text-sm font-medium hidden md:hidden lg:inline sm:inline ">
+          <div className="flex items-center space-x-2 order-1 sm:order-2">
+            <p className="whitespace-nowrap text-sm font-medium hidden sm:inline">
               Rows per page
             </p>
             <Select
               value={pageSize.toString()}
               onValueChange={handlePageSizeChange}
             >
-              <SelectTrigger className="h-8 w-[70px]">
+              <SelectTrigger
+                className={`h-8 w-[70px] ${
+                  filteredExams.length === 0
+                    ? "opacity-50 cursor-not-allowed"
+                    : ""
+                }`}
+              >
                 <SelectValue placeholder={pageSize} />
               </SelectTrigger>
               <SelectContent side="top">
@@ -218,78 +230,60 @@ function ExamTemplatePage() {
               </SelectContent>
             </Select>
           </div>
-          {totalPages > 1 && (
-            <div className="order-3 w-full md:w-auto">
-              <Pagination>
-                <PaginationContent>
-                  <PaginationItem>
-                    <PaginationPrevious
-                      onClick={() => handlePageChange(Math.max(1, page - 1))}
-                      disabled={page === 1}
-                    />
-                  </PaginationItem>
-                  <div className="flex md:hidden items-center">
-                    <PaginationItem>
-                      <PaginationLink isActive>{page}</PaginationLink>
-                    </PaginationItem>
-                  </div>
-                  <div className="hidden md:flex space-x-1 items-center">
-                    <PaginationItem>
-                      <PaginationLink
-                        onClick={() => handlePageChange(1)}
-                        isActive={page === 1}
-                      >
-                        1
-                      </PaginationLink>
-                    </PaginationItem>
-                    {page > 3 && <PaginationEllipsis />}
-                    {page > 2 && (
-                      <PaginationItem>
-                        <PaginationLink
-                          onClick={() => handlePageChange(page - 1)}
-                        >
-                          {page - 1}
-                        </PaginationLink>
-                      </PaginationItem>
-                    )}
-                    {page !== 1 && page !== totalPages && (
-                      <PaginationItem>
-                        <PaginationLink isActive>{page}</PaginationLink>
-                      </PaginationItem>
-                    )}
-                    {page < totalPages - 1 && (
-                      <PaginationItem>
-                        <PaginationLink
-                          onClick={() => handlePageChange(page + 1)}
-                        >
-                          {page + 1}
-                        </PaginationLink>
-                      </PaginationItem>
-                    )}
-                    {page < totalPages - 2 && <PaginationEllipsis />}
-                    {totalPages > 1 && (
-                      <PaginationItem>
-                        <PaginationLink
-                          onClick={() => handlePageChange(totalPages)}
-                          isActive={page === totalPages}
-                        >
-                          {totalPages}
-                        </PaginationLink>
-                      </PaginationItem>
-                    )}
-                  </div>
-                  <PaginationItem>
-                    <PaginationNext
-                      onClick={() =>
-                        handlePageChange(Math.min(totalPages, page + 1))
-                      }
-                      disabled={page === totalPages}
-                    />
-                  </PaginationItem>
-                </PaginationContent>
-              </Pagination>
-            </div>
-          )}
+          <div className="order-3 w-full sm:w-auto">
+            <Pagination>
+              <PaginationContent>
+                <PaginationItem>
+                  <Button
+                    aria-label="Go to last page"
+                    variant="outline"
+                    size="icon"
+                    className="size-8 lg:flex"
+                    onClick={() => handlePageChange(1)}
+                    disabled={page === 1 || totalPages === 0}
+                  >
+                    <ChevronsLeft className="size-4" aria-hidden="true" />
+                  </Button>
+                </PaginationItem>
+                <Button
+                  aria-label="Go to last page"
+                  variant="outline"
+                  size="icon"
+                  className="size-8 lg:flex"
+                  onClick={() => handlePageChange(Math.max(1, page - 1))}
+                  disabled={page === 1 || totalPages === 0}
+                >
+                  <ChevronLeft className="size-4" aria-hidden="true" />
+                </Button>
+                <Button
+                  aria-label="Go to last page"
+                  variant="outline"
+                  size="icon"
+                  className="size-8 lg:flex"
+                  onClick={() =>
+                    handlePageChange(Math.min(totalPages, page + 1))
+                  }
+                  disabled={page === totalPages || totalPages === 0}
+                >
+                  <ChevronRight className="size-4" aria-hidden="true" />
+                </Button>
+                <PaginationItem>
+                  <Button
+                    aria-label="Go to last page"
+                    variant="outline"
+                    size="icon"
+                    className="size-8 lg:flex"
+                    onClick={() =>
+                      handlePageChange(Math.min(totalPages, totalPages))
+                    }
+                    disabled={page === totalPages || totalPages === 0}
+                  >
+                    <ChevronsRight className="size-4" aria-hidden="true" />
+                  </Button>
+                </PaginationItem>
+              </PaginationContent>
+            </Pagination>
+          </div>
         </div>
       </div>
     </>

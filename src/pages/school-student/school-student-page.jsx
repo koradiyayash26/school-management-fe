@@ -22,8 +22,29 @@ import { Link } from "react-router-dom";
 import ActionsPopupSchoolStudent from "@/components/school-student/data-table-row-action";
 import { useSchoolStudents } from "@/hooks/use-school-student";
 import Spinner from "@/components/spinner/spinner";
-import { Pagination, PaginationContent, PaginationEllipsis, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from "@/components/ui/pagination";
-import { ChevronDown } from "lucide-react";
+import {
+  Pagination,
+  PaginationContent,
+  PaginationEllipsis,
+  PaginationItem,
+  PaginationLink,
+  PaginationNext,
+  PaginationPrevious,
+} from "@/components/ui/pagination";
+import {
+  ChevronDown,
+  ChevronLeft,
+  ChevronRight,
+  ChevronsLeft,
+  ChevronsRight,
+} from "lucide-react";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 const headers = [
   { label: "ID", value: "id" },
@@ -39,13 +60,13 @@ const headers = [
 
 function SchoolStudentPage() {
   const { data, isLoading, error } = useSchoolStudents();
-  const [page, setPage] = useState(0);
+  const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
   const [search, setSearch] = useState("");
 
   const students = data?.data || [];
-  const startIndex = page * pageSize;
-  const endIndex = (page + 1) * pageSize;
+  const startIndex = (page - 1) * pageSize;
+  const endIndex = startIndex + pageSize;
 
   const filteredStudents = students.filter((student) =>
     ["first_name", "middle_name", "last_name", "year", "standard", "grno"].some(
@@ -58,10 +79,13 @@ function SchoolStudentPage() {
 
   const totalPages = Math.ceil(filteredStudents.length / pageSize);
 
+  const handlePageChange = (newPage) => {
+    setPage(newPage);
+  };
 
-  const handlePageSizeChange = (value) => {
-    setPageSize(parseInt(value));
-    setPage(0);
+  const handlePageSizeChange = (newSize) => {
+    setPageSize(parseInt(newSize));
+    setPage(1);
   };
 
   if (isLoading)
@@ -141,78 +165,91 @@ function SchoolStudentPage() {
         </Table>
         <ScrollBar orientation="horizontal" />
       </ScrollArea>
-      <div className="w-full flex flex-col sm:flex-row items-center justify-between space-y-4 sm:space-y-0 py-4 text-sm">
-        <div className="w-full sm:w-auto flex items-center justify-center sm:justify-start text-muted-foreground">
-          <span className="text-sm dark:text-white text-black font-medium order-2 md:order-1">
-            Showing {startIndex + 1}-
-            {Math.min(endIndex, filteredStudents.length)} of{" "}
-            {filteredStudents.length}.
-          </span>
+      <div className="flex w-full flex-col-reverse items-center justify-between gap-4 overflow-auto p-1 sm:flex-row sm:gap-8">
+        <div className="whitespace-nowrap text-sm dark:text-white text-black font-medium order-2 md:order-1">
+          {filteredStudents?.length > 0
+            ? `Showing ${Math.min(
+                (page - 1) * pageSize + 1,
+                filteredStudents.length
+              )} - ${Math.min(page * pageSize, filteredStudents.length)} of ${
+                filteredStudents.length
+              }.`
+            : "No entries to show"}
         </div>
-        <div className="flex items-center space-x-2">
-          <span className="text-sm font-medium hidden md:hidden lg:inline sm:inline ">
+        <div className="flex items-center space-x-2 order-1 sm:order-2">
+          <p className="whitespace-nowrap text-sm font-medium hidden sm:inline">
             Rows per page
-          </span>
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant="outline" size="sm" className="h-8 w-[70px]">
-                {pageSize}
-                <ChevronDown className="ml-2 h-4 w-4" />
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end">
+          </p>
+          <Select
+            value={pageSize.toString()}
+            onValueChange={handlePageSizeChange}
+          >
+            <SelectTrigger
+              className={`h-8 w-[70px] ${
+                filteredStudents.length === 0
+                  ? "opacity-50 cursor-not-allowed"
+                  : ""
+              }`}
+            >
+              <SelectValue placeholder={pageSize} />
+            </SelectTrigger>
+            <SelectContent side="top">
               {[10, 20, 30, 40, 50].map((size) => (
-                <DropdownMenuItem
-                  key={size}
-                  onSelect={() => handlePageSizeChange(size)}
-                >
+                <SelectItem key={size} value={size.toString()}>
                   {size}
-                </DropdownMenuItem>
+                </SelectItem>
               ))}
-            </DropdownMenuContent>
-          </DropdownMenu>
+            </SelectContent>
+          </Select>
         </div>
-        <div className="w-full sm:w-auto flex justify-center sm:justify-end">
+        <div className="order-3 w-full sm:w-auto">
           <Pagination>
             <PaginationContent>
               <PaginationItem>
-                <PaginationPrevious
-                  onClick={() => setPage(Math.max(page - 1, 0))}
-                  disabled={page === 0}
-                />
-              </PaginationItem>
-              <PaginationItem>
-                <PaginationLink
-                  onClick={() => setPage(0)}
-                  isActive={page === 0}
+                <Button
+                  aria-label="Go to last page"
+                  variant="outline"
+                  size="icon"
+                  className="size-8 lg:flex"
+                  onClick={() => handlePageChange(1)}
+                  disabled={page === 1 || totalPages === 0}
                 >
-                  1
-                </PaginationLink>
+                  <ChevronsLeft className="size-4" aria-hidden="true" />
+                </Button>
               </PaginationItem>
-              {page > 1 && <PaginationEllipsis className="hidden sm:flex" />}
-              {page !== 0 && page !== totalPages - 1 && (
-                <PaginationItem>
-                  <PaginationLink isActive>{page + 1}</PaginationLink>
-                </PaginationItem>
-              )}
-              {page < totalPages - 2 && (
-                <PaginationEllipsis className="hidden sm:flex" />
-              )}
-              {totalPages > 1 && (
-                <PaginationItem>
-                  <PaginationLink
-                    onClick={() => setPage(totalPages - 1)}
-                    isActive={page === totalPages - 1}
-                  >
-                    {totalPages}
-                  </PaginationLink>
-                </PaginationItem>
-              )}
+              <Button
+                aria-label="Go to last page"
+                variant="outline"
+                size="icon"
+                className="size-8 lg:flex"
+                onClick={() => handlePageChange(Math.max(1, page - 1))}
+                disabled={page === 1 || totalPages === 0}
+              >
+                <ChevronLeft className="size-4" aria-hidden="true" />
+              </Button>
+              <Button
+                aria-label="Go to last page"
+                variant="outline"
+                size="icon"
+                className="size-8 lg:flex"
+                onClick={() => handlePageChange(Math.min(totalPages, page + 1))}
+                disabled={page === totalPages || totalPages === 0}
+              >
+                <ChevronRight className="size-4" aria-hidden="true" />
+              </Button>
               <PaginationItem>
-                <PaginationNext
-                  onClick={() => setPage(Math.min(page + 1, totalPages - 1))}
-                  disabled={page === totalPages - 1}
-                />
+                <Button
+                  aria-label="Go to last page"
+                  variant="outline"
+                  size="icon"
+                  className="size-8 lg:flex"
+                  onClick={() =>
+                    handlePageChange(Math.min(totalPages, totalPages))
+                  }
+                  disabled={page === totalPages || totalPages === 0}
+                >
+                  <ChevronsRight className="size-4" aria-hidden="true" />
+                </Button>
               </PaginationItem>
             </PaginationContent>
           </Pagination>

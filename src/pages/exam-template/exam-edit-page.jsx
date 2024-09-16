@@ -16,11 +16,7 @@ import Spinner from "@/components/spinner/spinner";
 const ExamTemplateEditPage = () => {
   const { id } = useParams();
   const navigate = useNavigate();
-  const {
-    data: data,
-    isLoading,
-    refetch
-  } = useExamTemplateIdGet(id);
+  const { data: data, isLoading, refetch } = useExamTemplateIdGet(id);
 
   let examGetData = data?.data;
 
@@ -45,12 +41,15 @@ const ExamTemplateEditPage = () => {
   };
 
   if (isLoading) {
-    return <><Spinner/></>;
+    return (
+      <>
+        <Spinner />
+      </>
+    );
   }
 
   return (
     <>
-      <h1>UPDATE EXAM MARKS</h1>
       <Card className="">
         <CardHeader>
           <CardTitle>UPDATE EXAM MARKS</CardTitle>

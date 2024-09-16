@@ -42,7 +42,6 @@ const ExamTemplateAddPage = () => {
 
   return (
     <>
-      <h1>EXAM TEMPLATE</h1>
       <Card className="">
         <CardHeader>
           <CardTitle>EXAM TEMPLATE</CardTitle>

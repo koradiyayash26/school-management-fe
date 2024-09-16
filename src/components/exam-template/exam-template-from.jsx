@@ -64,7 +64,7 @@ const ExamTemplateForm = ({ defaultValues, onSubmit,loading }) => {
           onSubmit={form.handleSubmit(onSubmit)}
           className="space-y-2 w-full"
         >
-          <div className="md:grid md:grid-cols-3 gap-8">
+          <div className="md:grid md:grid-cols-3 gap-8 space-y-4 md:space-y-0 mb-4">
             <FormField
               className=""
               control={form.control}

@@ -74,7 +74,7 @@ export const MENU = [
 ];
 
 export const studentDetail = {
-  grno: 0,
+  grno: 1,
   first_name: "",
   last_name: "",
   middle_name: "",

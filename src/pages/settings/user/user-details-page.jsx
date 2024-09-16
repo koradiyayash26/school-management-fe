@@ -282,9 +282,7 @@ const InfoItem = ({ icon, label, value }) => (
         {label}
       </span>
       {typeof value === "string" ? (
-        <span className="text-sm sm:text-lg font-semibold ">
-          {value}
-        </span>
+        <span className="text-sm sm:text-lg font-semibold ">{value}</span>
       ) : (
         value
       )}
@@ -332,7 +330,7 @@ const ChangePasswordModal = ({ userId, onClose }) => {
   return (
     <>
       <Toaster
-        position="top-right"
+        position="top"
         toastOptions={{
           duration: 3000,
           style: {
@@ -413,19 +411,19 @@ const DeleteUserModal = ({ onDelete, onClose }) => {
         </p>
         <div className="flex flex-col sm:flex-row justify-end space-y-2 sm:space-y-0 sm:space-x-2">
           <Button
-            onClick={onClose}
-            className="bg-gray-700 text-white hover:bg-gray-600 w-full sm:w-auto"
-            disabled={isDeleting}
-          >
-            Cancel
-          </Button>
-          <Button
             variant="destructive"
             className="bg-red-600 text-white hover:bg-red-700 w-full sm:w-auto"
             onClick={handleDelete}
             disabled={isDeleting}
           >
             {isDeleting ? "Deleting..." : "Delete"}
+          </Button>
+          <Button
+            onClick={onClose}
+            className="bg-gray-700 text-white hover:bg-gray-600 w-full sm:w-auto"
+            disabled={isDeleting}
+          >
+            Cancel
           </Button>
         </div>
       </div>

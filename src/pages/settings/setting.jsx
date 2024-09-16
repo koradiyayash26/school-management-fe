@@ -1,5 +1,4 @@
 import CardItem from "@/components/home/card-item";
-import ActionsPopupSettings from "@/components/settings/data-table-row-action";
 import Spinner from "@/components/spinner/spinner";
 import { Button } from "@/components/ui/button";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
@@ -13,7 +12,7 @@ import {
 } from "@/components/ui/table";
 import { useUserList } from "@/hooks/use-settings";
 import { Calculator, UserRoundCog, Users } from "lucide-react";
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { Link } from "react-router-dom";
 
 const headers = [

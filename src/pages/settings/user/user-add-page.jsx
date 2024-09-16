@@ -23,6 +23,7 @@ import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { postUser } from "@/services/settings-service";
+import toast, { Toaster } from "react-hot-toast";
 const formSchema = z.object({
   username: z.string().min(1, { message: "Enter username" }),
   email: z.string().email({ message: "Enter valid email" }).optional(),
@@ -40,7 +41,13 @@ const UserAddPage = () => {
   const mutation = useMutation({
     mutationFn: (data) => postUser(data),
     onSuccess: () => {
-      navigate("/setting");
+      toast.success("User added successfully");
+      setTimeout(() => {
+        navigate("/setting");
+      }, 1000);
+    },
+    onError: (error) => {
+      toast.error(error.response.data.error);
     },
   });
 
@@ -56,6 +63,16 @@ const UserAddPage = () => {
 
   return (
     <>
+      <Toaster
+        position="top"
+        toastOptions={{
+          duration: 3000,
+          style: {
+            background: "#333",
+            color: "#fff",
+          },
+        }}
+      />
       <div className="flex gap-2 md:m-0 mt-4">
         <Link to="/setting">
           <Button>Back Settings</Button>
@@ -75,7 +92,7 @@ const UserAddPage = () => {
               </CardDescription>
             </CardHeader>
             <CardContent>
-              <div className="md:grid md:grid-cols-2 gap-8">
+              <div className="md:grid md:grid-cols-2 gap-8 space-y-4 md:space-y-0">
                 <FormField
                   className=""
                   control={form.control}

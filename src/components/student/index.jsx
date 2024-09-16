@@ -16,7 +16,7 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 
 const formSchema = z.object({
-  grno: z.coerce.number(),
+  grno: z.coerce.number().min(1, { message: "Grno is required" }),
   first_name: z
     .string()
     .min(3, { message: "First Name must be at least 3 characters" }),
@@ -41,7 +41,7 @@ const formSchema = z.object({
   district: z
     .string()
     .min(3, { message: "District must be at least 2 characters" }),
-  address: z.string().optional(),
+  address: z.string().optional().max(100, { message: "Address must be at most 100 characters" }),
   mobile_no: z.string().optional(),
   status: z.string().optional(),
   gender: z.string().optional(),

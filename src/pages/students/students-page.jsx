@@ -257,7 +257,7 @@ function StudentsPage() {
               </AlertDialogFooter>
             </AlertDialogContent>
           </AlertDialog>
-          <h1>GENERAL REGISTER</h1>
+          <h1 className="uppercase text-2xl font-bold mb-4">GENERAL REGISTER</h1>
           <div className="block md:flex md:justify-between gap-2 mb-4">
             <div className="w-full md:w-auto">
               <Input
@@ -368,7 +368,7 @@ function StudentsPage() {
                               </TableCell>
                             )
                         )}
-                        <TableCell className="no-print sticky right-0 z-[1]">
+                        <TableCell className="no-print z-[1]">
                           <ActionsPopup
                             id={student.id}
                             openAlertDeleteBox={openAlertDeleteBox}

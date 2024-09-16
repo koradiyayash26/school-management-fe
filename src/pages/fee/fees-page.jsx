@@ -231,7 +231,7 @@ function FeesTypePage() {
                         : fee[header.value] || "None"}
                     </TableCell>
                   ))}
-                  <TableCell className="sticky right-0 z-[1]">
+                  <TableCell className="z-[1]">
                     <ActionsPopupFee
                       id={fee.id}
                       standard={fee.standard}

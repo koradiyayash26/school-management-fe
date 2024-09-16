@@ -195,7 +195,7 @@ function StudentHistoricalPage() {
                         : student[header.value] || "-"}
                     </TableCell>
                   ))}
-                  <TableCell className="sticky right-0 z-[1]">
+                  <TableCell className="z-[1]">
                     <ActionsPopupStudentHistorical
                       id={student.id}
                       openAlertDeleteBox={openAlertDeleteBox}

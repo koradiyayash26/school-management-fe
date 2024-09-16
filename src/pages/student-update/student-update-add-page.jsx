@@ -113,7 +113,6 @@ const StudentUpdateAddPage = () => {
 
   return (
     <>
-      <h1>ADD STANDARD AND YEAR TEMPLATE</h1>
       <Card className="">
         <CardHeader>
           <CardTitle>ADD STANDARD AND YEAR TEMPLATE</CardTitle>

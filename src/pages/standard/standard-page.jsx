@@ -97,7 +97,7 @@ const StandardPage = () => {
 
   return (
     <>
-      <h1 className="uppercase">STANDARD'S INFORMATION</h1>
+      <h1 className="uppercase text-2xl font-bold mb-4">STANDARD'S INFORMATION</h1>
       {/* Total Student Count */}
       <Card className="">
         <CardHeader>

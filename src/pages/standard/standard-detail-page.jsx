@@ -279,7 +279,7 @@ const StandardDetailPage = () => {
                               : student[header.value] || "None"}
                           </TableCell>
                         ))}
-                      <TableCell className="sticky right-0">
+                      <TableCell className="">
                         <ActionsPopup
                           id={student.id}
                           openAlertDeleteBox={openAlertDeleteBox}

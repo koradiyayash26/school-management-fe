@@ -173,7 +173,7 @@ function ExamTemplatePage() {
                         : exam[header.value] || "None"}
                     </TableCell>
                   ))}
-                  <TableCell className="sticky right-0">
+                  <TableCell className="">
                     <ActionsPopupExamTemplate
                       id={exam.id}
                       standard={exam.standard}

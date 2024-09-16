@@ -16,11 +16,21 @@ import {
   DropdownMenuContent,
   DropdownMenuRadioGroup,
   DropdownMenuRadioItem,
+  DropdownMenuItem,
 } from "@/components/ui/dropdown-menu";
 import ActionsPopup from "@/components/ui/data-table-row-actions";
 import { useCertificate } from "@/hooks/use-certificate";
-import { SearchX } from "lucide-react";
+import { ChevronDown, SearchX } from "lucide-react";
 import Spinner from "@/components/spinner/spinner";
+import {
+  Pagination,
+  PaginationContent,
+  PaginationEllipsis,
+  PaginationItem,
+  PaginationLink,
+  PaginationNext,
+  PaginationPrevious,
+} from "@/components/ui/pagination";
 
 const headers = [
   { label: "ID", value: "id" },
@@ -65,9 +75,11 @@ function CertificatePage() {
 
   const visibleStudents = filteredStudents.slice(startIndex, endIndex);
 
+  const totalPages = Math.ceil(filteredStudents.length / pageSize);
+
   return (
     <>
-      <h1 className="uppercase">certificate</h1>
+      <h1 className="uppercase text-2xl font-bold mb-4">certificate</h1>
       <div className="flex flex-col md:flex-row items-center justify-between">
         <Input
           className="w-full md:max-w-sm mb-2 md:mb-0 md:mr-2"
@@ -82,9 +94,7 @@ function CertificatePage() {
               {headers.map((header, index) => (
                 <TableHead key={index}>{header.label}</TableHead>
               ))}
-              <TableHead className="bg-[#151518]">
-                Certificate
-              </TableHead>
+              <TableHead className="">Certificate</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -101,7 +111,7 @@ function CertificatePage() {
               visibleStudents.map((student) => (
                 <TableRow key={student.id}>
                   {headers.map((header) => (
-                    <TableCell key={header.value}>
+                    <TableCell key={header.value} className="whitespace-nowrap">
                       {(header.value === "standard" ||
                         header.value === "admission_std") &&
                       student[header.value] == 13
@@ -109,7 +119,7 @@ function CertificatePage() {
                         : student[header.value] || "None"}
                     </TableCell>
                   ))}
-                  <TableCell className="sticky top-0 right-0 z-[1] bg-[#151518]">
+                  <TableCell className="">
                     <ActionsPopup
                       Bonafide="Bonafide"
                       Birth="Birth Certificate"
@@ -123,52 +133,83 @@ function CertificatePage() {
         </Table>
         <ScrollBar orientation="horizontal" />
       </ScrollArea>
-      <div className="block text-center  md:flex md:items-center md:justify-end md:space-x-2 py-4">
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="outline" className="w-[160px]">
-              {pageSize <= 10
-                ? "Items per page"
-                : pageSize == "9999"
-                ? "Show All"
-                : pageSize}
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent className="w-56">
-            <DropdownMenuRadioGroup
-              value={pageSize.toString()}
-              onValueChange={(value) => handlePageSizeChange(value)}
-            >
-              <DropdownMenuRadioItem value="10">10</DropdownMenuRadioItem>
-              <DropdownMenuRadioItem value="20">20</DropdownMenuRadioItem>
-              <DropdownMenuRadioItem value="30">30</DropdownMenuRadioItem>
-              <DropdownMenuRadioItem value="40">40</DropdownMenuRadioItem>
-              <DropdownMenuRadioItem value="50">50</DropdownMenuRadioItem>
-              <DropdownMenuRadioItem value="9999">
-                Show All
-              </DropdownMenuRadioItem>
-            </DropdownMenuRadioGroup>
-          </DropdownMenuContent>
-        </DropdownMenu>
-        <div className="space-x-2 md:m-0 mt-2">
-          <Button
-            variant="outline"
-            onClick={() => setPage(Math.max(page - 1, 0))}
-            size="sm"
-            disabled={page === 0}
-          >
-            Previous
-          </Button>
-          <Button
-            variant="outline"
-            onClick={() => setPage(page + 1)}
-            size="sm"
-            disabled={endIndex >= students.length}
-          >
-            Next
-          </Button>
+      <div className="w-full flex flex-col sm:flex-row items-center justify-between space-y-4 sm:space-y-0 py-4 text-sm">
+        <div className="w-full sm:w-auto flex items-center justify-center sm:justify-start text-muted-foreground">
+          <span className="text-sm dark:text-white text-black font-medium order-2 md:order-1">
+            Showing {startIndex + 1}-
+            {Math.min(endIndex, filteredStudents.length)} of{" "}
+            {filteredStudents.length}.
+          </span>
         </div>
-      </div>
+        <div className="flex items-center space-x-2">
+          <span className="text-sm font-medium hidden md:hidden lg:inline sm:inline ">
+            Rows per page
+          </span>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="outline" size="sm" className="h-8 w-[70px]">
+                {pageSize}
+                <ChevronDown className="ml-2 h-4 w-4" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              {[10, 20, 30, 40, 50].map((size) => (
+                <DropdownMenuItem
+                  key={size}
+                  onSelect={() => handlePageSizeChange(size)}
+                >
+                  {size}
+                </DropdownMenuItem>
+              ))}
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </div>
+        <div className="w-full sm:w-auto flex justify-center sm:justify-end">
+          <Pagination>
+            <PaginationContent>
+              <PaginationItem>
+                <PaginationPrevious
+                  onClick={() => setPage(Math.max(page - 1, 0))}
+                  disabled={page === 0}
+                />
+              </PaginationItem>
+              <PaginationItem>
+                <PaginationLink
+                  onClick={() => setPage(0)}
+                  isActive={page === 0}
+                >
+                  1
+                </PaginationLink>
+              </PaginationItem>
+              {page > 1 && <PaginationEllipsis className="hidden sm:flex" />}
+              {page !== 0 && page !== totalPages - 1 && (
+                <PaginationItem>
+                  <PaginationLink isActive>{page + 1}</PaginationLink>
+                </PaginationItem>
+              )}
+              {page < totalPages - 2 && (
+                <PaginationEllipsis className="hidden sm:flex" />
+              )}
+              {totalPages > 1 && (
+                <PaginationItem>
+                  <PaginationLink
+                    onClick={() => setPage(totalPages - 1)}
+                    isActive={page === totalPages - 1}
+                  >
+                    {totalPages}
+                  </PaginationLink>
+                </PaginationItem>
+              )}
+              <PaginationItem>
+                <PaginationNext
+                  onClick={() => setPage(Math.min(page + 1, totalPages - 1))}
+                  disabled={page === totalPages - 1}
+                />
+              </PaginationItem>
+            </PaginationContent>
+          </Pagination>
+        </div>
+      </div>{" "}
     </>
   );
 }

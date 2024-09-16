@@ -73,7 +73,6 @@ const SchoolStudentUpdatePage = () => {
 
   return (
     <>
-      <h1>UPDATE SCHOOL STUDENT</h1>
       <Card className="">
         <SchoolStudentForm
           defaultValues={defaultValues}

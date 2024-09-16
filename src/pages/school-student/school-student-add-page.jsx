@@ -57,7 +57,6 @@ const SchoolStudentAddPage = () => {
 
   return (
     <>
-      <h1>ADD SCHOOL STUDENT</h1>
       <Card className="">
         <SchoolStudentForm
           defaultValues={defaultValues}

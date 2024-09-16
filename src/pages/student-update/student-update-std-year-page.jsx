@@ -213,7 +213,7 @@ function StudentUpdateStdYearPage() {
           Refresh Page.
         </AlertDescription>
       </Alert>
-      <h1>STUDENT NOT UPDATED</h1>
+      <h1 className="uppercase text-2xl font-bold mb-4">STUDENT NOT UPDATED</h1>
       <div>
         <Button
           onClick={handleSubmitInactive}
@@ -290,7 +290,7 @@ function StudentUpdateStdYearPage() {
           If Update Not Work Then CLick Twice Times Then Work.
         </AlertDescription>
       </Alert>
-      <h1>STUDENT UPDATED</h1>
+      <h1 className="uppercase text-2xl font-bold mb-4">STUDENT UPDATED</h1>
       <div>
         <Button
           onClick={handleSubmitActive}

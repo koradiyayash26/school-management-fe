@@ -43,7 +43,6 @@ const BonafideCertificatePage = () => {
 
   return (
     <>
-      <h1>BONAFIDE CERTIFICATE</h1>
       <ContextMenu>
         <ContextMenuTrigger>
           <div className="border border-white-200 rounded-lg shadow-sm">

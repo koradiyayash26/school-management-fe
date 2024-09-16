@@ -129,7 +129,7 @@ function SchoolStudentPage() {
                       ? student.standard === "13"
                         ? "Balvatika"
                         : student.standard
-                      : student[header.value] || "None"}
+                      : student[header.value] || "-"}
                   </TableCell>
                 ))}
                 <TableCell className="">

@@ -15,6 +15,7 @@ import { Calendar } from "@/components/ui/calendar";
 import {
   DropdownMenu,
   DropdownMenuContent,
+  DropdownMenuItem,
   DropdownMenuRadioGroup,
   DropdownMenuRadioItem,
   DropdownMenuTrigger,
@@ -51,11 +52,12 @@ import {
 import { usePayment, usePaymentFeeList } from "@/hooks/use-payment";
 import { deletePaymentFee } from "@/services/payment-service";
 import { useMutation } from "@tanstack/react-query";
-import { Info } from "lucide-react";
+import { ChevronDown, Info } from "lucide-react";
 import React, { useState } from "react";
 import toast, { Toaster } from "react-hot-toast";
 import { Link } from "react-router-dom";
-import { format, isWithinInterval, parseISO } from 'date-fns';
+import { format, isWithinInterval, parseISO } from "date-fns";
+import { Pagination, PaginationContent, PaginationEllipsis, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from "@/components/ui/pagination";
 
 const headers = [
   { label: "Fee Paid Date", value: "fee_paid_date" },
@@ -146,26 +148,38 @@ const PaymentsPage = () => {
 
   const filteredStudents = paymentFeeList?.filter((payment) => {
     if (!isFilterApplied) return true;
-    
+
     const searchLower = search.toLowerCase();
-    const matchesSearch = (
-      (payment.student__standard?.toString().toLowerCase().includes(searchLower) || false) ||
-      (payment.student__first_name?.toLowerCase().includes(searchLower) || false) ||
-      (payment.student__last_name?.toLowerCase().includes(searchLower) || false) ||
-      (payment.student__middle_name?.toLowerCase().includes(searchLower) || false) ||
-      (payment.fee_paid_date?.toLowerCase().includes(searchLower) || false) ||
-      (payment.id?.toString().includes(search) || false)
-    );
+    const matchesSearch =
+      payment.student__standard
+        ?.toString()
+        .toLowerCase()
+        .includes(searchLower) ||
+      false ||
+      payment.student__first_name?.toLowerCase().includes(searchLower) ||
+      false ||
+      payment.student__last_name?.toLowerCase().includes(searchLower) ||
+      false ||
+      payment.student__middle_name?.toLowerCase().includes(searchLower) ||
+      false ||
+      payment.fee_paid_date?.toLowerCase().includes(searchLower) ||
+      false ||
+      payment.id?.toString().includes(search) ||
+      false;
 
     const paymentDate = parseISO(payment.fee_paid_date);
-    const isWithinDateRange = startDate && endDate ? 
-      isWithinInterval(paymentDate, { start: startDate, end: endDate }) : 
-      true;
+    const isWithinDateRange =
+      startDate && endDate
+        ? isWithinInterval(paymentDate, { start: startDate, end: endDate })
+        : true;
 
     return matchesSearch && isWithinDateRange;
   });
 
   const visibleStudents = filteredStudents?.slice(startIndex, endIndex);
+
+  const totalPages = Math.ceil(filteredStudents.length / pageSize);
+
 
   const handlePageSizeChange = (value) => {
     setPageSize(parseInt(value));
@@ -204,7 +218,7 @@ const PaymentsPage = () => {
 
   return (
     <>
-      <h1>PAYMENT</h1>
+      <h1 className="uppercase text-2xl font-bold mb-4">PAYMENT</h1>
       <div>
         <div>
           <div className="flex  flex-col md:flex-row items-center gap-8 mb-4">
@@ -343,7 +357,7 @@ const PaymentsPage = () => {
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
-      <h1>FEE HISTORY</h1>
+      <h1 className="uppercase text-2xl font-bold">FEE HISTORY</h1>
       <div className="space-y-4">
         <div className="flex flex-col md:flex-row gap-4">
           <Input
@@ -383,7 +397,9 @@ const PaymentsPage = () => {
             </PopoverContent>
           </Popover>
           <Button onClick={applyFilter}>Apply Filter</Button>
-          <Button onClick={clearFilter} variant="outline">Clear Filter</Button>
+          <Button onClick={clearFilter} variant="outline">
+            Clear Filter
+          </Button>
         </div>
       </div>
       <ScrollArea className="rounded-md border w-full h-[calc(80vh-120px)]">
@@ -393,7 +409,7 @@ const PaymentsPage = () => {
               {headers.map((header, index) => (
                 <TableHead key={index}>{header.label}</TableHead>
               ))}
-              <TableHead className="bg-[#151518]">Actions</TableHead>
+              <TableHead className="">Actions</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -410,17 +426,17 @@ const PaymentsPage = () => {
               visibleStudents.map((payment) => (
                 <TableRow key={payment.id}>
                   {headers.map((header) => (
-                    <TableCell key={header.value} className="capitalize">
+                    <TableCell key={header.value} className="capitalize whitespace-nowrap">
                       {header.value === "standard"
                         ? payment.standard || "None"
                         : header.value === "paid"
                         ? (payment.paid || 0) + (payment.waived || 0)
                         : payment[header.value] == 13
                         ? "Balvatika"
-                        : payment[header.value] || "None"}
+                        : payment[header.value] || "-"}
                     </TableCell>
                   ))}
-                  <TableCell className="sticky top-0 right-0 z-[1] bg-[#151518]">
+                  <TableCell className="">
                     <ActionsPopupPaymentFee
                       id={payment.id}
                       openAlertDeleteBox={openAlertDeleteBox}
@@ -433,50 +449,81 @@ const PaymentsPage = () => {
         </Table>
         <ScrollBar orientation="horizontal" />
       </ScrollArea>
-      <div className="block text-center  md:flex md:items-center md:justify-end md:space-x-2 py-4">
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="outline" className="w-[160px]">
-              {pageSize <= 10
-                ? "Items per page"
-                : pageSize == "9999"
-                ? "Show All"
-                : pageSize}
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent className="w-56">
-            <DropdownMenuRadioGroup
-              value={pageSize.toString()}
-              onValueChange={(value) => handlePageSizeChange(value)}
-            >
-              <DropdownMenuRadioItem value="10">10</DropdownMenuRadioItem>
-              <DropdownMenuRadioItem value="20">20</DropdownMenuRadioItem>
-              <DropdownMenuRadioItem value="30">30</DropdownMenuRadioItem>
-              <DropdownMenuRadioItem value="40">40</DropdownMenuRadioItem>
-              <DropdownMenuRadioItem value="50">50</DropdownMenuRadioItem>
-              <DropdownMenuRadioItem value="9999">
-                Show All
-              </DropdownMenuRadioItem>
-            </DropdownMenuRadioGroup>
-          </DropdownMenuContent>
-        </DropdownMenu>
-        <div className="space-x-2 md:m-0 mt-2">
-          <Button
-            variant="outline"
-            onClick={() => setPage(Math.max(page - 1, 0))}
-            size="sm"
-            disabled={page === 0}
-          >
-            Previous
-          </Button>
-          <Button
-            variant="outline"
-            onClick={() => setPage(page + 1)}
-            size="sm"
-            disabled={endIndex >= paymentFeeList.length}
-          >
-            Next
-          </Button>
+      <div className="w-full flex flex-col sm:flex-row items-center justify-between space-y-4 sm:space-y-0 py-4 text-sm">
+        <div className="w-full sm:w-auto flex items-center justify-center sm:justify-start text-muted-foreground">
+          <span className="text-sm dark:text-white text-black font-medium order-2 md:order-1">
+            Showing {startIndex + 1}-
+            {Math.min(endIndex, filteredStudents.length)} of{" "}
+            {filteredStudents.length}.
+          </span>
+        </div>
+        <div className="flex items-center space-x-2">
+          <span className="text-sm font-medium hidden md:hidden lg:inline sm:inline ">
+            Rows per page
+          </span>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="outline" size="sm" className="h-8 w-[70px]">
+                {pageSize}
+                <ChevronDown className="ml-2 h-4 w-4" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              {[10, 20, 30, 40, 50].map((size) => (
+                <DropdownMenuItem
+                  key={size}
+                  onSelect={() => handlePageSizeChange(size)}
+                >
+                  {size}
+                </DropdownMenuItem>
+              ))}
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </div>
+        <div className="w-full sm:w-auto flex justify-center sm:justify-end">
+          <Pagination>
+            <PaginationContent>
+              <PaginationItem>
+                <PaginationPrevious
+                  onClick={() => setPage(Math.max(page - 1, 0))}
+                  disabled={page === 0}
+                />
+              </PaginationItem>
+              <PaginationItem>
+                <PaginationLink
+                  onClick={() => setPage(0)}
+                  isActive={page === 0}
+                >
+                  1
+                </PaginationLink>
+              </PaginationItem>
+              {page > 1 && <PaginationEllipsis className="hidden sm:flex" />}
+              {page !== 0 && page !== totalPages - 1 && (
+                <PaginationItem>
+                  <PaginationLink isActive>{page + 1}</PaginationLink>
+                </PaginationItem>
+              )}
+              {page < totalPages - 2 && (
+                <PaginationEllipsis className="hidden sm:flex" />
+              )}
+              {totalPages > 1 && (
+                <PaginationItem>
+                  <PaginationLink
+                    onClick={() => setPage(totalPages - 1)}
+                    isActive={page === totalPages - 1}
+                  >
+                    {totalPages}
+                  </PaginationLink>
+                </PaginationItem>
+              )}
+              <PaginationItem>
+                <PaginationNext
+                  onClick={() => setPage(Math.min(page + 1, totalPages - 1))}
+                  disabled={page === totalPages - 1}
+                />
+              </PaginationItem>
+            </PaginationContent>
+          </Pagination>
         </div>
       </div>
     </>

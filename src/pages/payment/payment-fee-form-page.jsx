@@ -464,7 +464,7 @@ const PaymentFeeFormPage = () => {
         </Form>
         <ScrollBar orientation="horizontal" />
       </ScrollArea>
-      <h1 className="my-6 text-xl">FEE HISTORY</h1>
+      <h1 className="my-6 text-xl uppercase font-bold">FEE HISTORY</h1>
       <ScrollArea className="rounded-md border mt-6 max-w-[1280px]">
         <Table className="relative">
           <TableHeader>

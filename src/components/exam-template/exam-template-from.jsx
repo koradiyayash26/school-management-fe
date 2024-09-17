@@ -24,13 +24,16 @@ import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 
-const ExamTemplateForm = ({ defaultValues, onSubmit,loading }) => {
+const ExamTemplateForm = ({ defaultValues, onSubmit, loading }) => {
   const formSchema = z.object({
     total_marks: z.coerce
       .number()
       .min(1, { message: "Please enter total mark" }),
     subject: z.string().min(1, { message: "Please select a subject" }),
-    note: z.string().optional(),
+    note: z
+      .string()
+      .max(100, { message: "Note Must not exceed 100 characters" })
+      .optional(),
     date: z.string().min(1, { message: "Please select a date" }),
     standard: z.string().min(1, { message: "Please select a standard" }),
   });
@@ -175,7 +178,7 @@ const ExamTemplateForm = ({ defaultValues, onSubmit,loading }) => {
                 </FormItem>
               )}
             />
-             <FormField
+            <FormField
               className=""
               control={form.control}
               name="note"

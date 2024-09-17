@@ -64,7 +64,10 @@ const years = [
 const formSchema = z.object({
   student: z.string().min(1, { message: "Please select a student" }),
   year: z.string().min(1, { message: "Please select a year" }),
-  note: z.string().min(1, { message: "Please enter a note" }),
+  note: z
+    .string()
+    .max(100, { message: "Note Must not exceed 100 characters" })
+    .optional(),
   standard: z.string().min(1, { message: "Please select a standard" }),
   update_date: z.string().min(1, { message: "Please enter an update date" }),
 });

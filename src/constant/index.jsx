@@ -15,21 +15,25 @@ export const MENU = [
     lable: "HOME",
     path: "/",
     icon: () => <Home className="h-4 w-4" />,
+    Permission: "",
   },
   {
     lable: "STANDARD",
     path: "/standard",
     icon: () => <Users className="h-4 w-4" />,
+    Permission: "StandardReport",
   },
   {
     lable: "GENERAL REGISTER",
     path: "/student",
     icon: () => <ClipboardList className="h-4 w-4" />,
+    Permission: "GeneralRegister",
   },
   {
     lable: "STUDENT",
     path: "/update",
     icon: () => <UsersRound className="h-4 w-4" />,
+    Permission: "StudentUpdate",
   },
   // {
   //   lable: "STUDENT HISTORICAL",
@@ -45,21 +49,25 @@ export const MENU = [
     lable: "FEES",
     path: "/fee-type",
     icon: () => <Calculator className="h-4 w-4" />,
+    Permission: "FeeTypes",
   },
   {
     lable: "FEES STUDENT",
     path: "/school-student",
     icon: () => <UsersRound className="h-4 w-4" />,
+    Permission: "StudentFees",
   },
   {
     lable: "PAYMENT",
     path: "/payment",
     icon: () => <IndianRupee className="h-4 w-4" />,
+    Permission: "Payment",
   },
   {
     lable: "REPORT",
     path: "/report",
     icon: () => <StickyNote className="h-4 w-4" />,
+    Permission: "FeeReport",
   },
   // {
   //   lable: "EXAM",
@@ -70,6 +78,7 @@ export const MENU = [
     lable: "EXAM",
     path: "/exam-template",
     icon: () => <Medal className="h-4 w-4" />,
+    Permission: "Exam",
   },
 ];
 

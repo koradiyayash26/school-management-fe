@@ -3,11 +3,16 @@ import { useEffect, useState } from "react";
 import { Outlet, Navigate, useLocation } from "react-router-dom";
 import Spinner from "./spinner/spinner";
 import apiClient from "@/lib/api-client";
+import { useUserPermissions } from "@/contextAPI";
 
 function ProtectedRoutes() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const location = useLocation();
+  const { setPermissions,setIsSuperuser } = useUserPermissions();
+  
+
+
 
   const ApiTokenVerify = async () => {
     try {
@@ -28,6 +33,8 @@ function ProtectedRoutes() {
       if (response.status === 200) {
         setIsAuthenticated(true);
         localStorage.setItem("user", response.data.user.username);
+        setPermissions(response.data.groups); // Store the groups as permissions
+        setIsSuperuser(response.data.user.is_superuser)
       }
     } catch (error) {
       setIsAuthenticated(false);

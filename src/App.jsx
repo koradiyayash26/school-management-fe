@@ -50,147 +50,162 @@ import FeeTypeMasterAddPage from "./pages/settings/fee-type-master/fee-type-mast
 import FeeTypeMasterUpdate from "./pages/settings/fee-type-master/fee-type-master-update-page";
 import UserAddPage from "./pages/settings/user/user-add-page";
 import UserDetailsPage from "./pages/settings/user/user-details-page";
+import { UserPermissionsProvider } from "./contextAPI";
 
 const App = () => {
   return (
     <>
       <div className="App">
-        <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
-          <Router>
-            <Routes>
-              <Route element={<ProtectedRoutes />}>
-                <Route path="/" element={<DashboardLayout />}>
-                  <Route index element={<HomePage />} />
-                  <Route element={<StudentsPage />} path="/student/" />
-                  <Route element={<StudentAddPage />} path="/student/add" />
-                  <Route
-                    element={<StudentEditPage />}
-                    path="/student/edit/:id"
-                  />
-                  <Route element={<StandardPage />} path="/standard" />
-                  <Route
-                    element={<StandardDetailPage />}
-                    path="/standard/:id"
-                  />
-                  <Route element={<CertificatePage />} path="/certificate/" />
-                  <Route
-                    element={<BonafideCertificatePage />}
-                    path="/bonafide/:id"
-                  />
-                  <Route element={<BirthCertificatePage />} path="/birth/:id" />
-                  <Route element={<MyDocument />} path="/pdf" />
-                  <Route element={<FeesTypePage />} path="/fee-type" />
-                  <Route element={<FeeTypesAddPage />} path="/fee-type/add" />
-                  <Route
-                    element={<FeetypeUpdatePage />}
-                    path="/fee-type/edit/:id"
-                  />
-                  <Route
-                    element={<FeesAssingPage />}
-                    path="/fee-type/:id/:std/:year/student-assign"
-                  />
+        <UserPermissionsProvider>
+          <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
+            <Router>
+              <Routes>
+                <Route element={<ProtectedRoutes />}>
+                  <Route path="/" element={<DashboardLayout />}>
+                    <Route index element={<HomePage />} />
+                    <Route element={<StudentsPage />} path="/student/" />
+                    <Route element={<StudentAddPage />} path="/student/add" />
+                    <Route
+                      element={<StudentEditPage />}
+                      path="/student/edit/:id"
+                    />
+                    <Route element={<StandardPage />} path="/standard" />
+                    <Route
+                      element={<StandardDetailPage />}
+                      path="/standard/:id"
+                    />
+                    <Route element={<CertificatePage />} path="/certificate/" />
+                    <Route
+                      element={<BonafideCertificatePage />}
+                      path="/bonafide/:id"
+                    />
+                    <Route
+                      element={<BirthCertificatePage />}
+                      path="/birth/:id"
+                    />
+                    <Route element={<MyDocument />} path="/pdf" />
+                    <Route element={<FeesTypePage />} path="/fee-type" />
+                    <Route element={<FeeTypesAddPage />} path="/fee-type/add" />
+                    <Route
+                      element={<FeetypeUpdatePage />}
+                      path="/fee-type/edit/:id"
+                    />
+                    <Route
+                      element={<FeesAssingPage />}
+                      path="/fee-type/:id/:std/:year/student-assign"
+                    />
 
-                  <Route element={<ExamMarksPage />} path="/exam" />
-                  <Route element={<ExamMarksAddPage />} path="/exam/add" />
-                  <Route
-                    element={<ExamMarksEditPage />}
-                    path="/exam/edit/:id"
-                  />
-                  <Route
-                    element={<HistoricalFeesPage />}
-                    path="/historical-fee"
-                  />
-                  <Route
-                    element={<HistoricalFeesAddPage />}
-                    path="/historical-fee/add"
-                  />
-                  <Route element={<ReportsPage />} path="/report" />
-                  <Route
-                    element={<ReportDetailsPage />}
-                    path="/report/standard/:id"
-                  />
-                  <Route
-                    element={<SchoolStudentPage />}
-                    path="/school-student"
-                  />
-                  <Route
-                    element={<SchoolStudentAddPage />}
-                    path="/school-student/add"
-                  />
-                  <Route
-                    element={<SchoolStudentUpdatePage />}
-                    path="/school-student/edit/:id"
-                  />
-                  <Route
-                    element={<StudentHistoricalPage />}
-                    path="/educational"
-                  />
-                  <Route element={<StudentUpdatePage />} path="/update" />
-                  <Route
-                    element={<StudentUpdateAddPage />}
-                    path="/update/add"
-                  />
-                  <Route
-                    element={<StudentUpdateStdYearPage />}
-                    path="/update/students/:std/:year"
-                  />
-                  <Route element={<PaymentsPage />} path="/payment" />
-                  <Route
-                    element={<PaymentFeeFormPage />}
-                    path="/payment/:id/:year"
-                  />
-                  <Route element={<PaymentReceiptPage />} path="/receipt/:id" />
-                  <Route element={<Setting />} path="/setting" />
-                  <Route
-                    element={<StandardMasterList />}
-                    path="/setting/standard-master"
-                  />
-                  <Route
-                    element={<StandardMasterAdd />}
-                    path="/setting/standard-master/add"
-                  />
-                  <Route
-                    element={<StandardMasterUpdate />}
-                    path="/setting/standard-master/edit/:id"
-                  />
-                  <Route
-                    element={<FeeTypeMasterList />}
-                    path="/setting/fee-type-master"
-                  />
-                  <Route
-                    element={<FeeTypeMasterAddPage />}
-                    path="/setting/fee-type-master/add"
-                  />
-                  <Route
-                    element={<FeeTypeMasterUpdate />}
-                    path="/setting/fee-type-master/edit/:id"
-                  />
-                  <Route element={<UserAddPage />} path="/setting/user/add" />
-                  <Route element={<UserDetailsPage />} path="/setting/user/details/:id" />
-                  <Route element={<ExamTemplatePage />} path="/exam-template" />
-                  <Route
-                    element={<ExamTemplateAddPage />}
-                    path="/exam-template/add"
-                  />
-                  <Route
-                    element={<ExamTemplateEditPage />}
-                    path="/exam-template/edit/:id"
-                  />
-                  <Route
-                    element={<ExamAssingMarkPage />}
-                    path="/exam-template/mark-assign/:std/:id"
-                  />
-                  <Route
-                    element={<ExamAssingMarkEditPage />}
-                    path="/exam-template/mark-assign-edit/:std/:id"
-                  />
-                  <Route element={<Notfound />} path="*" />
+                    <Route element={<ExamMarksPage />} path="/exam" />
+                    <Route element={<ExamMarksAddPage />} path="/exam/add" />
+                    <Route
+                      element={<ExamMarksEditPage />}
+                      path="/exam/edit/:id"
+                    />
+                    <Route
+                      element={<HistoricalFeesPage />}
+                      path="/historical-fee"
+                    />
+                    <Route
+                      element={<HistoricalFeesAddPage />}
+                      path="/historical-fee/add"
+                    />
+                    <Route element={<ReportsPage />} path="/report" />
+                    <Route
+                      element={<ReportDetailsPage />}
+                      path="/report/standard/:id"
+                    />
+                    <Route
+                      element={<SchoolStudentPage />}
+                      path="/school-student"
+                    />
+                    <Route
+                      element={<SchoolStudentAddPage />}
+                      path="/school-student/add"
+                    />
+                    <Route
+                      element={<SchoolStudentUpdatePage />}
+                      path="/school-student/edit/:id"
+                    />
+                    <Route
+                      element={<StudentHistoricalPage />}
+                      path="/educational"
+                    />
+                    <Route element={<StudentUpdatePage />} path="/update" />
+                    <Route
+                      element={<StudentUpdateAddPage />}
+                      path="/update/add"
+                    />
+                    <Route
+                      element={<StudentUpdateStdYearPage />}
+                      path="/update/students/:std/:year"
+                    />
+                    <Route element={<PaymentsPage />} path="/payment" />
+                    <Route
+                      element={<PaymentFeeFormPage />}
+                      path="/payment/:id/:year"
+                    />
+                    <Route
+                      element={<PaymentReceiptPage />}
+                      path="/receipt/:id"
+                    />
+                    <Route element={<Setting />} path="/setting" />
+                    <Route
+                      element={<StandardMasterList />}
+                      path="/setting/standard-master"
+                    />
+                    <Route
+                      element={<StandardMasterAdd />}
+                      path="/setting/standard-master/add"
+                    />
+                    <Route
+                      element={<StandardMasterUpdate />}
+                      path="/setting/standard-master/edit/:id"
+                    />
+                    <Route
+                      element={<FeeTypeMasterList />}
+                      path="/setting/fee-type-master"
+                    />
+                    <Route
+                      element={<FeeTypeMasterAddPage />}
+                      path="/setting/fee-type-master/add"
+                    />
+                    <Route
+                      element={<FeeTypeMasterUpdate />}
+                      path="/setting/fee-type-master/edit/:id"
+                    />
+                    <Route element={<UserAddPage />} path="/setting/user/add" />
+                    <Route
+                      element={<UserDetailsPage />}
+                      path="/setting/user/details/:id"
+                    />
+                    <Route
+                      element={<ExamTemplatePage />}
+                      path="/exam-template"
+                    />
+                    <Route
+                      element={<ExamTemplateAddPage />}
+                      path="/exam-template/add"
+                    />
+                    <Route
+                      element={<ExamTemplateEditPage />}
+                      path="/exam-template/edit/:id"
+                    />
+                    <Route
+                      element={<ExamAssingMarkPage />}
+                      path="/exam-template/mark-assign/:std/:id"
+                    />
+                    <Route
+                      element={<ExamAssingMarkEditPage />}
+                      path="/exam-template/mark-assign-edit/:std/:id"
+                    />
+                    <Route element={<Notfound />} path="*" />
+                  </Route>
                 </Route>
-              </Route>
-              <Route element={<LoginPage />} path="/login" />
-            </Routes>
-          </Router>
-        </ThemeProvider>
+                <Route element={<LoginPage />} path="/login" />
+              </Routes>
+            </Router>
+          </ThemeProvider>
+        </UserPermissionsProvider>
       </div>
     </>
   );

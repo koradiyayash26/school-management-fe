@@ -9,8 +9,16 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "../ui/tooltip";
+import { useUserPermissions } from "@/contextAPI";
 
 function Sidebar({ collapsed, onToggle }) {
+  const { permissions, isSuperuser } = useUserPermissions();
+  const filteredMenu = MENU.filter((item) => {
+    if (isSuperuser) return true; // Show all options for superuser
+    if (!item.Permission) return true; // Always show items without a permission requirement
+    return permissions.includes(item.Permission);
+  });
+
   return (
     <>
       <div
@@ -37,7 +45,7 @@ function Sidebar({ collapsed, onToggle }) {
                 collapsed && "justify-center"
               } items-start px-2 text-sm font-medium lg:px-4`}
             >
-              {MENU.map((item, index) => (
+              {filteredMenu.map((item, index) => (
                 <NavLink
                   key={index}
                   to={item.path}

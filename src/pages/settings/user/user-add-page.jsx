@@ -64,7 +64,7 @@ const UserAddPage = () => {
   return (
     <>
       <Toaster
-        position="top"
+        position="top-center"
         toastOptions={{
           duration: 3000,
           style: {

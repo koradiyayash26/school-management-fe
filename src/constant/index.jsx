@@ -21,19 +21,19 @@ export const MENU = [
     lable: "STANDARD",
     path: "/standard",
     icon: () => <Users className="h-4 w-4" />,
-    Permission: "StandardReport",
+    Permission: "Standard Report",
   },
   {
     lable: "GENERAL REGISTER",
     path: "/student",
     icon: () => <ClipboardList className="h-4 w-4" />,
-    Permission: "GeneralRegister",
+    Permission: "General Register",
   },
   {
     lable: "STUDENT",
     path: "/update",
     icon: () => <UsersRound className="h-4 w-4" />,
-    Permission: "StudentUpdate",
+    Permission: "Student Update",
   },
   // {
   //   lable: "STUDENT HISTORICAL",
@@ -49,13 +49,13 @@ export const MENU = [
     lable: "FEES",
     path: "/fee-type",
     icon: () => <Calculator className="h-4 w-4" />,
-    Permission: "FeeTypes",
+    Permission: "Fee Types",
   },
   {
     lable: "FEES STUDENT",
     path: "/school-student",
     icon: () => <UsersRound className="h-4 w-4" />,
-    Permission: "StudentFees",
+    Permission: "Student Fees",
   },
   {
     lable: "PAYMENT",
@@ -67,7 +67,7 @@ export const MENU = [
     lable: "REPORT",
     path: "/report",
     icon: () => <StickyNote className="h-4 w-4" />,
-    Permission: "FeeReport",
+    Permission: "Fee Report",
   },
   // {
   //   lable: "EXAM",

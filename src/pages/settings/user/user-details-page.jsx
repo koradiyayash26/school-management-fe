@@ -8,12 +8,12 @@ import { Mail, User, Shield, Clock } from "lucide-react";
 import {
   userDelete,
   changePasswordOfUser,
-  postUserPermitions,
+  patchUserPermittionGroupData,
 } from "@/services/settings-service";
 import toast, { Toaster } from "react-hot-toast";
 import { useMutation } from "@tanstack/react-query";
 import Spinner from "@/components/spinner/spinner";
-import { useDataUser, useUserPermittions } from "@/hooks/use-settings";
+import { useDataUser, useUserPermittionGroupData } from "@/hooks/use-settings";
 import { Checkbox } from "@/components/ui/checkbox";
 
 const PermissionsCheckboxes = ({ userPermitions, onSubmit, disabled }) => {
@@ -21,7 +21,6 @@ const PermissionsCheckboxes = ({ userPermitions, onSubmit, disabled }) => {
 
   useEffect(() => {
     const initialSelected = userPermitions
-      .flatMap((group) => group.permissions)
       .filter((perm) => perm.assigned)
       .map((perm) => perm.id);
     setSelectedPermissions(initialSelected);
@@ -41,32 +40,22 @@ const PermissionsCheckboxes = ({ userPermitions, onSubmit, disabled }) => {
 
   return (
     <>
-      <div className="space-y-8">
-        {userPermitions.map((per) => (
-          <div key={per.id} className="bg-gray-800 rounded-lg p-4 shadow-md">
-            <h2 className="uppercase text-lg font-semibold mb-4 text-white">
-              {per.name}
-            </h2>
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-              {per?.permissions.map((permission) => (
-                <div
-                  key={permission.id}
-                  className="flex items-center space-x-2"
-                >
-                  <Checkbox
-                    id={`permission-${permission.id}`}
-                    checked={selectedPermissions.includes(permission.id)}
-                    onCheckedChange={() => handleCheckboxChange(permission.id)}
-                    disabled={disabled}
-                  />
-                  <label
-                    htmlFor={`permission-${permission.id}`}
-                    className="uppercase text-sm font-medium cursor-pointer peer-disabled:cursor-not-allowed peer-disabled:opacity-70 text-white"
-                  >
-                    {permission.name}
-                  </label>
-                </div>
-              ))}
+      <div className="space-y-6">
+        {userPermitions.map((permission) => (
+          <div key={permission.id}>
+            <div className="hover:underline flex items-center space-x-2">
+              <Checkbox
+                id={`permission-${permission.id}`}
+                checked={selectedPermissions.includes(permission.id)}
+                onCheckedChange={() => handleCheckboxChange(permission.id)}
+                disabled={disabled}
+              />
+              <label
+                htmlFor={`permission-${permission.id}`}
+                className="uppercase text-sm font-medium cursor-pointer peer-disabled:cursor-not-allowed peer-disabled:opacity-70 text-white"
+              >
+                {permission.name}
+              </label>
             </div>
           </div>
         ))}
@@ -97,8 +86,8 @@ const UserDetailsPage = () => {
     isLoading: perIsLoading,
     error: perErorr,
     refetch: perRefetch,
-  } = useUserPermittions(id);
-  let userPermitions = perData?.user_permissions || [];
+  } = useUserPermittionGroupData(id);
+  let userPermitions = perData || [];
 
   const mutation = useMutation({
     mutationFn: (userId) => userDelete(userId),
@@ -124,11 +113,10 @@ const UserDetailsPage = () => {
   };
 
   const handleUpdatePermissions = async (selectedPermissions) => {
-    console.log("Selected groups before API call:", selectedPermissions);
     const toastId = toast.loading("Updating permissions...");
     try {
-      const response = await postUserPermitions(user.id, {
-        permissions: selectedPermissions,
+      const response = await patchUserPermittionGroupData(user.id, {
+        group_ids: selectedPermissions,
       });
       if (response.status === 200) {
         toast.success("Permissions updated successfully", { id: toastId });

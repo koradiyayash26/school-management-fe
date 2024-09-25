@@ -142,13 +142,13 @@ function SchoolStudentPage() {
                 {headers.map((header) => (
                   <TableCell key={header.value} className="capitalize">
                     {header.value === "grno"
-                      ? student.student.grno
+                      ? student.student?.grno
                       : header.value === "first_name"
-                      ? student.student.first_name
+                      ? student.student?.first_name
                       : header.value === "middle_name"
-                      ? student.student.middle_name
+                      ? student.student?.middle_name
                       : header.value === "last_name"
-                      ? student.student.last_name
+                      ? student.student?.last_name
                       : header.value === "standard"
                       ? student.standard === "13"
                         ? "Balvatika"

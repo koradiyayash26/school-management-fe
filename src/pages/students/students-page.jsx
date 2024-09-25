@@ -60,6 +60,9 @@ import {
   ChevronsLeft,
   ChevronsRight,
 } from "lucide-react";
+import axios from "axios";
+import apiClient from "@/lib/api-client";
+import { getToken } from "@/utils/token";
 
 const headers = [
   { label: "ID", value: "id" },
@@ -181,6 +184,32 @@ function StudentsPage() {
     }));
   };
 
+  const excelFileGeneralRegister = async () => {
+    try {
+      const response = await apiClient.get("/export-general-register/", {
+        headers: {
+          Authorization: `Bearer ${getToken()}`,
+        },
+        responseType: "blob", // This is important
+      });
+
+      const blob = new Blob([response.data], {
+        type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+      });
+
+      const link = document.createElement("a");
+      link.href = window.URL.createObjectURL(blob);
+      link.download = "General Register.xlsx";
+      document.body.appendChild(link); // Needed for Firefox
+      link.click();
+
+      window.URL.revokeObjectURL(link.href);
+      document.body.removeChild(link);
+    } catch (error) {
+      console.error("Error downloading Excel file:", error);
+    }
+  };
+
   if (isLoading)
     return (
       <>
@@ -272,31 +301,9 @@ function StudentsPage() {
               <Link to="/student/add">
                 <Button>Add</Button>
               </Link>
-              {!students || filteredStudents.length === 0 ? (
-                <TooltipProvider>
-                  <Tooltip>
-                    <TooltipTrigger asChild>
-                      <Button className="cursor-not-allowed bg-[gray] hover:bg-[gray]">
-                        Download as XLS
-                      </Button>
-                    </TooltipTrigger>
-                    <TooltipContent>
-                      <p className="">Not Print Empty Data</p>
-                    </TooltipContent>
-                  </Tooltip>
-                </TooltipProvider>
-              ) : (
-                // <Button>
-                <ReactHTMLTableToExcel
-                  id="test-table-xls-button"
-                  className="download-table-xls-button inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90 h-10 px-4 py-2"
-                  table="print-excel"
-                  filename="tablexls"
-                  sheet="tablexls"
-                  buttonText="Download as XLS"
-                />
-                // </Button>
-              )}
+              <Button onClick={excelFileGeneralRegister}>
+                Download as XLS
+              </Button>
               <DropdownMenu className="">
                 <DropdownMenuTrigger asChild>
                   <Button variant="outline">Columns</Button>

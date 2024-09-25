@@ -162,23 +162,16 @@ const PaymentsPage = () => {
   };
 
   const filteredStudents = paymentFeeList?.filter((payment) => {
-    if (!isFilterApplied) return true;
-
     const searchLower = search.toLowerCase();
     const matchesSearch =
       payment.student__standard
         ?.toString()
         .toLowerCase()
         .includes(searchLower) ||
-      false ||
       payment.student__first_name?.toLowerCase().includes(searchLower) ||
-      false ||
       payment.student__last_name?.toLowerCase().includes(searchLower) ||
-      false ||
       payment.student__middle_name?.toLowerCase().includes(searchLower) ||
-      false ||
       payment.fee_paid_date?.toLowerCase().includes(searchLower) ||
-      false ||
       payment.id?.toString().includes(search) ||
       false;
 
@@ -188,7 +181,10 @@ const PaymentsPage = () => {
         ? isWithinInterval(paymentDate, { start: startDate, end: endDate })
         : true;
 
-    return matchesSearch && isWithinDateRange;
+    return (
+      (!isFilterApplied || (matchesSearch && isWithinDateRange)) &&
+      matchesSearch
+    );
   });
 
   const visibleStudents = filteredStudents?.slice(startIndex, endIndex);

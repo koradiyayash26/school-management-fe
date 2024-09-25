@@ -1,16 +1,16 @@
 import { LoginForm } from "@/components/login-form";
 import {
-    Card,
-    CardContent,
-    CardDescription,
-    CardHeader,
-    CardTitle,
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
 } from "@/components/ui/card";
 import axios from "axios";
 import { json, useNavigate } from "react-router-dom";
 
 export default function LoginPage() {
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
 
   const loginUser = ({ email, password }) => {
     axios
@@ -19,8 +19,13 @@ export default function LoginPage() {
         password: password,
       })
       .then(function (response) {
-        localStorage.setItem("jwt_token", JSON.stringify(response.data.jwt_token));
-        navigate("/");
+        localStorage.setItem(
+          "jwt_token",
+          JSON.stringify(response.data.jwt_token)
+        );
+        localStorage.setItem("user", email);
+        // navigate("/");
+        window.location.href = "/";
       })
       .catch(function (error) {
         console.log(error);

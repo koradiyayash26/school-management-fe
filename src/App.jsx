@@ -63,17 +63,34 @@ const App = () => {
                 <Route element={<ProtectedRoutes />}>
                   <Route path="/" element={<DashboardLayout />}>
                     <Route index element={<HomePage />} />
-                    <Route element={<StudentsPage />} path="/student/" />
-                    <Route element={<StudentAddPage />} path="/student/add" />
+                    {/* General Register */}
                     <Route
-                      element={<StudentEditPage />}
-                      path="/student/edit/:id"
-                    />
-                    <Route element={<StandardPage />} path="/standard" />
+                      element={
+                        <ProtectedRoutes requiredPermission="General Register" />
+                      }
+                    >
+                      <Route element={<StudentsPage />} path="/student/" />
+                      <Route element={<StudentAddPage />} path="/student/add" />
+                      <Route
+                        element={<StudentEditPage />}
+                        path="/student/edit/:id"
+                      />
+                    </Route>
+                    {/* General Register */}
+                    {/* Standard Report */}
                     <Route
-                      element={<StandardDetailPage />}
-                      path="/standard/:id"
-                    />
+                      element={
+                        <ProtectedRoutes requiredPermission="Standard Report" />
+                      }
+                    >
+                      <Route element={<StandardPage />} path="/standard" />
+                      <Route
+                        element={<StandardDetailPage />}
+                        path="/standard/:id"
+                      />
+                    </Route>
+                    {/* Standard Report */}
+                    {/* Certificate */}
                     <Route element={<CertificatePage />} path="/certificate/" />
                     <Route
                       element={<BonafideCertificatePage />}
@@ -83,121 +100,202 @@ const App = () => {
                       element={<BirthCertificatePage />}
                       path="/birth/:id"
                     />
-                    <Route element={<MyDocument />} path="/pdf" />
-                    <Route element={<FeesTypePage />} path="/fee-type" />
-                    <Route element={<FeeTypesAddPage />} path="/fee-type/add" />
-                    <Route
-                      element={<FeetypeUpdatePage />}
-                      path="/fee-type/edit/:id"
-                    />
-                    <Route
-                      element={<FeesAssingPage />}
-                      path="/fee-type/:id/:std/:year/student-assign"
-                    />
+                    {/* Certificate */}
 
-                    <Route element={<ExamMarksPage />} path="/exam" />
-                    <Route element={<ExamMarksAddPage />} path="/exam/add" />
+                    <Route element={<MyDocument />} path="/pdf" />
+                    {/* Fee Types */}
                     <Route
-                      element={<ExamMarksEditPage />}
-                      path="/exam/edit/:id"
-                    />
+                      element={
+                        <ProtectedRoutes requiredPermission="Fee Types" />
+                      }
+                    >
+                      <Route element={<FeesTypePage />} path="/fee-type" />
+                      <Route
+                        element={<FeeTypesAddPage />}
+                        path="/fee-type/add"
+                      />
+                      <Route
+                        element={<FeetypeUpdatePage />}
+                        path="/fee-type/edit/:id"
+                      />
+                      <Route
+                        element={<FeesAssingPage />}
+                        path="/fee-type/:id/:std/:year/student-assign"
+                      />
+                    </Route>
+                    {/* Fee Types */}
+                    {/* Exam */}
                     <Route
-                      element={<HistoricalFeesPage />}
-                      path="/historical-fee"
-                    />
+                      element={<ProtectedRoutes requiredPermission="Exams" />}
+                    >
+                      <Route element={<ExamMarksPage />} path="/exam" />
+                      <Route element={<ExamMarksAddPage />} path="/exam/add" />
+                      <Route
+                        element={<ExamMarksEditPage />}
+                        path="/exam/edit/:id"
+                      />
+                    </Route>
+                    {/* Exam */}
+                    {/* Historical Fee */}
                     <Route
-                      element={<HistoricalFeesAddPage />}
-                      path="/historical-fee/add"
-                    />
-                    <Route element={<ReportsPage />} path="/report" />
+                      element={
+                        <ProtectedRoutes requiredPermission="Historical Fee" />
+                      }
+                    >
+                      <Route
+                        element={<HistoricalFeesPage />}
+                        path="/historical-fee"
+                      />
+                      <Route
+                        element={<HistoricalFeesAddPage />}
+                        path="/historical-fee/add"
+                      />
+                    </Route>
+                    {/* Historical Fee */}
+                    {/* Fee Report */}
                     <Route
-                      element={<ReportDetailsPage />}
-                      path="/report/standard/:id"
-                    />
+                      element={
+                        <ProtectedRoutes requiredPermission="Fee Report" />
+                      }
+                    >
+                      <Route element={<ReportsPage />} path="/report" />
+                      <Route
+                        element={<ReportDetailsPage />}
+                        path="/report/standard/:id"
+                      />
+                    </Route>
+                    {/* Fee Report */}
+                    {/* Student Fees */}
                     <Route
-                      element={<SchoolStudentPage />}
-                      path="/school-student"
-                    />
+                      element={
+                        <ProtectedRoutes requiredPermission="Student Fees" />
+                      }
+                    >
+                      <Route
+                        element={<SchoolStudentPage />}
+                        path="/school-student"
+                      />
+                      <Route
+                        element={<SchoolStudentAddPage />}
+                        path="/school-student/add"
+                      />
+                      <Route
+                        element={<SchoolStudentUpdatePage />}
+                        path="/school-student/edit/:id"
+                      />
+                    </Route>
+                    {/* Student Fees */}
+                    {/* Student Update History */}
                     <Route
-                      element={<SchoolStudentAddPage />}
-                      path="/school-student/add"
-                    />
+                      element={
+                        <ProtectedRoutes requiredPermission="Student Update History" />
+                      }
+                    >
+                      <Route
+                        element={<StudentHistoricalPage />}
+                        path="/educational"
+                      />
+                    </Route>
+                    {/* Student Update History */}
+                    {/* STudent Update */}
                     <Route
-                      element={<SchoolStudentUpdatePage />}
-                      path="/school-student/edit/:id"
-                    />
+                      element={
+                        <ProtectedRoutes requiredPermission="Student Update" />
+                      }
+                    >
+                      <Route element={<StudentUpdatePage />} path="/update" />
+                      <Route
+                        element={<StudentUpdateAddPage />}
+                        path="/update/add"
+                      />
+                      <Route
+                        element={<StudentUpdateStdYearPage />}
+                        path="/update/students/:std/:year"
+                      />
+                    </Route>
+                    {/* STudent Update */}
+                    {/* Payment */}
                     <Route
-                      element={<StudentHistoricalPage />}
-                      path="/educational"
-                    />
-                    <Route element={<StudentUpdatePage />} path="/update" />
+                      element={<ProtectedRoutes requiredPermission="Payment" />}
+                    >
+                      <Route element={<PaymentsPage />} path="/payment" />
+                      <Route
+                        element={<PaymentFeeFormPage />}
+                        path="/payment/:id/:year"
+                      />
+                      <Route
+                        element={<PaymentReceiptPage />}
+                        path="/receipt/:id"
+                      />
+                    </Route>
+                    {/* Payment */}
+                    {/* Settings */}
                     <Route
-                      element={<StudentUpdateAddPage />}
-                      path="/update/add"
-                    />
+                      element={
+                        <ProtectedRoutes requiredPermission="Settings" />
+                      }
+                    >
+                      <Route element={<Setting />} path="/setting" />
+                      <Route
+                        element={<StandardMasterList />}
+                        path="/setting/standard-master"
+                      />
+                      <Route
+                        element={<StandardMasterAdd />}
+                        path="/setting/standard-master/add"
+                      />
+                      <Route
+                        element={<StandardMasterUpdate />}
+                        path="/setting/standard-master/edit/:id"
+                      />
+                      <Route
+                        element={<FeeTypeMasterList />}
+                        path="/setting/fee-type-master"
+                      />
+                      <Route
+                        element={<FeeTypeMasterAddPage />}
+                        path="/setting/fee-type-master/add"
+                      />
+                      <Route
+                        element={<FeeTypeMasterUpdate />}
+                        path="/setting/fee-type-master/edit/:id"
+                      />
+                      <Route
+                        element={<UserAddPage />}
+                        path="/setting/user/add"
+                      />
+                      <Route
+                        element={<UserDetailsPage />}
+                        path="/setting/user/details/:id"
+                      />
+                    </Route>
+                    {/* Settings */}
+                    {/* Exam Template */}
                     <Route
-                      element={<StudentUpdateStdYearPage />}
-                      path="/update/students/:std/:year"
-                    />
-                    <Route element={<PaymentsPage />} path="/payment" />
-                    <Route
-                      element={<PaymentFeeFormPage />}
-                      path="/payment/:id/:year"
-                    />
-                    <Route
-                      element={<PaymentReceiptPage />}
-                      path="/receipt/:id"
-                    />
-                    <Route element={<Setting />} path="/setting" />
-                    <Route
-                      element={<StandardMasterList />}
-                      path="/setting/standard-master"
-                    />
-                    <Route
-                      element={<StandardMasterAdd />}
-                      path="/setting/standard-master/add"
-                    />
-                    <Route
-                      element={<StandardMasterUpdate />}
-                      path="/setting/standard-master/edit/:id"
-                    />
-                    <Route
-                      element={<FeeTypeMasterList />}
-                      path="/setting/fee-type-master"
-                    />
-                    <Route
-                      element={<FeeTypeMasterAddPage />}
-                      path="/setting/fee-type-master/add"
-                    />
-                    <Route
-                      element={<FeeTypeMasterUpdate />}
-                      path="/setting/fee-type-master/edit/:id"
-                    />
-                    <Route element={<UserAddPage />} path="/setting/user/add" />
-                    <Route
-                      element={<UserDetailsPage />}
-                      path="/setting/user/details/:id"
-                    />
-                    <Route
-                      element={<ExamTemplatePage />}
-                      path="/exam-template"
-                    />
-                    <Route
-                      element={<ExamTemplateAddPage />}
-                      path="/exam-template/add"
-                    />
-                    <Route
-                      element={<ExamTemplateEditPage />}
-                      path="/exam-template/edit/:id"
-                    />
-                    <Route
-                      element={<ExamAssingMarkPage />}
-                      path="/exam-template/mark-assign/:std/:id"
-                    />
-                    <Route
-                      element={<ExamAssingMarkEditPage />}
-                      path="/exam-template/mark-assign-edit/:std/:id"
-                    />
+                      element={<ProtectedRoutes requiredPermission="Exam" />}
+                    >
+                      <Route
+                        element={<ExamTemplatePage />}
+                        path="/exam-template"
+                      />
+                      <Route
+                        element={<ExamTemplateAddPage />}
+                        path="/exam-template/add"
+                      />
+                      <Route
+                        element={<ExamTemplateEditPage />}
+                        path="/exam-template/edit/:id"
+                      />
+                      <Route
+                        element={<ExamAssingMarkPage />}
+                        path="/exam-template/mark-assign/:std/:id"
+                      />
+                      <Route
+                        element={<ExamAssingMarkEditPage />}
+                        path="/exam-template/mark-assign-edit/:std/:id"
+                      />
+                    </Route>
+                    {/* Exam Template */}
                     <Route element={<Notfound />} path="*" />
                   </Route>
                 </Route>

@@ -1,52 +1,12 @@
-import axios from "axios";
-import { useEffect, useState } from "react";
-import { Outlet, Navigate, useLocation } from "react-router-dom";
+import { Outlet, Navigate } from "react-router-dom";
 import Spinner from "./spinner/spinner";
-import apiClient from "@/lib/api-client";
 import { useUserPermissions } from "@/contextAPI";
+import NotFound from "./not-found";
+import Forbidden from "./403forbidden";
 
-function ProtectedRoutes() {
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [isLoading, setIsLoading] = useState(true);
-  const location = useLocation();
-  const { setPermissions,setIsSuperuser } = useUserPermissions();
-  
-
-
-
-  const ApiTokenVerify = async () => {
-    try {
-      const jwt_token = JSON.parse(localStorage.getItem("jwt_token"));
-      if (!jwt_token || !jwt_token.access) {
-        throw new Error("JWT token not found");
-      }
-
-      const response = await apiClient.get(
-        "/api-token-verify/",
-        {
-          headers: {
-            Authorization: `Bearer ${jwt_token.access}`,
-          },
-        }
-      );
-
-      if (response.status === 200) {
-        setIsAuthenticated(true);
-        localStorage.setItem("user", response.data.user.username);
-        setPermissions(response.data.groups); // Store the groups as permissions
-        setIsSuperuser(response.data.user.is_superuser)
-      }
-    } catch (error) {
-      setIsAuthenticated(false);
-      console.error("Error verifying token:", error);
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    ApiTokenVerify();
-  }, [location]);
+function ProtectedRoutes({ requiredPermission }) {
+  const { permissions, isSuperuser, isAuthenticated, isLoading } =
+    useUserPermissions();
 
   if (isLoading) {
     return (
@@ -56,7 +16,21 @@ function ProtectedRoutes() {
     );
   }
 
-  return isAuthenticated ? <Outlet /> : <Navigate to="/login" />;
+  if (!isAuthenticated) {
+    return <Navigate to="/login" />;
+  }
+
+  // Superusers have access to all routes
+  if (isSuperuser) {
+    return <Outlet />;
+  }
+
+  // For non-superusers, check the required permission
+  const hasRequiredPermission = requiredPermission
+    ? permissions.includes(requiredPermission)
+    : true;
+
+  return hasRequiredPermission ? <Outlet /> : <Forbidden />;
 }
 
 export default ProtectedRoutes;

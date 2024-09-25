@@ -52,7 +52,7 @@ const PermissionsCheckboxes = ({ userPermitions, onSubmit, disabled }) => {
               />
               <label
                 htmlFor={`permission-${permission.id}`}
-                className="uppercase text-sm font-medium cursor-pointer peer-disabled:cursor-not-allowed peer-disabled:opacity-70 text-white"
+                className="uppercase text-sm font-medium cursor-pointer peer-disabled:cursor-not-allowed peer-disabled:opacity-70 dark:text-white"
               >
                 {permission.name}
               </label>

@@ -89,8 +89,8 @@ const Setting = () => {
                       <span
                         className={
                           user[header.value]
-                            ? "p-2 rounded-full bg-green-600 font-medium"
-                            : "p-2 rounded-full bg-gray-500 font-medium"
+                            ? "p-2 rounded-full dark:bg-white dark:text-black bg-black text-white dark:font-bold"
+                            : "p-2 rounded-full dark:bg-gray-500  bg-black text-white dark:font-bold"
                         }
                       >
                         {user[header.value] ? "Admin" : "Staff"}
@@ -102,7 +102,7 @@ const Setting = () => {
                 ))}
                 <TableCell>
                   <Link to={`/setting/user/details/${user.id}`}>
-                    <UserRoundCog className="cursor-pointer w-5 h-5 hover:text-blue-500" />
+                    <UserRoundCog className="cursor-pointer w-5 h-5 hover:text-gray-400" />
                   </Link>
                 </TableCell>
               </TableRow>

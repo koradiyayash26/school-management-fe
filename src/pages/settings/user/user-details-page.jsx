@@ -15,6 +15,16 @@ import { useMutation } from "@tanstack/react-query";
 import Spinner from "@/components/spinner/spinner";
 import { useDataUser, useUserPermittionGroupData } from "@/hooks/use-settings";
 import { Checkbox } from "@/components/ui/checkbox";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import { Label } from "@/components/ui/label";
 
 const PermissionsCheckboxes = ({ userPermitions, onSubmit, disabled }) => {
   const [selectedPermissions, setSelectedPermissions] = useState([]);
@@ -74,10 +84,16 @@ const PermissionsCheckboxes = ({ userPermitions, onSubmit, disabled }) => {
 const UserDetailsPage = () => {
   const { id } = useParams();
   const navigate = useNavigate();
-  const [showPasswordModal, setShowPasswordModal] = useState(false);
-  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
+  const [isOpenDeleteDialog, setIsOpenDeleteDialog] = useState(false);
+  const [isPassLoading, setIsPassLoading] = useState(false);
+  const [currentPassword, setCurrentPassword] = useState("");
+  const [newPassword, setNewPassword] = useState("");
+
+  const [isDeleting, setIsDeleting] = useState(false);
 
   const { data, isLoading, error, refetch } = useDataUser(id);
+  const [passwordError, setPasswordError] = useState("");
 
   let user = data || [];
 
@@ -92,6 +108,9 @@ const UserDetailsPage = () => {
   const mutation = useMutation({
     mutationFn: (userId) => userDelete(userId),
     onSuccess: () => {
+      setTimeout(() => {
+        setIsOpenDeleteDialog(false);
+      }, 1000);
       toast.success("User Delete Successfully");
       setTimeout(() => {
         navigate("/setting");
@@ -103,12 +122,13 @@ const UserDetailsPage = () => {
   });
 
   const handleDeleteUser = async () => {
+    setIsDeleting(true);
     try {
       mutation.mutate(user.id);
     } catch (error) {
       console.error("Error deleting user:", error);
     } finally {
-      setShowDeleteModal(false);
+      setIsDeleting(true);
     }
   };
 
@@ -121,6 +141,7 @@ const UserDetailsPage = () => {
       if (response.status === 200) {
         toast.success("Permissions updated successfully", { id: toastId });
         perRefetch();
+        refetch();
       } else {
         throw new Error("Failed to update permissions");
       }
@@ -132,9 +153,31 @@ const UserDetailsPage = () => {
     }
   };
 
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setIsPassLoading(true);
+    try {
+      await changePasswordOfUser(
+        {
+          old_password: currentPassword,
+          new_password: newPassword,
+        },
+        id
+      );
+      toast.success("Password changed successfully.");
+      setIsOpen(false);
+    } catch (error) {
+      console.error("Error changing password:", error);
+      setPasswordError(error.response.data.error);
+    } finally {
+      setIsPassLoading(false);
+    }
+  };
   if (isLoading || perIsLoading) return <Spinner />;
   if (error) {
     return <>{error.message}</>;
+  } else if (perErorr) {
+    return <>{perErorr.message}</>;
   }
   if (!user) return <div className="text-red-400">Error: User not found</div>;
 
@@ -175,15 +218,72 @@ const UserDetailsPage = () => {
             </Button>
           </Link>
         </div>
-        {/* user details */}
         <Card className="mb-6 sm:mb-8 ">
           <CardHeader className="bg-[#27272a66] rounded-t-lg border-b flex flex-col sm:flex-row justify-between items-start sm:items-center space-y-4 sm:space-y-0">
             <CardTitle className="text-xl sm:text-2xl font-semibold text-white">
               User Details
             </CardTitle>
-            <Button onClick={() => setShowPasswordModal(true)}>
-              Change Password
-            </Button>
+            <Dialog open={isOpen} onOpenChange={setIsOpen}>
+              <div className="block md:flex gap-4">
+                <DialogTrigger asChild>
+                  <div className="block md:flex justify-between w-full gap-6">
+                    <Button>Change Password</Button>
+                  </div>
+                </DialogTrigger>
+              </div>
+              <DialogContent className="sm:max-w-[425px]">
+                <DialogHeader>
+                  <DialogTitle>Change Password</DialogTitle>
+                  <DialogDescription>
+                    Make changes to your password here. Click save when you're
+                    done.
+                  </DialogDescription>
+                </DialogHeader>
+                <form onSubmit={handleSubmit} className="grid gap-4 py-4">
+                  <div>
+                    <Label htmlFor="current_password" className="text-right">
+                      Current Password
+                    </Label>
+                    <Input
+                      id="current_password"
+                      type="password"
+                      autoComplete="current_password"
+                      placeholder="Current password"
+                      value={currentPassword}
+                      onChange={(e) => setCurrentPassword(e.target.value)}
+                      className="col-span-3 mt-2"
+                      required
+                    />
+                    {passwordError && (
+                      <p className="text-red-500 text-sm">{passwordError}</p>
+                    )}
+                  </div>
+                  <div>
+                    <Label htmlFor="new_password" className="text-right">
+                      New Password
+                    </Label>
+                    <Input
+                      id="new_password"
+                      type="password"
+                      placeholder="New password"
+                      autoComplete="new_passworsd"
+                      onChange={(e) => setNewPassword(e.target.value)}
+                      className="col-span-3 mt-2"
+                      required
+                    />
+                  </div>
+                  <DialogFooter>
+                    <Button
+                      type="submit"
+                      onClick={handleSubmit}
+                      disabled={isPassLoading}
+                    >
+                      {isPassLoading ? "Saving..." : "Save changes"}
+                    </Button>
+                  </DialogFooter>
+                </form>
+              </DialogContent>
+            </Dialog>
           </CardHeader>
           <CardContent className="p-4 sm:p-6">
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
@@ -237,32 +337,47 @@ const UserDetailsPage = () => {
                 onSubmit={handleUpdatePermissions}
               />
               <div className="mt-6 flex md:self-end">
-                <Button
-                  variant="destructive"
-                  onClick={() => setShowDeleteModal(true)}
-                  disabled={user.is_superuser}
-                  className="bg-red-600 text-white hover:bg-red-700 w-full sm:w-auto"
+                <Dialog
+                  open={isOpenDeleteDialog}
+                  onOpenChange={setIsOpenDeleteDialog}
                 >
-                  Delete User
-                </Button>
+                  <div className="block md:flex gap-4">
+                    <DialogTrigger asChild>
+                      <Button
+                        variant="destructive"
+                        disabled={user.is_superuser}
+                        className="bg-red-600 text-white hover:bg-red-700 w-full sm:w-auto"
+                      >
+                        Delete User
+                      </Button>
+                    </DialogTrigger>
+                  </div>
+                  <DialogContent className="sm:max-w-[425px]">
+                    <DialogHeader>
+                      <DialogTitle>Delete User</DialogTitle>
+                      <DialogDescription>
+                        Click Delete If You Want To Delete User.Other Wise Click
+                        Cancel.
+                      </DialogDescription>
+                    </DialogHeader>
+                    <DialogFooter>
+                      <div className="flex flex-col sm:flex-row justify-end space-y-2 sm:space-y-0 sm:space-x-2">
+                        <Button
+                          variant="destructive"
+                          className="bg-red-600 text-white hover:bg-red-700 w-full sm:w-auto"
+                          onClick={handleDeleteUser}
+                          disabled={isDeleting}
+                        >
+                          {isDeleting ? "Deleting..." : "Delete"}
+                        </Button>
+                      </div>
+                    </DialogFooter>
+                  </DialogContent>
+                </Dialog>
               </div>
             </div>
           </CardContent>
         </Card>
-
-        {showPasswordModal && (
-          <ChangePasswordModal
-            userId={user.id}
-            onClose={() => setShowPasswordModal(false)}
-          />
-        )}
-
-        {showDeleteModal && (
-          <DeleteUserModal
-            onDelete={handleDeleteUser}
-            onClose={() => setShowDeleteModal(false)}
-          />
-        )}
       </div>
     </>
   );
@@ -283,146 +398,5 @@ const InfoItem = ({ icon, label, value }) => (
     </div>
   </div>
 );
-
-const ChangePasswordModal = ({ userId, onClose }) => {
-  const [currentPassword, setCurrentPassword] = useState("");
-  const [newPassword, setNewPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
-  const [passwordError, setPasswordError] = useState("");
-  const [samePassError, setSamePassError] = useState("");
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    if (newPassword !== confirmPassword) {
-      toast.error("New passwords do not match.");
-      console.log("New passwords do not match.");
-      setSamePassError("New passwords do not match.");
-      return;
-    }
-    setIsLoading(true);
-    try {
-      // Assuming there's an API endpoint to change password
-      await changePasswordOfUser(
-        {
-          old_password: currentPassword,
-          new_password: newPassword,
-        },
-        userId
-      );
-      toast.success("Password changed successfully.");
-      onClose();
-    } catch (error) {
-      console.error("Error changing password:", error);
-      console.log(error.response.data.error);
-      setPasswordError(error.response.data.error);
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  return (
-    <>
-      <Toaster
-        position="top-center"
-        toastOptions={{
-          duration: 3000,
-          style: {
-            background: "#333",
-            color: "#fff",
-          },
-        }}
-      />
-      <div className="fixed inset-0 bg-black bg-opacity-75 overflow-y-auto h-full w-full flex items-center justify-center p-4">
-        <div className="relative w-full max-w-md p-6 border shadow-xl rounded-lg bg-[#323234] border-gray-700">
-          <h2 className="text-xl sm:text-2xl font-bold mb-4 text-white">
-            Change Password
-          </h2>
-          <form onSubmit={handleSubmit} className="space-y-4">
-            <Input
-              type="password"
-              placeholder="Current Password"
-              value={currentPassword}
-              autoComplete="current-password"
-              onChange={(e) => setCurrentPassword(e.target.value)}
-              required
-            />
-            {passwordError && (
-              <p className="text-red-500 text-sm">{passwordError}</p>
-            )}
-            <Input
-              type="password"
-              placeholder="New Password"
-              value={newPassword}
-              autoComplete="new-password"
-              onChange={(e) => setNewPassword(e.target.value)}
-              required
-            />
-            <Input
-              type="password"
-              placeholder="Confirm New Password"
-              value={confirmPassword}
-              autoComplete="current-password"
-              onChange={(e) => setConfirmPassword(e.target.value)}
-              required
-            />
-            {samePassError && (
-              <p className="text-red-500 text-sm">{samePassError}</p>
-            )}
-            <div className="flex justify-end space-x-2">
-              <Button type="button" onClick={onClose} disabled={isLoading}>
-                Cancel
-              </Button>
-              <Button type="submit" disabled={isLoading}>
-                {isLoading ? "Changing..." : "Change Password"}
-              </Button>
-            </div>
-          </form>
-        </div>
-      </div>
-    </>
-  );
-};
-
-const DeleteUserModal = ({ onDelete, onClose }) => {
-  const [isDeleting, setIsDeleting] = useState(false);
-
-  const handleDelete = async () => {
-    setIsDeleting(true);
-    await onDelete();
-    setIsDeleting(false);
-  };
-
-  return (
-    <div className="fixed inset-0 bg-black bg-opacity-75 overflow-y-auto h-full w-full flex items-center justify-center p-4">
-      <div className="relative w-full max-w-md p-6 border shadow-xl rounded-lg bg-[#323234] border-gray-700">
-        <h2 className="text-xl sm:text-2xl font-bold mb-4 text-white">
-          Delete User
-        </h2>
-        <p className="text-gray-300 mb-4 text-sm sm:text-base">
-          Are you sure you want to delete this user? This action cannot be
-          undone.
-        </p>
-        <div className="flex flex-col sm:flex-row justify-end space-y-2 sm:space-y-0 sm:space-x-2">
-          <Button
-            variant="destructive"
-            className="bg-red-600 text-white hover:bg-red-700 w-full sm:w-auto"
-            onClick={handleDelete}
-            disabled={isDeleting}
-          >
-            {isDeleting ? "Deleting..." : "Delete"}
-          </Button>
-          <Button
-            onClick={onClose}
-            className="bg-gray-700 text-white hover:bg-gray-600 w-full sm:w-auto"
-            disabled={isDeleting}
-          >
-            Cancel
-          </Button>
-        </div>
-      </div>
-    </div>
-  );
-};
 
 export default UserDetailsPage;

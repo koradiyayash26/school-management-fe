@@ -33,7 +33,11 @@ const ReportDetailsPage = () => {
   const { data, isLoading, error } = useReport(id);
 
   if (isLoading) {
-    return <><Spinner/></>;
+    return (
+      <>
+        <Spinner />
+      </>
+    );
   }
 
   if (error) {
@@ -73,6 +77,16 @@ const ReportDetailsPage = () => {
                   ))}
                 </TableRow>
               ))}
+              {students.length === 0 && (
+                <TableRow>
+                  <TableCell
+                    colSpan={headers.length}
+                    className="text-center py-4"
+                  >
+                    No data available
+                  </TableCell>
+                </TableRow>
+              )}
             </TableBody>
           </Table>
           <ScrollBar orientation="horizontal" />

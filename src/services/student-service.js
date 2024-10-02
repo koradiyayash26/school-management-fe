@@ -45,4 +45,20 @@ const addStudent = async (formattedData) => {
   });
 };
 
-export { getStudents, deleteStudent, getStudent, updateStudent, addStudent };
+const bulkImport = async (formData) => {
+  console.log(formData);
+  return await apiClient.post(`/bulk-import/`, formData, {
+    headers: {
+      Authorization: `Bearer ${getToken()}`,
+    },
+  });
+};
+
+export {
+  getStudents,
+  deleteStudent,
+  getStudent,
+  updateStudent,
+  addStudent,
+  bulkImport,
+};

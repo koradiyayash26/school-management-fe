@@ -233,8 +233,10 @@ const UserDetailsPage = () => {
               </div>
               <DialogContent className="sm:max-w-[425px]">
                 <DialogHeader>
-                  <DialogTitle>Change Password</DialogTitle>
-                  <DialogDescription>
+                  <DialogTitle className="text-left">
+                    Change Password
+                  </DialogTitle>
+                  <DialogDescription className="text-left">
                     Make changes to your password here. Click save when you're
                     done.
                   </DialogDescription>
@@ -354,10 +356,11 @@ const UserDetailsPage = () => {
                   </div>
                   <DialogContent className="sm:max-w-[425px]">
                     <DialogHeader>
-                      <DialogTitle>Delete User</DialogTitle>
-                      <DialogDescription>
-                        Click Delete If You Want To Delete User.Other Wise Click
-                        Cancel.
+                      <DialogTitle className="text-left">
+                        Delete User
+                      </DialogTitle>
+                      <DialogDescription className="text-left">
+                        Click delete to delete user.
                       </DialogDescription>
                     </DialogHeader>
                     <DialogFooter>

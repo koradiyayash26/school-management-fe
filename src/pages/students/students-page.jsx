@@ -1,5 +1,3 @@
-"use client";
-
 import React, { useRef, useState } from "react";
 import {
   Table,
@@ -32,15 +30,8 @@ import toast, { Toaster } from "react-hot-toast";
 import ActionsPopup from "@/components/ui/data-table-row-actions";
 import { useStudents } from "@/hooks/use-student";
 import { useMutation } from "@tanstack/react-query";
-import { deleteStudent } from "@/services/student-service";
+import { bulkImport, deleteStudent } from "@/services/student-service";
 import { Link } from "react-router-dom";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
-import ReactHTMLTableToExcel from "react-html-table-to-excel";
 import Spinner from "@/components/spinner/spinner";
 import {
   Pagination,
@@ -59,10 +50,21 @@ import {
   ChevronRight,
   ChevronsLeft,
   ChevronsRight,
+  FileUp,
+  X,
 } from "lucide-react";
-import axios from "axios";
 import apiClient from "@/lib/api-client";
 import { getToken } from "@/utils/token";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import { Label } from "@/components/ui/label";
 
 const headers = [
   { label: "ID", value: "id" },
@@ -123,6 +125,14 @@ function StudentsPage() {
   const [search, setSearch] = useState("");
   const [openAlert, setOpenAlert] = useState(false);
   const [studentId, setStudentId] = useState();
+
+  const [isOpen, setIsOpen] = useState(false);
+  const [isPassLoading, setIsPassLoading] = useState(false);
+
+  const [selectedFile, setSelectedFile] = useState(null);
+  const [fileError, setFileError] = useState("");
+  const [importMessage, setImportMessage] = useState(null);
+  const [importError, setImportError] = useState(null);
 
   const componentPDF = useRef();
 
@@ -207,6 +217,66 @@ function StudentsPage() {
       document.body.removeChild(link);
     } catch (error) {
       console.error("Error downloading Excel file:", error);
+    }
+  };
+
+  const mutationBulkImport = useMutation({
+    mutationFn: (formData) => bulkImport(formData),
+    onSuccess: (res) => {
+      setIsPassLoading(false);
+      setIsOpen(false);
+      refetch();
+      setImportMessage(res.data.message);
+      console.log(res);
+      setTimeout(() => {
+        toast.success("Bulk Import Successfully");
+      }, 1000);
+      setTimeout(() => {
+        setImportMessage(null);
+      }, 5000);
+    },
+    onError: (error) => {
+      if (error.response.data.error) {
+        toast.error(error.response.data.error);
+      } else {
+        setImportError(error.response.data.errors);
+      }
+      setIsOpen(false);
+      setIsPassLoading(false);
+      setTimeout(() => {
+        setImportError(null);
+      }, 5000);
+    },
+  });
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    if (!selectedFile) {
+      setFileError("Please select a file");
+      return;
+    }
+    setIsPassLoading(true);
+    const formData = new FormData();
+    formData.append("file", selectedFile);
+    mutationBulkImport.mutate(formData);
+  };
+
+  const handleFileChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      const fileName = file.name;
+      const fileExtension = fileName.split(".").pop().toLowerCase();
+
+      if (["xlsx", "xls"].includes(fileExtension)) {
+        setSelectedFile(file);
+        setFileError("");
+      } else {
+        setSelectedFile(null);
+        setFileError("Please select an Excel file (.xlsx or .xls)");
+      }
+    } else {
+      setSelectedFile(null);
+      setFileError("");
     }
   };
 
@@ -328,8 +398,81 @@ function StudentsPage() {
                   </ScrollArea>
                 </DropdownMenuContent>
               </DropdownMenu>
+              <Dialog open={isOpen} onOpenChange={setIsOpen}>
+                <div className="block md:flex gap-4">
+                  <DialogTrigger asChild>
+                    <Button variant="outline">
+                      <FileUp className="w-6 h-6" />
+                    </Button>
+                  </DialogTrigger>
+                </div>
+                <DialogContent className="sm:max-w-[425px]">
+                  <DialogHeader>
+                    <DialogTitle className="text-left mb-2">
+                      Upload Excel File
+                    </DialogTitle>
+                    <DialogDescription className="text-left">
+                      Select excel file here. Click upload when you're done.
+                    </DialogDescription>
+                  </DialogHeader>
+                  <form className="grid gap-4">
+                    <div className="grid w-full max-w-sm items-center gap-1.5">
+                      <Label htmlFor="file">Select File</Label>
+                      <Input
+                        id="file"
+                        type="file"
+                        onChange={handleFileChange}
+                        accept=".xlsx,.xls"
+                      />
+                      {fileError && (
+                        <p className="text-sm text-red-500">{fileError}</p>
+                      )}
+                    </div>
+                    <DialogFooter>
+                      <Button
+                        type="submit"
+                        onClick={handleSubmit}
+                        disabled={isPassLoading}
+                      >
+                        {isPassLoading ? "Uploading..." : "Upload"}
+                      </Button>
+                    </DialogFooter>
+                  </form>
+                </DialogContent>
+              </Dialog>
             </div>
           </div>
+          {importError && (
+            <div className="bg-red-100 rounded-sm border-l-4 border-red-500 text-red-700 p-4 relative">
+              <h3 className="font-bold">Import Errors:</h3>
+              <ul className="list-disc pl-5">
+                {importError.map((error, index) => (
+                  <li key={index}>
+                    GR No {error.grno}: {error.errors.join(", ")}
+                  </li>
+                ))}
+              </ul>
+              <button
+                onClick={() => setImportError(false)}
+                className="absolute top-0 right-0 mt-2 mr-2"
+                aria-label="Close"
+              >
+                <X size={18} />
+              </button>
+            </div>
+          )}
+          {importMessage && (
+            <div className="bg-green-100 rounded-sm border-l-4 border-green-500 text-green-700 p-2 relative">
+              <p className="font-medium">{importMessage}</p>
+              <button
+                onClick={() => setImportMessage(false)}
+                className="absolute top-0 right-0 mt-2 mr-2"
+                aria-label="Close"
+              >
+                <X size={18} className="" />
+              </button>
+            </div>
+          )}
           <ScrollArea className="rounded-md border w-full h-[calc(80vh-120px)]">
             <div ref={componentPDF} style={{ width: "100%" }}>
               <h1 className="hidden title-table">THINKERS GENERAL REGISTER</h1>

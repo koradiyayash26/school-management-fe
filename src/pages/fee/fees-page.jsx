@@ -237,7 +237,8 @@ function FeesTypePage() {
                     <TableCell key={header.value} className="capitalize">
                       {header.value === "fee_master"
                         ? fee.fee_master?.name || "None"
-                        : fee[header.value] === 13
+                        : header.value === "standard" &&
+                          fee[header.value] === 13
                         ? "Balvatika"
                         : fee[header.value] || "-"}
                     </TableCell>

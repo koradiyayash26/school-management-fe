@@ -73,6 +73,8 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from "@/components/ui/pagination";
+import { Calendar as CalendarIcon } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 const headers = [
   { label: "Fee Paid Date", value: "fee_paid_date" },
@@ -144,6 +146,11 @@ const PaymentsPage = () => {
   const [endDate, setEndDate] = useState(null);
   const [isFilterApplied, setIsFilterApplied] = useState(false);
 
+  const [dateRange, setDateRange] = useState({
+    from: undefined,
+    to: undefined,
+  });
+
   let studentsSearch = data?.data || [];
   let paymentFeeList = paymentFeeData?.data || [];
 
@@ -152,10 +159,13 @@ const PaymentsPage = () => {
 
   const applyFilter = () => {
     setIsFilterApplied(true);
+    setStartDate(dateRange.from);
+    setEndDate(dateRange.to);
   };
 
   const clearFilter = () => {
     setSearch("");
+    setDateRange({ from: undefined, to: undefined });
     setStartDate(null);
     setEndDate(null);
     setIsFilterApplied(false);
@@ -382,31 +392,37 @@ const PaymentsPage = () => {
           />
           <Popover>
             <PopoverTrigger asChild>
-              <Button variant="outline">
-                {startDate ? format(startDate, "yyyy-MM-dd") : "Start Date"}
+              <Button
+                id="date"
+                variant="outline"
+                className={cn(
+                  "w-auto justify-start text-left font-normal",
+                  !dateRange.from && !dateRange.to && "text-muted-foreground"
+                )}
+              >
+                <CalendarIcon className="mr-2 h-4 w-4" />
+                {dateRange.from ? (
+                  dateRange.to ? (
+                    <>
+                      {format(dateRange.from, "LLL dd, y")} -{" "}
+                      {format(dateRange.to, "LLL dd, y")}
+                    </>
+                  ) : (
+                    format(dateRange.from, "LLL dd, y")
+                  )
+                ) : (
+                  <span>Pick a date range</span>
+                )}
               </Button>
             </PopoverTrigger>
-            <PopoverContent className="w-auto p-0">
+            <PopoverContent className="w-auto p-0" align="start">
               <Calendar
-                mode="single"
-                selected={startDate}
-                onSelect={setStartDate}
                 initialFocus
-              />
-            </PopoverContent>
-          </Popover>
-          <Popover>
-            <PopoverTrigger asChild>
-              <Button variant="outline">
-                {endDate ? format(endDate, "yyyy-MM-dd") : "End Date"}
-              </Button>
-            </PopoverTrigger>
-            <PopoverContent className="w-auto p-0">
-              <Calendar
-                mode="single"
-                selected={endDate}
-                onSelect={setEndDate}
-                initialFocus
+                mode="range"
+                defaultMonth={dateRange.from}
+                selected={dateRange}
+                onSelect={setDateRange}
+                numberOfMonths={2}
               />
             </PopoverContent>
           </Popover>

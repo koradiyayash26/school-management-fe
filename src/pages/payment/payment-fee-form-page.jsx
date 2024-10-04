@@ -101,7 +101,9 @@ const PaymentFeeFormPage = () => {
           amount_paid: Number(item.amount_paid) || 0,
           amount_waived: Number(item.amount_waived) || 0,
         }))
-        .filter(item => !isNaN(item.amount_paid) && !isNaN(item.amount_waived)),
+        .filter(
+          (item) => !isNaN(item.amount_paid) && !isNaN(item.amount_waived)
+        ),
       student_id: studentDetail?.id || null,
       note: data.note,
     };
@@ -315,6 +317,8 @@ const PaymentFeeFormPage = () => {
                                 <FormControl>
                                   <Input
                                     className="w-auto mx-auto"
+                                    type="number"
+                                    max={i?.fee_type__amount}
                                     disabled={isLoading}
                                     {...field}
                                   />
@@ -344,6 +348,8 @@ const PaymentFeeFormPage = () => {
                                 <FormControl>
                                   <Input
                                     className="w-auto mx-auto"
+                                    type="number"
+                                    max={i?.fee_type__amount}
                                     disabled={isLoading}
                                     {...field}
                                   />

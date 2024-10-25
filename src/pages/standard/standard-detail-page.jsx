@@ -291,7 +291,7 @@ const StandardDetailPage = () => {
                           >
                             {student[header.value] == 13
                               ? "Balvatika"
-                              : student[header.value] || "None"}
+                              : student[header.value] || "-"}
                           </TableCell>
                         ))}
                       <TableCell className="">

@@ -112,8 +112,9 @@ const formSchema = z.object({
     .optional(),
   left_school_date: z.string().optional(),
   left_school_std: z
-    .string()
-    .max(10, { message: "Left School Standard must not exceed 10 characters" })
+    .enum(["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12"], {
+      message: "Left School Standard must be between 1 and 12",
+    })
     .optional(),
   account_no: z
     .string()

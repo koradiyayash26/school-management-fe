@@ -33,7 +33,7 @@ export const MENU = [
     lable: "STUDENT",
     path: "/update",
     icon: () => <UsersRound className="h-4 w-4" />,
-    Permission: "Student Update",
+    Permission: "Student Update and History",
   },
   {
     lable: "FEES",

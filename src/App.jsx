@@ -131,7 +131,7 @@ const App = () => {
                     {/* Student Update History */}
                     <Route
                       element={
-                        <ProtectedRoutes requiredPermission="Student Update History" />
+                        <ProtectedRoutes requiredPermission="Student Update and History" />
                       }
                     >
                       <Route
@@ -143,7 +143,7 @@ const App = () => {
                     {/* STudent Update */}
                     <Route
                       element={
-                        <ProtectedRoutes requiredPermission="Student Update" />
+                        <ProtectedRoutes requiredPermission="Student Update and History" />
                       }
                     >
                       <Route element={<StudentUpdatePage />} path="/update" />

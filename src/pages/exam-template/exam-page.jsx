@@ -159,7 +159,7 @@ function ExamTemplatePage() {
             <TableHeader>
               <TableRow>
                 {headers.map((header) => (
-                  <TableHead key={header.value}>{header.label}</TableHead>
+                  <TableHead key={header.value} className="whitespace-nowrap">{header.label}</TableHead>
                 ))}
                 <TableHead>Actions</TableHead>
               </TableRow>

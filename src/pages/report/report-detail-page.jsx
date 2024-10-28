@@ -58,7 +58,7 @@ const ReportDetailsPage = () => {
             <TableHeader>
               <TableRow>
                 {headers.map((header, index) => (
-                  <TableHead className="text-center" key={index}>
+                  <TableHead className="text-center whitespace-nowrap" key={index}>
                     {header.label}
                   </TableHead>
                 ))}
@@ -68,7 +68,7 @@ const ReportDetailsPage = () => {
               {students.map((data, index) => (
                 <TableRow key={index}>
                   {headers.map((header) => (
-                    <TableCell key={header.value}>
+                    <TableCell key={header.value} className="whitespace-nowrap">
                       {header.value === "student__standard" &&
                       data[header.value] === "13"
                         ? "Balvatika"

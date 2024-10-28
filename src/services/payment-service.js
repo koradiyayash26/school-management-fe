@@ -20,7 +20,7 @@ const getPaymentFeeList = async () => {
 };
 
 const getPaymentStudentFee = async (id, year) => {
-  let response = await apiClient.get(`/payments/${id}/${year}/`, {
+  let response = await apiClient.get(`/payments/${id}/`, {
     headers: {
       Authorization: `Bearer ${getToken()}`,
     },

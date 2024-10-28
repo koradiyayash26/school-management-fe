@@ -95,12 +95,12 @@ const ReportsPage = () => {
           <Table className="relative text-center">
             <TableHeader>
               <TableRow>
-                <TableHead className="text-center">Standard</TableHead>
-                <TableHead className="text-center">No Of Students</TableHead>
-                <TableHead className="text-center">Total</TableHead>
-                <TableHead className="text-center">Paid</TableHead>
-                <TableHead className="text-center">Pending</TableHead>
-                <TableHead className="text-center">Waived</TableHead>
+                <TableHead className="text-center whitespace-nowrap">Standard</TableHead>
+                <TableHead className="text-center whitespace-nowrap">No Of Students</TableHead>
+                <TableHead className="text-center whitespace-nowrap">Total</TableHead>
+                <TableHead className="text-center whitespace-nowrap">Paid</TableHead>
+                <TableHead className="text-center whitespace-nowrap">Pending</TableHead>
+                <TableHead className="text-center whitespace-nowrap">Waived</TableHead>
                 <TableHead className="text-start">Actions</TableHead>
               </TableRow>
             </TableHeader>

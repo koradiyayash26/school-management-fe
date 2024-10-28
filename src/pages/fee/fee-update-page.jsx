@@ -7,15 +7,31 @@ import FeeTypeForm from "@/components/fee/fee-type-form";
 import { useMutation } from "@tanstack/react-query";
 import { feeTypeUpdate } from "@/services/fees-service";
 import Spinner from "@/components/spinner/spinner";
+import { useAcademicYear } from "@/hooks/use-academic-year";
 
 const FeetypeUpdatePage = () => {
   const navigate = useNavigate();
   const { id } = useParams();
   const { data, isLoading, error, refetch } = useFeetypeGetdata(id);
 
+  const {
+    data: academicData,
+    isLoading: academicLoading,
+    error: academicError,
+    refetch: academicRefetch,
+  } = useAcademicYear();
+  const academicYear = academicData || [];
+
   const feetypeData = data?.data;
+  
+  let academicDefault = null;
+  academicYear.forEach((year) => {
+    if (year.id === feetypeData?.year) {
+      academicDefault = year.year;      
+    }
+  });
   const defaultValues = {
-    year: feetypeData?.year || "",
+    year: academicDefault || "",
     fee_master: feetypeData?.fee_master?.name || "",
     standard: String(feetypeData?.standard) || "",
     amount: feetypeData?.amount || "",
@@ -35,6 +51,7 @@ const FeetypeUpdatePage = () => {
     mutationFn: (formattedData) => feeTypeUpdate(formattedData, id),
     onSuccess: () => {
       refetch();
+      academicRefetch();
       navigate("/fee-type");
     },
   });
@@ -46,15 +63,26 @@ const FeetypeUpdatePage = () => {
         feeId = element.id;
       }
     });
+    let academicYearId = null;
+    academicYear.forEach((year) => {
+      if (year.year === data.year) {
+        academicYearId = year.id;
+      }
+    });
     const formattedData = {
       ...data,
+      year: academicYearId,
       fee_master: feeId,
     };
     mutation.mutate(formattedData);
   };
 
   if (isLoading || feeTyoeLoading) {
-    return <><Spinner/></>;
+    return (
+      <>
+        <Spinner />
+      </>
+    );
   }
   if (error || feeTypeErro) {
     return <>Error</>;
@@ -64,6 +92,7 @@ const FeetypeUpdatePage = () => {
     <>
       <Card className="">
         <FeeTypeForm
+          academicYear={academicYear}
           defaultValues={defaultValues}
           onSubmit={onSubmit}
           id={id}

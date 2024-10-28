@@ -60,9 +60,9 @@ import {
 
 const headers = [
   { label: "ID", value: "id" },
-  { label: "Fee Type", value: "fee_master" },
+  { label: "Fee Type", value: "fee_master__name" },
   { label: "Standard", value: "standard" },
-  { label: "Year", value: "year" },
+  { label: "Year", value: "year__year" },
   { label: "Amount", value: "amount" },
 ];
 
@@ -234,11 +234,8 @@ function FeesTypePage() {
               visibleStudents.map((fee) => (
                 <TableRow key={fee.id}>
                   {headers.map((header) => (
-                    <TableCell key={header.value} className="capitalize">
-                      {header.value === "fee_master"
-                        ? fee.fee_master?.name || "None"
-                        : header.value === "standard" &&
-                          fee[header.value] === 13
+                    <TableCell key={header.value} className="capitalize whitespace-nowrap">
+                      {header.value === "standard" && fee[header.value] === 13
                         ? "Balvatika"
                         : fee[header.value] || "-"}
                     </TableCell>
@@ -247,7 +244,7 @@ function FeesTypePage() {
                     <ActionsPopupFee
                       id={fee.id}
                       standard={fee.standard}
-                      year={fee.year}
+                      year={fee.year__year}
                       openAlertDeleteBox={openAlertDeleteBox}
                     />
                   </TableCell>

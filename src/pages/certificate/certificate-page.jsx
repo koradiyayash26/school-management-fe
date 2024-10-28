@@ -113,7 +113,7 @@ function CertificatePage() {
           <TableHeader>
             <TableRow>
               {headers.map((header, index) => (
-                <TableHead key={index}>{header.label}</TableHead>
+                <TableHead key={index} className="whitespace-nowrap">{header.label}</TableHead>
               ))}
               <TableHead className="">Certificate</TableHead>
             </TableRow>

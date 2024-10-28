@@ -221,7 +221,7 @@ const App = () => {
                       <Route element={<PaymentsPage />} path="/payment" />
                       <Route
                         element={<PaymentFeeFormPage />}
-                        path="/payment/:id/:year"
+                        path="/payment/:id/"
                       />
                       <Route
                         element={<PaymentReceiptPage />}

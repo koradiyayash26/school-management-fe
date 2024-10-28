@@ -12,15 +12,7 @@ import {
 } from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuRadioGroup,
-  DropdownMenuRadioItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { Form, FormControl } from "@/components/ui/form";
+import { Form } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import {
@@ -38,12 +30,6 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
 import {
   Popover,
   PopoverContent,
@@ -140,8 +126,6 @@ const PaymentsPage = () => {
   const [openAlert, setOpenAlert] = useState(false);
   const [paymentId, setPaymentId] = useState();
 
-  const [selectedYear, setSelectedYear] = useState("");
-
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
   const [isFilterApplied, setIsFilterApplied] = useState(false);
@@ -224,10 +208,6 @@ const PaymentsPage = () => {
     setOpenAlert(true);
   };
 
-  const handleValueChange = (value) => {
-    setSelectedYear(value);
-  };
-
   const handleAlert = () => {
     alert("Select Year");
   };
@@ -247,23 +227,10 @@ const PaymentsPage = () => {
         <div>
           <div className="flex  flex-col md:flex-row items-center gap-8 mb-4">
             <Form>
-              <Select onValueChange={handleValueChange}>
-                <SelectTrigger className="w-[160px]">
-                  <SelectValue placeholder="Select a year" />
-                </SelectTrigger>
-                <SelectContent>
-                  {years.map((year) => (
-                    <SelectItem key={year.value} value={year.value}>
-                      {year.value}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
               <Input
                 className="w-full md:max-w-sm mb-2 md:mb-0  md:mr-2"
                 placeholder="Search student"
                 onChange={(e) => setSearchPaymentStudent(e.target.value)}
-                disabled={!selectedYear}
               />
             </Form>
           </div>
@@ -272,12 +239,13 @@ const PaymentsPage = () => {
           <Table className="relative">
             <TableHeader>
               <TableRow>
-                <TableHead className="text-center">Pay</TableHead>
-                <TableHead className="text-center">GRNO</TableHead>
-                <TableHead className="text-center">FIRST NAME</TableHead>
-                <TableHead className="text-center">MIDDLE NAME</TableHead>
-                <TableHead className="text-center">LAST NAME</TableHead>
-                <TableHead className="text-center">STANDARD</TableHead>
+                <TableHead className="text-center whitespace-nowrap">Pay</TableHead>
+                <TableHead className="text-center whitespace-nowrap">GRNO</TableHead>
+                <TableHead className="text-center whitespace-nowrap">FIRST NAME</TableHead>
+                <TableHead className="text-center whitespace-nowrap">MIDDLE NAME</TableHead>
+                <TableHead className="text-center whitespace-nowrap">LAST NAME</TableHead>
+                <TableHead className="text-center whitespace-nowrap">STANDARD</TableHead>
+                <TableHead className="text-center whitespace-nowrap">SECTION</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -301,14 +269,12 @@ const PaymentsPage = () => {
                 .map((paymentFeeData) => (
                   <TableRow key={paymentFeeData.id}>
                     <TableCell className="text-center">
-                      {!searchPaymentStudent || !selectedYear ? (
+                      {!searchPaymentStudent ? (
                         <div onClick={handleAlert} className="cursor-pointer">
                           <Button disabled>Pay</Button>
                         </div>
                       ) : (
-                        <Link
-                          to={`/payment/${paymentFeeData.id}/${selectedYear}`}
-                        >
+                        <Link to={`/payment/${paymentFeeData.id}/`}>
                           <Button>Pay</Button>
                         </Link>
                       )}
@@ -329,6 +295,9 @@ const PaymentsPage = () => {
                       {paymentFeeData.standard === "13"
                         ? "Balvatika"
                         : paymentFeeData.standard}
+                    </TableCell>
+                    <TableCell className="capitalize text-center">
+                      {paymentFeeData.section}
                     </TableCell>
                   </TableRow>
                 ))}
@@ -437,7 +406,7 @@ const PaymentsPage = () => {
           <TableHeader>
             <TableRow>
               {headers.map((header, index) => (
-                <TableHead key={index}>{header.label}</TableHead>
+                <TableHead key={index} className="whitespace-nowrap">{header.label}</TableHead>
               ))}
               <TableHead className="">Actions</TableHead>
             </TableRow>

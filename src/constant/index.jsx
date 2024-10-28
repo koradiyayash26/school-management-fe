@@ -51,12 +51,12 @@ export const MENU = [
     icon: () => <Calculator className="h-4 w-4" />,
     Permission: "Fee Types",
   },
-  {
-    lable: "FEES STUDENT",
-    path: "/school-student",
-    icon: () => <UsersRound className="h-4 w-4" />,
-    Permission: "Student Fees",
-  },
+  // {
+  //   lable: "FEES STUDENT",
+  //   path: "/school-student",
+  //   icon: () => <UsersRound className="h-4 w-4" />,
+  //   Permission: "Student Fees",
+  // },
   {
     lable: "PAYMENT",
     path: "/payment",

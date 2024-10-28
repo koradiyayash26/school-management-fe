@@ -82,6 +82,7 @@ const headers = [
   { label: "District", value: "district" },
   { label: "Standard", value: "standard" },
   { label: "Section", value: "section" },
+  { label: "Academic Year", value: "academic_year__year" },
   { label: "Last School", value: "last_school" },
   { label: "Admission Standard", value: "admission_std" },
   { label: "Admission Date", value: "admission_date" },

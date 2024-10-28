@@ -3,8 +3,6 @@ import { Route, BrowserRouter as Router, Routes } from "react-router-dom";
 import "./App.css";
 import DashboardLayout from "./components/layouts";
 import Notfound from "./components/not-found";
-import HistoricalFeesPage from "./pages/historical-fees/historical-fees-page";
-import HistoricalFeesAddPage from "./pages/historical-fees/historical-fee-add-page";
 import MyDocument from "./components/pdf";
 import ProtectedRoutes from "./components/protected-routes";
 import BirthCertificatePage from "./pages/certificate/birth-certificate-page";
@@ -17,9 +15,6 @@ import StandardPage from "./pages/standard/standard-page";
 import StudentsPage from "./pages/students/students-page";
 import StudentAddPage from "./pages/students/student-add-page";
 import StudentEditPage from "./pages/students/student-edit-page";
-import ExamMarksPage from "./pages/exam/exam-page";
-import ExamMarksAddPage from "./pages/exam/exam-add-page";
-import ExamMarksEditPage from "./pages/exam/exam-edit-page";
 import ReportsPage from "./pages/report/reports-page";
 import ReportDetailsPage from "./pages/report/report-detail-page";
 import PaymentsPage from "./pages/payment/payments-page";
@@ -28,9 +23,6 @@ import FeetypeUpdatePage from "./pages/fee/fee-update-page";
 import FeeTypesAddPage from "./pages/fee/fee-add-page";
 import PaymentReceiptPage from "./pages/payment/payment-receipt-page";
 import PaymentFeeFormPage from "./pages/payment/payment-fee-form-page";
-import SchoolStudentPage from "./pages/school-student/school-student-page";
-import SchoolStudentAddPage from "./pages/school-student/school-student-add-page";
-import SchoolStudentUpdatePage from "./pages/school-student/school-student-update-page";
 import StudentHistoricalPage from "./pages/student-historical/student-historical-page";
 import StudentUpdatePage from "./pages/student-update/student-update-page";
 import StudentUpdateAddPage from "./pages/student-update/student-update-add-page";
@@ -123,35 +115,6 @@ const App = () => {
                         path="/fee-type/:id/:std/:year/student-assign"
                       />
                     </Route>
-                    {/* Fee Types */}
-                    {/* Exam */}
-                    <Route
-                      element={<ProtectedRoutes requiredPermission="Exams" />}
-                    >
-                      <Route element={<ExamMarksPage />} path="/exam" />
-                      <Route element={<ExamMarksAddPage />} path="/exam/add" />
-                      <Route
-                        element={<ExamMarksEditPage />}
-                        path="/exam/edit/:id"
-                      />
-                    </Route>
-                    {/* Exam */}
-                    {/* Historical Fee */}
-                    <Route
-                      element={
-                        <ProtectedRoutes requiredPermission="Historical Fee" />
-                      }
-                    >
-                      <Route
-                        element={<HistoricalFeesPage />}
-                        path="/historical-fee"
-                      />
-                      <Route
-                        element={<HistoricalFeesAddPage />}
-                        path="/historical-fee/add"
-                      />
-                    </Route>
-                    {/* Historical Fee */}
                     {/* Fee Report */}
                     <Route
                       element={
@@ -165,26 +128,6 @@ const App = () => {
                       />
                     </Route>
                     {/* Fee Report */}
-                    {/* Student Fees */}
-                    <Route
-                      element={
-                        <ProtectedRoutes requiredPermission="Student Fees" />
-                      }
-                    >
-                      <Route
-                        element={<SchoolStudentPage />}
-                        path="/school-student"
-                      />
-                      <Route
-                        element={<SchoolStudentAddPage />}
-                        path="/school-student/add"
-                      />
-                      <Route
-                        element={<SchoolStudentUpdatePage />}
-                        path="/school-student/edit/:id"
-                      />
-                    </Route>
-                    {/* Student Fees */}
                     {/* Student Update History */}
                     <Route
                       element={

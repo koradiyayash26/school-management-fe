@@ -35,28 +35,12 @@ export const MENU = [
     icon: () => <UsersRound className="h-4 w-4" />,
     Permission: "Student Update",
   },
-  // {
-  //   lable: "STUDENT HISTORICAL",
-  //   path: "/educational",
-  //   icon: () => <NotebookPen className="h-4 w-4" />,
-  // },
-  // {
-  //   lable: "HISTORICAL FEE",
-  //   path: "/historical-fee",
-  //   icon: () => <IndianRupee className="h-4 w-4" />,
-  // },
   {
     lable: "FEES",
     path: "/fee-type",
     icon: () => <Calculator className="h-4 w-4" />,
     Permission: "Fee Types",
   },
-  // {
-  //   lable: "FEES STUDENT",
-  //   path: "/school-student",
-  //   icon: () => <UsersRound className="h-4 w-4" />,
-  //   Permission: "Student Fees",
-  // },
   {
     lable: "PAYMENT",
     path: "/payment",
@@ -69,11 +53,6 @@ export const MENU = [
     icon: () => <StickyNote className="h-4 w-4" />,
     Permission: "Fee Report",
   },
-  // {
-  //   lable: "EXAM",
-  //   path: "/exam",
-  //   icon: () => <Medal className="h-4 w-4" />,
-  // },
   {
     lable: "EXAM",
     path: "/exam-template",

@@ -187,7 +187,7 @@ function FeesAssingPage() {
                 )}
               </TableHead>
               {headers.map((header, index) => (
-                <TableHead key={index} className="text-center">
+                <TableHead key={index} className="text-center whitespace-nowrap">
                   {header.label}
                 </TableHead>
               ))}
@@ -257,7 +257,7 @@ function FeesAssingPage() {
                 )}
               </TableHead>
               {headers.map((header, index) => (
-                <TableHead key={index} className="text-center">
+                <TableHead key={index} className="text-center whitespace-nowrap">
                   {header.label}
                 </TableHead>
               ))}

@@ -25,7 +25,7 @@ import { useState } from "react";
 import { format } from "date-fns";
 import { Calendar } from "../ui/calendar";
 
-export const GrDetails = ({ form, categories }) => {
+export const GrDetails = ({ academicYear, form, categories }) => {
   const [loading, setLoading] = useState(false);
 
   const religions = [
@@ -354,6 +354,38 @@ export const GrDetails = ({ form, categories }) => {
                   {section.map((clas) => (
                     <SelectItem key={clas._id} value={clas._id}>
                       {clas.name}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="academic_year"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Academic Year*</FormLabel>
+              <Select
+                disabled={loading}
+                onValueChange={field.onChange}
+                value={field.value}
+                defaultValue={field.value}
+              >
+                <FormControl>
+                  <SelectTrigger>
+                    <SelectValue
+                      defaultValue={field.value}
+                      placeholder="Select a Year"
+                    />
+                  </SelectTrigger>
+                </FormControl>
+                <SelectContent>
+                  {academicYear.map((year) => (
+                    <SelectItem key={year.id} value={year.year}>
+                      {year.year}
                     </SelectItem>
                   ))}
                 </SelectContent>

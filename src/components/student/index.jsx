@@ -63,6 +63,10 @@ const formSchema = z.object({
     .string()
     .max(1, { message: "Section must not exceed 1 characters" })
     .optional(),
+  academic_year: z
+    .string()
+    .min(1, { message: "Please select an academic year" })
+    .max(100, { message: "Academic year is too long" }),
   last_school: z
     .string()
     .max(100, { message: "Last School must not exceed 100 characters" })
@@ -141,7 +145,7 @@ const formSchema = z.object({
     .optional(),
 });
 
-function StudentForm({ defaultValues, onSubmit }) {
+function StudentForm({ academicYear, defaultValues, onSubmit }) {
   const form = useForm({
     resolver: zodResolver(formSchema),
     defaultValues,
@@ -178,6 +182,7 @@ function StudentForm({ defaultValues, onSubmit }) {
                 </CardHeader>
                 <CardContent className="space-y-2">
                   <GrDetails
+                    academicYear={academicYear}
                     form={form}
                     categories={[
                       { _id: "જનરલ", name: "જનરલ" },

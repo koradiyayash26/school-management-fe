@@ -292,11 +292,10 @@ function StudentsPage() {
 
   return (
     <>
-      {students && students.length > 0 ? (
-        <>
-          {" "}
-          <style>
-            {`
+      <>
+        {" "}
+        <style>
+          {`
           @media print {
             .no-print {
               display: none;
@@ -309,323 +308,315 @@ function StudentsPage() {
             }
           }
         `}
-          </style>
-          <Toaster
-            position="top-center"
-            reverseOrder={false}
-            gutter={8}
-            containerClassName=""
-            containerStyle={{}}
-            toastOptions={{
-              // Define default options
-              className: "",
-              duration: 5000,
-              style: {
-                background: "#363636",
-                color: "#fff",
-              },
+        </style>
+        <Toaster
+          position="top-center"
+          reverseOrder={false}
+          gutter={8}
+          containerClassName=""
+          containerStyle={{}}
+          toastOptions={{
+            // Define default options
+            className: "",
+            duration: 5000,
+            style: {
+              background: "#363636",
+              color: "#fff",
+            },
 
-              // Default options for specific types
-              success: {
-                duration: 3000,
-                theme: {
-                  primary: "green",
-                  secondary: "black",
-                },
+            // Default options for specific types
+            success: {
+              duration: 3000,
+              theme: {
+                primary: "green",
+                secondary: "black",
               },
-            }}
-          />
-          <AlertDialog open={openAlert}>
-            <AlertDialogContent>
-              <AlertDialogHeader>
-                <AlertDialogTitle>Are you sure?</AlertDialogTitle>
-                <AlertDialogDescription>
-                  This will permanently delete student and remove your data from
-                  our servers.
-                </AlertDialogDescription>
-              </AlertDialogHeader>
-              <AlertDialogFooter>
-                <AlertDialogCancel onClick={() => setOpenAlert(false)}>
-                  Cancel
-                </AlertDialogCancel>
-                <AlertDialogAction
-                  onClick={() => mutation.mutate({ id: studentId })}
-                  className="bg-[red] text-white hover:bg-red-500"
-                >
-                  Delete
-                </AlertDialogAction>
-              </AlertDialogFooter>
-            </AlertDialogContent>
-          </AlertDialog>
-          <h1 className="uppercase text-2xl font-bold mb-4">
-            GENERAL REGISTER
-          </h1>
-          <div className="block md:flex md:justify-between gap-2 mb-4">
-            <div className="w-full md:w-auto">
-              <Input
-                className="w-full md:w-64 mb-2 md:mb-0"
-                placeholder="Search By Name"
-                onChange={(e) => setSearch(e.target.value)}
-              />
-            </div>
-            <div className="flex flex-wrap gap-2 mt-4 md:mt-0">
-              <Link to="/student/add">
-                <Button>Add</Button>
-              </Link>
-              <Button onClick={excelFileGeneralRegister}>
-                Download as XLS
-              </Button>
-              <DropdownMenu className="">
-                <DropdownMenuTrigger asChild>
-                  <Button variant="outline">Columns</Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent className="w-56">
-                  <ScrollArea className="h-[300px] overflow-y-auto">
-                    <div className="p-2">
-                      <h4 className="mb-2 font-semibold">Toggle Columns</h4>
-                      {headers.map((header) => (
-                        <DropdownMenuCheckboxItem
-                          key={header.value}
-                          className="capitalize"
-                          checked={columnVisibility[header.value]}
-                          onCheckedChange={() =>
-                            toggleColumnVisibility(header.value)
-                          }
-                        >
-                          {header.label}
-                        </DropdownMenuCheckboxItem>
-                      ))}
-                    </div>
-                  </ScrollArea>
-                </DropdownMenuContent>
-              </DropdownMenu>
-              <Dialog open={isOpen} onOpenChange={setIsOpen}>
-                <div className="block md:flex gap-4">
-                  <DialogTrigger asChild>
-                    <Button variant="outline">
-                      <FileUp className="w-6 h-6" />
-                    </Button>
-                  </DialogTrigger>
-                </div>
-                <DialogContent className="sm:max-w-[425px]">
-                  <DialogHeader>
-                    <DialogTitle className="text-left mb-2">
-                      Upload Excel File
-                    </DialogTitle>
-                    <DialogDescription className="text-left">
-                      Select excel file here. Click upload when you're done.
-                    </DialogDescription>
-                  </DialogHeader>
-                  <form className="grid gap-4">
-                    <div className="grid w-full max-w-sm items-center gap-1.5">
-                      <Label htmlFor="file">Select File</Label>
-                      <Input
-                        id="file"
-                        type="file"
-                        onChange={handleFileChange}
-                        accept=".xlsx,.xls"
-                      />
-                      {fileError && (
-                        <p className="text-sm text-red-500">{fileError}</p>
-                      )}
-                    </div>
-                    <DialogFooter>
-                      <Button
-                        type="submit"
-                        onClick={handleSubmit}
-                        disabled={isPassLoading}
-                      >
-                        {isPassLoading ? "Uploading..." : "Upload"}
-                      </Button>
-                    </DialogFooter>
-                  </form>
-                </DialogContent>
-              </Dialog>
-            </div>
+            },
+          }}
+        />
+        <AlertDialog open={openAlert}>
+          <AlertDialogContent>
+            <AlertDialogHeader>
+              <AlertDialogTitle>Are you sure?</AlertDialogTitle>
+              <AlertDialogDescription>
+                This will permanently delete student and remove your data from
+                our servers.
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <AlertDialogCancel onClick={() => setOpenAlert(false)}>
+                Cancel
+              </AlertDialogCancel>
+              <AlertDialogAction
+                onClick={() => mutation.mutate({ id: studentId })}
+                className="bg-[red] text-white hover:bg-red-500"
+              >
+                Delete
+              </AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
+        <h1 className="uppercase text-2xl font-bold mb-4">GENERAL REGISTER</h1>
+        <div className="block md:flex md:justify-between gap-2 mb-4">
+          <div className="w-full md:w-auto">
+            <Input
+              className="w-full md:w-64 mb-2 md:mb-0"
+              placeholder="Search By Name"
+              onChange={(e) => setSearch(e.target.value)}
+            />
           </div>
-          {importError && (
-            <div className="bg-red-100 rounded-sm border-l-4 border-red-500 text-red-700 p-4 relative">
-              <h3 className="font-bold">Import Errors:</h3>
-              <ul className="list-disc pl-5">
-                {importError.map((error, index) => (
-                  <li key={index}>
-                    GR No {error.grno}: {error.errors.join(", ")}
-                  </li>
-                ))}
-              </ul>
-              <button
-                onClick={() => setImportError(false)}
-                className="absolute top-0 right-0 mt-2 mr-2"
-                aria-label="Close"
-              >
-                <X size={18} />
-              </button>
-            </div>
-          )}
-          {importMessage && (
-            <div className="bg-green-100 rounded-sm border-l-4 border-green-500 text-green-700 p-2 relative">
-              <p className="font-medium">{importMessage}</p>
-              <button
-                onClick={() => setImportMessage(false)}
-                className="absolute top-0 right-0 mt-2 mr-2"
-                aria-label="Close"
-              >
-                <X size={18} className="" />
-              </button>
-            </div>
-          )}
-          <ScrollArea className="rounded-md border w-full h-[calc(80vh-120px)]">
-            <div ref={componentPDF} style={{ width: "100%" }}>
-              <h1 className="hidden title-table">THINKERS GENERAL REGISTER</h1>
-              <Table className="relative" id="print-excel">
-                <TableHeader>
-                  <TableRow>
-                    {headers.map(
-                      (header, index) =>
-                        columnVisibility[header.value] && (
-                          <TableHead className="whitespace-nowrap" key={index}>
-                            {header.label}
-                          </TableHead>
-                        )
-                    )}
-                    <TableHead className="no-print">Actions</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {!students || filteredStudents.length === 0 ? (
-                    <TableRow className="text-center">
-                      <TableCell
-                        colSpan={
-                          Object.values(columnVisibility).filter(Boolean)
-                            .length + 1
+          <div className="flex flex-wrap gap-2 mt-4 md:mt-0">
+            <Link to="/student/add">
+              <Button>Add</Button>
+            </Link>
+            <Button onClick={excelFileGeneralRegister}>Download as XLS</Button>
+            <DropdownMenu className="">
+              <DropdownMenuTrigger asChild>
+                <Button variant="outline">Columns</Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent className="w-56">
+                <ScrollArea className="h-[300px] overflow-y-auto">
+                  <div className="p-2">
+                    <h4 className="mb-2 font-semibold">Toggle Columns</h4>
+                    {headers.map((header) => (
+                      <DropdownMenuCheckboxItem
+                        key={header.value}
+                        className="capitalize"
+                        checked={columnVisibility[header.value]}
+                        onCheckedChange={() =>
+                          toggleColumnVisibility(header.value)
                         }
                       >
-                        No Data Found
+                        {header.label}
+                      </DropdownMenuCheckboxItem>
+                    ))}
+                  </div>
+                </ScrollArea>
+              </DropdownMenuContent>
+            </DropdownMenu>
+            <Dialog open={isOpen} onOpenChange={setIsOpen}>
+              <div className="block md:flex gap-4">
+                <DialogTrigger asChild>
+                  <Button variant="outline">
+                    <FileUp className="w-6 h-6" />
+                  </Button>
+                </DialogTrigger>
+              </div>
+              <DialogContent className="sm:max-w-[425px]">
+                <DialogHeader>
+                  <DialogTitle className="text-left mb-2">
+                    Upload Excel File
+                  </DialogTitle>
+                  <DialogDescription className="text-left">
+                    Select excel file here. Click upload when you're done.
+                  </DialogDescription>
+                </DialogHeader>
+                <form className="grid gap-4">
+                  <div className="grid w-full max-w-sm items-center gap-1.5">
+                    <Label htmlFor="file">Select File</Label>
+                    <Input
+                      id="file"
+                      type="file"
+                      onChange={handleFileChange}
+                      accept=".xlsx,.xls"
+                    />
+                    {fileError && (
+                      <p className="text-sm text-red-500">{fileError}</p>
+                    )}
+                  </div>
+                  <DialogFooter>
+                    <Button
+                      type="submit"
+                      onClick={handleSubmit}
+                      disabled={isPassLoading}
+                    >
+                      {isPassLoading ? "Uploading..." : "Upload"}
+                    </Button>
+                  </DialogFooter>
+                </form>
+              </DialogContent>
+            </Dialog>
+          </div>
+        </div>
+        {importError && (
+          <div className="bg-red-100 rounded-sm border-l-4 border-red-500 text-red-700 p-4 relative">
+            <h3 className="font-bold">Import Errors:</h3>
+            <ul className="list-disc pl-5">
+              {importError.map((error, index) => (
+                <li key={index}>
+                  GR No {error.grno}: {error.errors.join(", ")}
+                </li>
+              ))}
+            </ul>
+            <button
+              onClick={() => setImportError(false)}
+              className="absolute top-0 right-0 mt-2 mr-2"
+              aria-label="Close"
+            >
+              <X size={18} />
+            </button>
+          </div>
+        )}
+        {importMessage && (
+          <div className="bg-green-100 rounded-sm border-l-4 border-green-500 text-green-700 p-2 relative">
+            <p className="font-medium">{importMessage}</p>
+            <button
+              onClick={() => setImportMessage(false)}
+              className="absolute top-0 right-0 mt-2 mr-2"
+              aria-label="Close"
+            >
+              <X size={18} className="" />
+            </button>
+          </div>
+        )}
+        <ScrollArea className="rounded-md border w-full h-[calc(80vh-120px)]">
+          <div ref={componentPDF} style={{ width: "100%" }}>
+            <h1 className="hidden title-table">THINKERS GENERAL REGISTER</h1>
+            <Table className="relative" id="print-excel">
+              <TableHeader>
+                <TableRow>
+                  {headers.map(
+                    (header, index) =>
+                      columnVisibility[header.value] && (
+                        <TableHead className="whitespace-nowrap" key={index}>
+                          {header.label}
+                        </TableHead>
+                      )
+                  )}
+                  <TableHead className="no-print">Actions</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {!students || filteredStudents.length === 0 ? (
+                  <TableRow className="text-center">
+                    <TableCell
+                      colSpan={
+                        Object.values(columnVisibility).filter(Boolean).length +
+                        1
+                      }
+                    >
+                      No Data Found
+                    </TableCell>
+                  </TableRow>
+                ) : (
+                  visibleStudents.map((student) => (
+                    <TableRow key={student.id}>
+                      {headers.map(
+                        (header) =>
+                          columnVisibility[header.value] && (
+                            <TableCell
+                              key={header.value}
+                              className="whitespace-nowrap"
+                            >
+                              {(header.value === "standard" ||
+                                header.value === "admission_std") &&
+                              student[header.value] == 13
+                                ? "Balvatika"
+                                : student[header.value] || "-"}
+                            </TableCell>
+                          )
+                      )}
+                      <TableCell className="no-print z-[1]">
+                        <ActionsPopup
+                          id={student.id}
+                          openAlertDeleteBox={openAlertDeleteBox}
+                        />
                       </TableCell>
                     </TableRow>
-                  ) : (
-                    visibleStudents.map((student) => (
-                      <TableRow key={student.id}>
-                        {headers.map(
-                          (header) =>
-                            columnVisibility[header.value] && (
-                              <TableCell
-                                key={header.value}
-                                className="whitespace-nowrap"
-                              >
-                                {(header.value === "standard" ||
-                                  header.value === "admission_std") &&
-                                student[header.value] == 13
-                                  ? "Balvatika"
-                                  : student[header.value] || "-"}
-                              </TableCell>
-                            )
-                        )}
-                        <TableCell className="no-print z-[1]">
-                          <ActionsPopup
-                            id={student.id}
-                            openAlertDeleteBox={openAlertDeleteBox}
-                          />
-                        </TableCell>
-                      </TableRow>
-                    ))
-                  )}
-                </TableBody>
-              </Table>
-            </div>
-            <ScrollBar orientation="horizontal" />
-          </ScrollArea>
-          <div className="flex w-full flex-col-reverse items-center justify-between gap-4 overflow-auto p-1 sm:flex-row sm:gap-8">
-            <div className="whitespace-nowrap text-sm dark:text-white text-black font-medium order-2 md:order-1">
-              {filteredStudents?.length > 0
-                ? `Showing ${Math.min(
-                    (page - 1) * pageSize + 1,
-                    filteredStudents.length
-                  )} - ${Math.min(
-                    page * pageSize,
-                    filteredStudents.length
-                  )} of ${filteredStudents.length}.`
-                : "No entries to show"}
-            </div>
-            <div className="flex items-center space-x-2 order-1 sm:order-2">
-              <p className="whitespace-nowrap text-sm font-medium hidden sm:inline">
-                Rows per page
-              </p>
-              <Select
-                value={pageSize.toString()}
-                onValueChange={handlePageSizeChange}
-              >
-                <SelectTrigger className="h-8 w-[70px]">
-                  <SelectValue placeholder={pageSize} />
-                </SelectTrigger>
-                <SelectContent side="top">
-                  {[10, 20, 30, 40, 50].map((size) => (
-                    <SelectItem key={size} value={size.toString()}>
-                      {size}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-            <div className="order-3 w-full sm:w-auto">
-              <Pagination>
-                <PaginationContent>
-                  <PaginationItem>
-                    <Button
-                      aria-label="Go to last page"
-                      variant="outline"
-                      size="icon"
-                      className="size-8 lg:flex"
-                      onClick={() => handlePageChange(1)}
-                      disabled={page === 1}
-                    >
-                      <ChevronsLeft className="size-4" aria-hidden="true" />
-                    </Button>
-                  </PaginationItem>
+                  ))
+                )}
+              </TableBody>
+            </Table>
+          </div>
+          <ScrollBar orientation="horizontal" />
+        </ScrollArea>
+        <div className="flex w-full flex-col-reverse items-center justify-between gap-4 overflow-auto p-1 sm:flex-row sm:gap-8">
+          <div className="whitespace-nowrap text-sm dark:text-white text-black font-medium order-2 md:order-1">
+            {filteredStudents?.length > 0
+              ? `Showing ${Math.min(
+                  (page - 1) * pageSize + 1,
+                  filteredStudents.length
+                )} - ${Math.min(page * pageSize, filteredStudents.length)} of ${
+                  filteredStudents.length
+                }.`
+              : "No entries to show"}
+          </div>
+          <div className="flex items-center space-x-2 order-1 sm:order-2">
+            <p className="whitespace-nowrap text-sm font-medium hidden sm:inline">
+              Rows per page
+            </p>
+            <Select
+              value={pageSize.toString()}
+              onValueChange={handlePageSizeChange}
+            >
+              <SelectTrigger className="h-8 w-[70px]">
+                <SelectValue placeholder={pageSize} />
+              </SelectTrigger>
+              <SelectContent side="top">
+                {[10, 20, 30, 40, 50].map((size) => (
+                  <SelectItem key={size} value={size.toString()}>
+                    {size}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+          <div className="order-3 w-full sm:w-auto">
+            <Pagination>
+              <PaginationContent>
+                <PaginationItem>
                   <Button
                     aria-label="Go to last page"
                     variant="outline"
                     size="icon"
                     className="size-8 lg:flex"
-                    onClick={() => handlePageChange(Math.max(1, page - 1))}
+                    onClick={() => handlePageChange(1)}
                     disabled={page === 1}
                   >
-                    <ChevronLeft className="size-4" aria-hidden="true" />
+                    <ChevronsLeft className="size-4" aria-hidden="true" />
                   </Button>
+                </PaginationItem>
+                <Button
+                  aria-label="Go to last page"
+                  variant="outline"
+                  size="icon"
+                  className="size-8 lg:flex"
+                  onClick={() => handlePageChange(Math.max(1, page - 1))}
+                  disabled={page === 1}
+                >
+                  <ChevronLeft className="size-4" aria-hidden="true" />
+                </Button>
+                <Button
+                  aria-label="Go to last page"
+                  variant="outline"
+                  size="icon"
+                  className="size-8 lg:flex"
+                  onClick={() =>
+                    handlePageChange(Math.min(totalPages, page + 1))
+                  }
+                  disabled={page === totalPages}
+                >
+                  <ChevronRight className="size-4" aria-hidden="true" />
+                </Button>
+                <PaginationItem>
                   <Button
                     aria-label="Go to last page"
                     variant="outline"
                     size="icon"
                     className="size-8 lg:flex"
                     onClick={() =>
-                      handlePageChange(Math.min(totalPages, page + 1))
+                      handlePageChange(Math.min(totalPages, totalPages))
                     }
                     disabled={page === totalPages}
                   >
-                    <ChevronRight className="size-4" aria-hidden="true" />
+                    <ChevronsRight className="size-4" aria-hidden="true" />
                   </Button>
-                  <PaginationItem>
-                    <Button
-                      aria-label="Go to last page"
-                      variant="outline"
-                      size="icon"
-                      className="size-8 lg:flex"
-                      onClick={() =>
-                        handlePageChange(Math.min(totalPages, totalPages))
-                      }
-                      disabled={page === totalPages}
-                    >
-                      <ChevronsRight className="size-4" aria-hidden="true" />
-                    </Button>
-                  </PaginationItem>
-                </PaginationContent>
-              </Pagination>
-            </div>
+                </PaginationItem>
+              </PaginationContent>
+            </Pagination>
           </div>
-        </>
-      ) : (
-        <div>No students data available</div>
-      )}
+        </div>
+      </>
     </>
   );
 }

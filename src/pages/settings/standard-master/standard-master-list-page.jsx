@@ -57,7 +57,9 @@ function StandardMasterList() {
               <TableRow key={std.id}>
                 {headers.map((header) => (
                   <TableCell key={header.value} className="capitalize">
-                    {std[header.value] || "None"}
+                    {header.value === "name" && std[header.value] === "13"
+                      ? "Balvatika"
+                      : std[header.value] || "None"}
                   </TableCell>
                 ))}
                 <TableCell>

@@ -61,7 +61,7 @@ import {
 const headers = [
   { label: "ID", value: "id" },
   { label: "Fee Type", value: "fee_master__name" },
-  { label: "Standard", value: "standard" },
+  { label: "Standard", value: "standard__name" },
   { label: "Year", value: "year__year" },
   { label: "Amount", value: "amount" },
 ];
@@ -235,7 +235,7 @@ function FeesTypePage() {
                 <TableRow key={fee.id}>
                   {headers.map((header) => (
                     <TableCell key={header.value} className="capitalize whitespace-nowrap">
-                      {header.value === "standard" && fee[header.value] === 13
+                      {header.value === "standard__name" && fee[header.value] === "13"
                         ? "Balvatika"
                         : fee[header.value] || "-"}
                     </TableCell>
@@ -243,7 +243,7 @@ function FeesTypePage() {
                   <TableCell className="z-[1]">
                     <ActionsPopupFee
                       id={fee.id}
-                      standard={fee.standard}
+                      standard={fee.standard__name}
                       year={fee.year__year}
                       openAlertDeleteBox={openAlertDeleteBox}
                     />

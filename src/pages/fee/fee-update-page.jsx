@@ -33,7 +33,7 @@ const FeetypeUpdatePage = () => {
   const defaultValues = {
     year: academicDefault || "",
     fee_master: feetypeData?.fee_master?.name || "",
-    standard: String(feetypeData?.standard) || "",
+    standard: String(feetypeData?.standard?.name) || "",
     amount: feetypeData?.amount || "",
   };
 
@@ -69,8 +69,15 @@ const FeetypeUpdatePage = () => {
         academicYearId = year.id;
       }
     });
+    let stdData = null;
+    standard.forEach((std) => {
+      if (std.name == data.standard) {
+        stdData = std.id;
+      }
+    });
     const formattedData = {
       ...data,
+      standard:stdData,
       year: academicYearId,
       fee_master: feeId,
     };

@@ -51,8 +51,15 @@ const FeeTypesAddPage = () => {
         academicYearId = year.id;
       }
     });
+    let stdData = null;
+    standard.forEach((std) => {
+      if (std.name == data.standard) {
+        stdData = std.id;
+      }
+    });
     const formattedData = {
       ...data,
+      standard: stdData,
       year: academicYearId, // Send the matched ID
       fee_master: feeId,
     };

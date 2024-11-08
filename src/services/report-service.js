@@ -3,7 +3,7 @@ import { getToken } from "@/utils/token";
 
 const getReportStandardData = async (id) => {
   try {
-    const response = await apiClient.get(`/report/standard/${id}`, {
+    const response = await apiClient.get(`/report/standard/${id}/`, {
       headers: {
         Authorization: `Bearer ${getToken()}`,
       },
@@ -11,6 +11,20 @@ const getReportStandardData = async (id) => {
     return response.data;
   } catch (error) {
     console.error("Error fetching report data:", error);
+    throw error;
+  }
+};
+
+const ExcelFileDownloadAll = async (id) => {
+  try {
+    const response = await apiClient.get(`/report/fee-report-excel/${id}/`, {
+      headers: {
+        Authorization: `Bearer ${getToken()}`,
+      },
+    });
+    return response.data;
+  } catch (error) {
+    console.error("Can't Download Excel File", error);
     throw error;
   }
 };
@@ -43,4 +57,4 @@ const getFeeReport = async () => {
   }
 };
 
-export { getReportStandardData, getReportStandardCount, getFeeReport };
+export { getReportStandardData, getReportStandardCount, getFeeReport,ExcelFileDownloadAll };

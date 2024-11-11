@@ -61,8 +61,17 @@ function Sidebar({ collapsed, onToggle }) {
                 >
                   {collapsed ? (
                     <TooltipProvider>
-                      <Tooltip className="">
-                        <TooltipTrigger asChild>{item.icon()}</TooltipTrigger>
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <div className="relative">
+                            {item.icon()}
+                            {item.lable === "CHATS" && (
+                              <div className="absolute -top-1 -right-1 h-2 w-2 rounded-full bg-red-500">
+                                <div className="absolute top-0 left-0 h-full w-full animate-ping rounded-full bg-red-400 opacity-75"></div>
+                              </div>
+                            )}
+                          </div>
+                        </TooltipTrigger>
                         <TooltipContent
                           side="right"
                           className="p-2 rounded-lg shadow-lg"
@@ -72,9 +81,18 @@ function Sidebar({ collapsed, onToggle }) {
                       </Tooltip>
                     </TooltipProvider>
                   ) : (
-                    item.icon()
+                    <>
+                      <div className="relative">
+                        {item.icon()}
+                        {item.lable === "CHATS" && (
+                          <div className="absolute -top-1 -right-1 h-2 w-2 rounded-full bg-red-500">
+                            <div className="absolute top-0 left-0 h-full w-full animate-ping rounded-full bg-red-400 opacity-75"></div>
+                          </div>
+                        )}
+                      </div>
+                      {!collapsed && item.lable}
+                    </>
                   )}
-                  {!collapsed && item.lable}
                 </NavLink>
               ))}
             </nav>

@@ -31,7 +31,14 @@ export const MobileSidebar = () => {
               to={item.path}
               className="mx-[-0.65rem] flex items-center gap-4 rounded-xl px-3 py-2 text-sm text-muted-foreground hover:text-foreground"
             >
-              {item.icon()}
+              <div className="relative">
+                {item.icon()}
+                {item.lable === "CHATS" && (
+                  <div className="absolute -top-1 -right-1 h-2 w-2 rounded-full bg-red-500">
+                    <div className="absolute top-0 left-0 h-full w-full animate-ping rounded-full bg-red-400 opacity-75"></div>
+                  </div>
+                )}
+              </div>
               {item.lable}
             </Link>
           ))}

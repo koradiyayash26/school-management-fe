@@ -4,17 +4,24 @@ import {
   Home,
   IndianRupee,
   Medal,
-  NotebookPen,
+  MessageSquareMore,
   StickyNote,
   Users,
   UsersRound,
 } from "lucide-react";
+
 
 export const MENU = [
   {
     lable: "HOME",
     path: "/",
     icon: () => <Home className="h-4 w-4" />,
+    Permission: "",
+  },
+  {
+    lable: "CHATS",
+    path: "/chats",
+    icon: () => <MessageSquareMore className="h-4 w-4" />,
     Permission: "",
   },
   {

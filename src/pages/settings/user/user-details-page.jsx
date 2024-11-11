@@ -195,7 +195,7 @@ const UserDetailsPage = () => {
       />
       <div className="container  mx-auto px-4 py-6 sm:py-8 text-white min-h-screen">
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 sm:mb-8 space-y-4 sm:space-y-0">
-          <h1 className="text-2xl sm:text-3xl font-bold text-white">
+          <h1 className="text-2xl sm:text-3xl font-bold dark:text-white text-black">
             Manage User - {user.username}
           </h1>
           <Link to="/setting">
@@ -219,8 +219,8 @@ const UserDetailsPage = () => {
           </Link>
         </div>
         <Card className="mb-6 sm:mb-8 ">
-          <CardHeader className="bg-[#27272a66] rounded-t-lg border-b flex flex-col sm:flex-row justify-between items-start sm:items-center space-y-4 sm:space-y-0">
-            <CardTitle className="text-xl sm:text-2xl font-semibold text-white">
+          <CardHeader className="dark:bg-[#27272a66] rounded-t-lg border-b flex flex-col sm:flex-row justify-between items-start sm:items-center space-y-4 sm:space-y-0">
+            <CardTitle className="text-xl sm:text-2xl font-semibold dark:text-white">
               User Details
             </CardTitle>
             <Dialog open={isOpen} onOpenChange={setIsOpen}>
@@ -387,7 +387,7 @@ const UserDetailsPage = () => {
 };
 
 const InfoItem = ({ icon, label, value }) => (
-  <div className="flex items-center dark:bg-[#3f3f46] dark:border-none border-black border p-3 sm:p-4 rounded-lg">
+  <div className="flex items-center border p-3 sm:p-4 rounded-lg">
     <div className="flex-shrink-0">{icon}</div>
     <div className="ml-3 sm:ml-4 flex flex-col">
       <span className="text-xs sm:text-sm font-medium text-gray-400">

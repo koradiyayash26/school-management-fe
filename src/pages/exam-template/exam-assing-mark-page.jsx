@@ -164,7 +164,7 @@ function ExamAssingMarkPage() {
                 {headers.map((header, index) => (
                   <TableHead key={index} className="whitespace-nowrap">{header.label}</TableHead>
                 ))}
-                <TableHead className="no-print bg-[#151518]">Marks</TableHead>
+                <TableHead className="no-print">Marks</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>

@@ -423,7 +423,7 @@ function ChatArea({
 
       {/* Scroll to Bottom Button */}
       {!showScrollButton && (
-        <div className="absolute bottom-20 right-6 z-10">
+        <div className="absolute bottom-24 right-6 z-10">
           <button
             onClick={() => scrollToBottom()}
             className="bg-primary hover:bg-primary/90 text-primary-foreground w-8 h-8 rounded-full shadow-lg flex items-center justify-center transition-all"
@@ -440,22 +440,50 @@ function ChatArea({
             onSendMessage(e);
             scrollToBottom();
           }}
-          className="flex gap-2"
+          className="flex items-center gap-2"
         >
           <div className="relative flex-1">
-            <input
-              type="text"
-              placeholder="Type a message..."
-              className="flex h-9 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
-              value={messageInput}
-              onChange={(e) => setMessageInput(e.target.value)}
-              disabled={isLoading}
-            />
+            <div className="flex items-center gap-2 rounded-md border border-input bg-background px-3 py-2">
+              <div className="flex gap-1">
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="icon"
+                  className="h-8 w-8"
+                >
+                  <IconPlus className="h-4 w-4 text-muted-foreground" />
+                </Button>
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="icon"
+                  className="h-8 w-8"
+                >
+                  <IconPhotoPlus className="h-4 w-4 text-muted-foreground" />
+                </Button>
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="icon"
+                  className="h-8 w-8"
+                >
+                  <IconPaperclip className="h-4 w-4 text-muted-foreground" />
+                </Button>
+              </div>
+              <input
+                type="text"
+                placeholder="Type a message..."
+                className="flex-1 bg-transparent text-sm focus-visible:outline-none"
+                value={messageInput}
+                onChange={(e) => setMessageInput(e.target.value)}
+                disabled={isLoading}
+              />
+            </div>
           </div>
           <Button
             type="submit"
             size="icon"
-            className="h-9 w-9"
+            className="h-[40px] w-[40px]"
             disabled={isLoading || !messageInput.trim()}
           >
             <IconSend className="h-4 w-4" />

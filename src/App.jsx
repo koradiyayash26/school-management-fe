@@ -43,6 +43,7 @@ import FeeTypeMasterUpdate from "./pages/settings/fee-type-master/fee-type-maste
 import UserAddPage from "./pages/settings/user/user-add-page";
 import UserDetailsPage from "./pages/settings/user/user-details-page";
 import { UserPermissionsProvider } from "./contextAPI";
+import Chats from "./pages/chats";
 
 const App = () => {
   return (
@@ -69,6 +70,9 @@ const App = () => {
                       />
                     </Route>
                     {/* General Register */}
+                    {/*Chats*/}
+                    <Route element={<Chats />} path="/chats/" />
+                    {/*Chats*/}
                     {/* Standard Report */}
                     <Route
                       element={

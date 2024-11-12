@@ -221,14 +221,12 @@ function MessageStatus({ message, isCurrentUser }) {
 
   return (
     <span className="ml-1 inline-flex">
-      {message.is_delivered ? (
-        message.is_read ? (
-          // Blue double ticks for read
-          <span className="text-blue-500">✓✓</span>
-        ) : (
-          // Gray double ticks for delivered
-          <span className="text-gray-400">✓✓</span>
-        )
+      {message.is_read ? (
+        // Blue double ticks for read
+        <span className="text-blue-500 font-semibold">✓✓</span>
+      ) : message.is_delivered ? (
+        // Gray double ticks for delivered
+        <span className="text-gray-400">✓✓</span>
       ) : (
         // Single tick for sent
         <span className="text-gray-400">✓</span>
@@ -396,7 +394,7 @@ function ChatArea({
             </p>
           </div>
         </div>
-        
+
         {/* Add the call buttons */}
         <div className="-mr-1 flex items-center gap-1 lg:gap-2">
           <Button

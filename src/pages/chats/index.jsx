@@ -291,7 +291,6 @@ function ChatArea({
   isLoading,
 }) {
   const queryClient = useQueryClient();
-  const messagesEndRef = useRef(null);
   const scrollAreaRef = useRef(null);
   const [showScrollButton, setShowScrollButton] = useState(false);
 
@@ -316,16 +315,22 @@ function ChatArea({
     }
   }, []);
 
-  // Handle scroll
-  const handleScroll = useCallback((event) => {
-    const viewport = event.currentTarget;
-    const { scrollHeight, scrollTop, clientHeight } = viewport;
+  // Updated scroll handler
+  useEffect(() => {
+    const scrollContainer = scrollAreaRef.current?.querySelector(
+      "[data-radix-scroll-area-viewport]"
+    );
 
-    // Show button when scrolled up more than 100px from bottom
-    const scrollFromBottom = scrollHeight - scrollTop - clientHeight;
-    const shouldShowButton = scrollFromBottom > 100;
+    if (!scrollContainer) return;
 
-    setShowScrollButton(shouldShowButton);
+    const handleScroll = () => {
+      const { scrollHeight, scrollTop, clientHeight } = scrollContainer;
+      const distanceFromBottom = scrollHeight - scrollTop - clientHeight;
+      setShowScrollButton(distanceFromBottom > 100);
+    };
+
+    scrollContainer.addEventListener("scroll", handleScroll);
+    return () => scrollContainer.removeEventListener("scroll", handleScroll);
   }, []);
 
   // Auto scroll on new messages if near bottom
@@ -333,12 +338,12 @@ function ChatArea({
     if (!showScrollButton) {
       scrollToBottom();
     }
-  }, [messages.length, showScrollButton, scrollToBottom]);
+  }, [messages?.length, showScrollButton, scrollToBottom]);
 
   // Initial scroll
   useEffect(() => {
     scrollToBottom("auto");
-  }, [scrollToBottom]);
+  }, [user.id]);
 
   useEffect(() => {
     // Connect to WebSocket
@@ -422,13 +427,9 @@ function ChatArea({
       </div>
 
       {/* Messages Container */}
-      <ScrollArea
-        ref={scrollAreaRef}
-        className="flex-1"
-        onScroll={handleScroll}
-      >
+      <ScrollArea ref={scrollAreaRef} className="flex-1">
         <div className="space-y-4 p-4">
-          {messages.map((message) => (
+          {messages?.map((message) => (
             <div
               key={message.id}
               data-message-id={message.id}
@@ -440,18 +441,22 @@ function ChatArea({
               />
             </div>
           ))}
-          <div ref={messagesEndRef} />
         </div>
       </ScrollArea>
 
-      {/* Scroll to Bottom Button */}
-      {!showScrollButton && (
-        <div className="absolute bottom-24 right-6 z-10">
+      {/* Updated Scroll to Bottom Button */}
+      {showScrollButton && (
+        <div 
+          className="absolute bottom-24 right-6 z-10 animate-fade-in"
+          style={{
+            animation: 'fadeIn 0.2s ease-in-out',
+          }}
+        >
           <button
             onClick={() => scrollToBottom()}
-            className="bg-primary hover:bg-primary/90 text-primary-foreground w-8 h-8 rounded-full shadow-lg flex items-center justify-center transition-all"
+            className="bg-primary hover:bg-primary/90 text-primary-foreground w-10 h-10 rounded-full shadow-lg flex items-center justify-center transition-all hover:scale-105"
           >
-            <BiArrowToBottom className="h-4 w-4" />
+            <BiArrowToBottom className="h-5 w-5" />
           </button>
         </div>
       )}
@@ -516,3 +521,17 @@ function ChatArea({
     </div>
   );
 }
+
+// Add this CSS to your global styles or as a style tag
+const styles = `
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+`;

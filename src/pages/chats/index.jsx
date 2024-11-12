@@ -396,6 +396,31 @@ function ChatArea({
             </p>
           </div>
         </div>
+        
+        {/* Add the call buttons */}
+        <div className="-mr-1 flex items-center gap-1 lg:gap-2">
+          <Button
+            size="icon"
+            variant="ghost"
+            className="hidden size-8 rounded-full sm:inline-flex lg:size-10"
+          >
+            <IconVideo className="h-5 w-5 text-muted-foreground" />
+          </Button>
+          <Button
+            size="icon"
+            variant="ghost"
+            className="hidden size-8 rounded-full sm:inline-flex lg:size-10"
+          >
+            <IconPhone className="h-5 w-5 text-muted-foreground" />
+          </Button>
+          <Button
+            size="icon"
+            variant="ghost"
+            className="h-10 rounded-md sm:h-8 sm:w-4 lg:h-10 lg:w-6"
+          >
+            <IconDotsVertical className="h-5 w-5 text-muted-foreground" />
+          </Button>
+        </div>
       </div>
 
       {/* Messages Container */}

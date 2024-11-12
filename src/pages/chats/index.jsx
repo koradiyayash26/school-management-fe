@@ -23,7 +23,7 @@ import { Button } from "@/components/ui/button";
 import { chatService } from "@/services/chats-service";
 import { socketService } from "@/services/socket-service";
 // import { socketService } from '@/services/socket-service'
-import { ScrollArea } from "@/components/ui/scroll-area"  // Add this import
+import { ScrollArea } from "@/components/ui/scroll-area"; // Add this import
 
 export default function Chats() {
   const [search, setSearch] = useState("");
@@ -135,61 +135,63 @@ export default function Chats() {
           </div>
 
           {/* Chat List */}
-          <div className="flex-1 overflow-auto">
-            {filteredChatList.length === 0 ? (
-              <div className="p-4 text-center text-muted-foreground">
-                No conversations found
-              </div>
-            ) : (
-              <div className="space-y-0.5 p-2">
-                {filteredChatList.map((chat) => (
-                  <button
-                    key={chat.user.id}
-                    className={cn(
-                      "flex w-full items-center gap-3 rounded-lg p-2.5 text-left transition-colors hover:bg-muted",
-                      selectedUser?.id === chat.user.id && "bg-muted"
-                    )}
-                    onClick={() => handleChatSelect(chat)}
-                  >
-                    <Avatar className="h-9 w-9">
-                      <AvatarImage
-                        src={chat.user.profile_image}
-                        alt={chat.user.username}
-                      />
-                      <AvatarFallback>
-                        {chat.user.username?.[0]?.toUpperCase() ?? "?"}
-                      </AvatarFallback>
-                    </Avatar>
-                    <div className="flex-1 overflow-hidden">
-                      <div className="flex items-center justify-between gap-2">
-                        <p className="truncate font-medium">
-                          {chat.user.username}
-                        </p>
-                        {chat.unread_count > 0 && (
-                          <span className="rounded-full bg-primary px-2 py-0.5 text-xs text-primary-foreground">
-                            {chat.unread_count}
-                          </span>
-                        )}
-                      </div>
-                      {chat.last_message && (
-                        <div className="flex items-center gap-1 text-sm text-muted-foreground">
-                          <span className="truncate">
-                            {chat.last_message.message}
-                          </span>
-                          {chat.last_message.sender.id ===
-                          chat.user.id ? null : (
-                            <span className="ml-1 shrink-0">
-                              {chat.last_message.is_read ? "✓✓" : "✓"}
+          <ScrollArea className="flex-1">
+            <div className="flex-1">
+              {filteredChatList.length === 0 ? (
+                <div className="p-4 text-center text-muted-foreground">
+                  No conversations found
+                </div>
+              ) : (
+                <div className="space-y-0.5 p-2">
+                  {filteredChatList.map((chat) => (
+                    <button
+                      key={chat.user.id}
+                      className={cn(
+                        "flex w-full items-center gap-3 rounded-lg p-2.5 text-left transition-colors hover:bg-muted",
+                        selectedUser?.id === chat.user.id && "bg-muted"
+                      )}
+                      onClick={() => handleChatSelect(chat)}
+                    >
+                      <Avatar className="h-9 w-9">
+                        <AvatarImage
+                          src={chat.user.profile_image}
+                          alt={chat.user.username}
+                        />
+                        <AvatarFallback>
+                          {chat.user.username?.[0]?.toUpperCase() ?? "?"}
+                        </AvatarFallback>
+                      </Avatar>
+                      <div className="flex-1 overflow-hidden">
+                        <div className="flex items-center justify-between gap-2">
+                          <p className="truncate font-medium">
+                            {chat.user.username}
+                          </p>
+                          {chat.unread_count > 0 && (
+                            <span className="rounded-full bg-primary px-2 py-0.5 text-xs text-primary-foreground">
+                              {chat.unread_count}
                             </span>
                           )}
                         </div>
-                      )}
-                    </div>
-                  </button>
-                ))}
-              </div>
-            )}
-          </div>
+                        {chat.last_message && (
+                          <div className="flex items-center gap-1 text-sm text-muted-foreground">
+                            <span className="truncate">
+                              {chat.last_message.message}
+                            </span>
+                            {chat.last_message.sender.id ===
+                            chat.user.id ? null : (
+                              <span className="ml-1 shrink-0">
+                                {chat.last_message.is_read ? "✓✓" : "✓"}
+                              </span>
+                            )}
+                          </div>
+                        )}
+                      </div>
+                    </button>
+                  ))}
+                </div>
+              )}
+            </div>
+          </ScrollArea>
         </div>
 
         {/* Chat Area */}
@@ -254,7 +256,7 @@ function Message({ message, isCurrentUser }) {
   return (
     <div
       className={cn(
-        "flex w-full", 
+        "flex w-full",
         isCurrentUser ? "justify-end" : "justify-start"
       )}
     >
@@ -263,7 +265,7 @@ function Message({ message, isCurrentUser }) {
           "max-w-[75%] rounded-2xl px-4 py-2.5 break-words whitespace-pre-wrap",
           isCurrentUser ? "bg-primary text-primary-foreground" : "bg-muted"
         )}
-        style={{ wordBreak: 'break-word', overflowWrap: 'break-word' }}
+        style={{ wordBreak: "break-word", overflowWrap: "break-word" }}
       >
         <p className="text-sm whitespace-pre-wrap">{message.message}</p>
         <div
@@ -302,13 +304,15 @@ function ChatArea({
   });
 
   // Scroll to bottom function
-  const scrollToBottom = useCallback((behavior = 'smooth') => {
+  const scrollToBottom = useCallback((behavior = "smooth") => {
     if (scrollAreaRef.current) {
-      const scrollContainer = scrollAreaRef.current.querySelector('[data-radix-scroll-area-viewport]');
+      const scrollContainer = scrollAreaRef.current.querySelector(
+        "[data-radix-scroll-area-viewport]"
+      );
       if (scrollContainer) {
         scrollContainer.scrollTo({
           top: scrollContainer.scrollHeight,
-          behavior
+          behavior,
         });
       }
     }
@@ -318,11 +322,11 @@ function ChatArea({
   const handleScroll = useCallback((event) => {
     const viewport = event.currentTarget;
     const { scrollHeight, scrollTop, clientHeight } = viewport;
-    
+
     // Show button when scrolled up more than 100px from bottom
     const scrollFromBottom = scrollHeight - scrollTop - clientHeight;
     const shouldShowButton = scrollFromBottom > 100;
-    
+
     setShowScrollButton(shouldShowButton);
   }, []);
 
@@ -335,7 +339,7 @@ function ChatArea({
 
   // Initial scroll
   useEffect(() => {
-    scrollToBottom('auto');
+    scrollToBottom("auto");
   }, [scrollToBottom]);
 
   useEffect(() => {
@@ -395,14 +399,14 @@ function ChatArea({
       </div>
 
       {/* Messages Container */}
-      <ScrollArea 
+      <ScrollArea
         ref={scrollAreaRef}
         className="flex-1"
         onScroll={handleScroll}
       >
         <div className="space-y-4 p-4">
           {messages.map((message) => (
-            <div 
+            <div
               key={message.id}
               data-message-id={message.id}
               className="message-item"
@@ -431,11 +435,11 @@ function ChatArea({
 
       {/* Message Input */}
       <div className="border-t p-4">
-        <form 
+        <form
           onSubmit={(e) => {
             onSendMessage(e);
             scrollToBottom();
-          }} 
+          }}
           className="flex gap-2"
         >
           <div className="relative flex-1">
@@ -459,5 +463,5 @@ function ChatArea({
         </form>
       </div>
     </div>
-  )
+  );
 }

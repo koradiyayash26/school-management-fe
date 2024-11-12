@@ -253,15 +253,19 @@ function MessageTime({ timestamp, className }) {
 function Message({ message, isCurrentUser }) {
   return (
     <div
-      className={cn("flex", isCurrentUser ? "justify-end" : "justify-start")}
+      className={cn(
+        "flex w-full", 
+        isCurrentUser ? "justify-end" : "justify-start"
+      )}
     >
       <div
         className={cn(
-          "max-w-[75%] rounded-2xl px-4 py-2.5",
+          "max-w-[75%] rounded-2xl px-4 py-2.5 break-words whitespace-pre-wrap",
           isCurrentUser ? "bg-primary text-primary-foreground" : "bg-muted"
         )}
+        style={{ wordBreak: 'break-word', overflowWrap: 'break-word' }}
       >
-        <p className="text-sm">{message.message}</p>
+        <p className="text-sm whitespace-pre-wrap">{message.message}</p>
         <div
           className={cn(
             "mt-1 flex items-center justify-end gap-1 text-[10px]",

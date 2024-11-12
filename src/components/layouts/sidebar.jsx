@@ -10,6 +10,8 @@ import {
   TooltipTrigger,
 } from "../ui/tooltip";
 import { useUserPermissions } from "@/contextAPI";
+import { useQuery } from "@tanstack/react-query"; // Add this import
+import { chatService } from "@/services/chats-service"; // Add this import
 
 function Sidebar({ collapsed, onToggle }) {
   const { permissions, isSuperuser } = useUserPermissions();
@@ -18,6 +20,16 @@ function Sidebar({ collapsed, onToggle }) {
     if (!item.Permission) return true; // Always show items without a permission requirement
     return permissions.includes(item.Permission);
   });
+
+  // Add this query to get unread messages count
+  const { data: chats = [] } = useQuery({
+    queryKey: ["chats"],
+    queryFn: chatService.getChatList,
+    select: (data) => data || [],
+  });
+
+  // Calculate total unread messages
+  const unreadCount = chats.reduce((sum, chat) => sum + (chat.unread_count || 0), 0);
 
   return (
     <>
@@ -65,7 +77,7 @@ function Sidebar({ collapsed, onToggle }) {
                         <TooltipTrigger asChild>
                           <div className="relative">
                             {item.icon()}
-                            {item.lable === "CHATS" && (
+                            {item.lable === "CHATS" && unreadCount > 0 && (
                               <div className="absolute -top-1 -right-1 h-2 w-2 rounded-full bg-red-500">
                                 <div className="absolute top-0 left-0 h-full w-full animate-ping rounded-full bg-red-400 opacity-75"></div>
                               </div>
@@ -84,7 +96,7 @@ function Sidebar({ collapsed, onToggle }) {
                     <>
                       <div className="relative">
                         {item.icon()}
-                        {item.lable === "CHATS" && (
+                        {item.lable === "CHATS" && unreadCount > 0 && (
                           <div className="absolute -top-1 -right-1 h-2 w-2 rounded-full bg-red-500">
                             <div className="absolute top-0 left-0 h-full w-full animate-ping rounded-full bg-red-400 opacity-75"></div>
                           </div>

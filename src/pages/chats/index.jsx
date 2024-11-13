@@ -14,6 +14,11 @@ import {
   BiSend as IconSend,
   BiVideo as IconVideo,
   BiArrowToBottom,
+  BiTrash as IconTrash,
+  BiCheck as IconCheck,
+  BiBell as IconBell,
+  BiTimer as IconTimer,
+  BiBlock as IconBlock,
 } from "react-icons/bi";
 import { cn } from "@/lib/utils";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -21,6 +26,14 @@ import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { chatService } from "@/services/chats-service";
 import { socketService } from "@/services/socket-service";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuShortcut,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import ErrorBoundary from '@/components/ErrorBoundary';
 
 // Message Status Component
 function MessageStatus({ message, isCurrentUser }) {
@@ -40,33 +53,122 @@ function MessageStatus({ message, isCurrentUser }) {
 }
 
 // Message Component
-function Message({ message, isCurrentUser }) {
+function Message({ message, isCurrentUser, onMessageAction, isSelected, onSelect, selectionMode }) {
+  const [showActions, setShowActions] = useState(false);
+
+  const handleMessageClick = (e) => {
+    if (selectionMode) {
+      onSelect(message);
+    } else if (e.detail === 2) { // Double click
+      onSelect(message);
+    }
+  };
+
   return (
     <div
       className={cn(
-        "flex w-full px-2",
-        isCurrentUser ? "justify-end" : "justify-start"
+        "flex w-full px-7 py-1 group relative hover:bg-muted/10 transition-colors",
+        isCurrentUser ? "justify-end" : "justify-start",
+        isSelected && "bg-muted/20"
       )}
+      onClick={handleMessageClick}
     >
-      <div
-        className={cn(
-          "inline-block max-w-[65%]",
-          isCurrentUser ? "bg-primary text-primary-foreground" : "bg-muted",
-          "rounded-2xl px-3 py-2"
-        )}
-        style={{ wordBreak: 'break-word' }}
-      >
-        <div className="text-sm whitespace-pre-wrap">
-          {message.message}
+      {/* Radio Selection */}
+      <div className={cn(
+        "absolute top-1/2 -translate-y-1/2 transition-opacity",
+        isCurrentUser ? "right-1" : "left-1",
+        selectionMode ? "opacity-100" : "opacity-0"
+      )}>
+        <div className={cn(
+          "h-5 w-5 rounded-full border-2 flex items-center justify-center",
+          isSelected ? "border-primary bg-primary" : "border-muted-foreground"
+        )}>
+          {isSelected && <IconCheck className="h-3 w-3 text-primary-foreground" />}
         </div>
+      </div>
+
+      <div
+        className="inline-block max-w-[65%] relative group"
+        onMouseEnter={() => isCurrentUser && !selectionMode && setShowActions(true)}
+        onMouseLeave={() => isCurrentUser && !selectionMode && setShowActions(false)}
+      >
+        {/* Message Actions Dropdown - Only show for current user's messages */}
+        {isCurrentUser && (
+          <div className={cn(
+            "absolute top-1/2 -translate-y-1/2 z-10 transition-opacity",
+            "-left-10",
+            showActions && !selectionMode ? "opacity-100" : "opacity-0"
+          )}>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="h-8 w-8 rounded-full hover:bg-muted"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setShowActions(true);
+                  }}
+                >
+                  <IconDotsVertical className="h-4 w-4" />
+                  <span className="sr-only">Open menu</span>
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent 
+                align={isCurrentUser ? "start" : "end"} 
+                className="w-[160px]"
+                onCloseAutoFocus={(e) => e.preventDefault()}
+              >
+                {/* Only show Edit option if message is not read */}
+                {!message.is_read && (
+                  <DropdownMenuItem 
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      onMessageAction('edit', message);
+                    }}
+                  >
+                    Edit
+                    <DropdownMenuShortcut>
+                      <IconEdit className="h-4 w-4" />
+                    </DropdownMenuShortcut>
+                  </DropdownMenuItem>
+                )}
+                <DropdownMenuItem 
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    onMessageAction('delete', message);
+                  }}
+                  className="text-destructive"
+                >
+                  Delete
+                  <DropdownMenuShortcut>
+                    <IconTrash className="h-4 w-4" />
+                  </DropdownMenuShortcut>
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </div>
+        )}
+
+        {/* Message Content */}
         <div
           className={cn(
+            "relative",
+            isCurrentUser ? "bg-primary text-primary-foreground" : "bg-muted",
+            "rounded-2xl px-3 py-2"
+          )}
+          style={{ wordBreak: 'break-word' }}
+        >
+          <div className="text-sm whitespace-pre-wrap">
+            {message.message}
+          </div>
+          <div className={cn(
             "mt-1 flex items-center justify-end gap-1 text-[10px]",
             isCurrentUser ? "text-primary-foreground/60" : "text-muted-foreground"
-          )}
-        >
-          <span>{format(new Date(message.timestamp), "HH:mm")}</span>
-          <MessageStatus message={message} isCurrentUser={isCurrentUser} />
+          )}>
+            <span>{format(new Date(message.timestamp), "HH:mm")}</span>
+            <MessageStatus message={message} isCurrentUser={isCurrentUser} />
+          </div>
         </div>
       </div>
     </div>
@@ -121,11 +223,11 @@ function ChatList({ search, setSearch, filteredChatList, selectedUser, handleCha
                   )}
                 </div>
                 <div className="flex items-center gap-2">
-                  <span className="truncate text-xs text-muted-foreground">
+                  <span className="truncate overflow-hidden w-[180px]  text-xs text-muted-foreground">
                     {chat.last_message?.message || "No messages yet"}
                   </span>
                   {chat.unread_count > 0 && (
-                    <span className="flex h-5 w-5 items-center justify-center rounded-full bg-primary text-xs text-primary-foreground">
+                    <span className="flex h-5 absolute right-8 w-5 items-center justify-center rounded-full bg-primary text-xs text-primary-foreground">
                       {chat.unread_count}
                     </span>
                   )}
@@ -183,7 +285,7 @@ function ChatArea({
           </div>
         </div>
 
-        <div className="flex items-center gap-1">
+        <div className="flex items-center gap-1 shrink-0">
           <Button
             size="icon"
             variant="ghost"
@@ -198,13 +300,62 @@ function ChatArea({
           >
             <IconPhone className="h-4 w-4 text-muted-foreground" />
           </Button>
-          <Button
-            size="icon"
-            variant="ghost"
-            className="h-8 w-8 rounded-full"
-          >
-            <IconDotsVertical className="h-4 w-4 text-muted-foreground" />
-          </Button>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button
+                size="icon"
+                variant="ghost"
+                className="h-8 w-8 rounded-full"
+              >
+                <IconDotsVertical className="h-4 w-4 text-muted-foreground" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end" className="w-[200px]">
+              <DropdownMenuItem
+                onClick={() => {
+                  if (window.confirm('Are you sure you want to clear all messages? This cannot be undone.')) {
+                    // Add your clear chat logic here
+                    chatService.clearChat(selectedUser.id);
+                  }
+                }}
+                className="text-destructive"
+              >
+                Clear Chat
+                <DropdownMenuShortcut>
+                  <IconTrash className="h-4 w-4" />
+                </DropdownMenuShortcut>
+              </DropdownMenuItem>
+              
+              <DropdownMenuItem>
+                Mute Notifications
+                <DropdownMenuShortcut>
+                  <IconBell className="h-4 w-4" />
+                </DropdownMenuShortcut>
+              </DropdownMenuItem>
+
+              <DropdownMenuItem>
+                Disappearing Messages
+                <DropdownMenuShortcut>
+                  <IconTimer className="h-4 w-4" />
+                </DropdownMenuShortcut>
+              </DropdownMenuItem>
+
+              <DropdownMenuItem
+                onClick={() => {
+                  if (window.confirm('Are you sure you want to block this user?')) {
+                    // Add your block user logic here
+                    chatService.blockUser(selectedUser.id);
+                  }
+                }}
+                className="text-destructive"
+              >
+                Block User
+                <DropdownMenuShortcut>
+                  <IconBlock className="h-4 w-4" />
+                </DropdownMenuShortcut>
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
         </div>
       </div>
 
@@ -293,13 +444,24 @@ function ChatArea({
 }
 
 // Main Chats Component
-export default function Chats() {
+export default function ChatsWrapper() {
+  return (
+    <ErrorBoundary>
+      <Chats />
+    </ErrorBoundary>
+  );
+}
+
+function Chats() {
   const [search, setSearch] = useState("");
   const [selectedUser, setSelectedUser] = useState(null);
   const [messageInput, setMessageInput] = useState("");
   const queryClient = useQueryClient();
   const scrollAreaRef = useRef(null);
   const [showScrollButton, setShowScrollButton] = useState(false);
+  const [selectedMessages, setSelectedMessages] = useState([]);
+  const [selectionMode, setSelectionMode] = useState(false);
+  const [editingMessage, setEditingMessage] = useState(null);
 
   // Send message mutation
   const sendMessageMutation = useMutation({
@@ -328,17 +490,23 @@ export default function Chats() {
   }, []);
 
   // Handle sending message
-  const handleSendMessage = (e) => {
+  const handleSendMessage = async (e) => {
     e.preventDefault();
     if (!messageInput.trim() || !selectedUser) return;
 
-    sendMessageMutation.mutate({
-      userId: selectedUser.id,
-      message: messageInput.trim(),
-    });
-
-    setMessageInput("");
-    scrollToBottom();
+    try {
+      if (editingMessage) {
+        await chatService.editMessage(editingMessage.id, messageInput.trim());
+        setEditingMessage(null);
+      } else {
+        await chatService.sendMessage(selectedUser.id, messageInput.trim());
+      }
+      setMessageInput("");
+      queryClient.invalidateQueries(["messages", selectedUser?.id]);
+      scrollToBottom();
+    } catch (error) {
+      console.error("Error sending/editing message:", error);
+    }
   };
 
   // Fetch messages for selected user
@@ -395,20 +563,26 @@ export default function Chats() {
   useEffect(() => {
     if (!selectedUser) return;
 
-    socketService.connect();
+    let messageUnsubscribe = () => {};
 
-    const messageUnsubscribe = socketService.onMessage((message) => {
-      queryClient.invalidateQueries(["messages", selectedUser.id]);
-      queryClient.invalidateQueries(["chats"]);
-    });
-
-    const statusUnsubscribe = socketService.onStatusUpdate((data) => {
-      queryClient.invalidateQueries(["messages", selectedUser.id]);
-    });
+    try {
+      socketService.connect();
+      
+      messageUnsubscribe = socketService.onMessage((data) => {
+        if (data.type === 'new_message') {
+          queryClient.invalidateQueries(["messages", selectedUser?.id]);
+          queryClient.invalidateQueries(["chats"]);
+        } else if (data.type === 'chat_cleared') {
+          queryClient.invalidateQueries(["messages", selectedUser?.id]);
+          queryClient.invalidateQueries(["chats"]);
+        }
+      });
+    } catch (error) {
+      console.error('Error setting up WebSocket:', error);
+    }
 
     return () => {
       messageUnsubscribe();
-      statusUnsubscribe();
     };
   }, [selectedUser?.id, queryClient]);
 
@@ -426,11 +600,95 @@ export default function Chats() {
     },
   });
 
-  // Handle chat selection
+  // Handle chat selection (reset selection mode)
   const handleChatSelect = (chat) => {
     setSelectedUser(chat.user);
+    setSelectionMode(false);
+    setSelectedMessages([]);
     if (chat.unread_count > 0) {
       markMessagesAsRead.mutate(chat.user.id);
+    }
+  };
+
+  // Handle message actions (edit/delete)
+  const handleMessageAction = async (action, message) => {
+    if (action === 'edit') {
+      setEditingMessage(message);
+      setMessageInput(message.message);
+    } else if (action === 'delete') {
+      if (window.confirm('Are you sure you want to delete this message?')) {
+        try {
+          await chatService.deleteMessage(message.id);
+          queryClient.invalidateQueries(["messages", selectedUser?.id]);
+        } catch (error) {
+          console.error("Error deleting message:", error);
+        }
+      }
+    }
+  };
+
+  // Handle message selection
+  const handleMessageSelect = (message) => {
+    if (!selectionMode) {
+      setSelectionMode(true);
+      setSelectedMessages([message]);
+    } else {
+      setSelectedMessages(prev => {
+        const isSelected = prev.some(m => m.id === message.id);
+        if (isSelected) {
+          const newSelection = prev.filter(m => m.id !== message.id);
+          if (newSelection.length === 0) {
+            setSelectionMode(false);
+          }
+          return newSelection;
+        } else {
+          return [...prev, message];
+        }
+      });
+    }
+  };
+
+  // Handle exit selection mode
+  const handleExitSelectionMode = () => {
+    setSelectionMode(false);
+    setSelectedMessages([]);
+  };
+
+  // Handle bulk delete
+  const handleBulkDelete = async () => {
+    if (window.confirm(`Delete ${selectedMessages.length} messages?`)) {
+      try {
+        await chatService.deleteBulkMessages(selectedMessages.map(m => m.id));
+        queryClient.invalidateQueries(["messages", selectedUser?.id]);
+        setSelectionMode(false);
+        setSelectedMessages([]);
+      } catch (error) {
+        console.error("Error deleting messages:", error);
+      }
+    }
+  };
+
+  // Add this mutation
+  const clearChatMutation = useMutation({
+    mutationFn: (userId) => chatService.clearChat(userId),
+    onSuccess: () => {
+      // Invalidate both messages and chat list queries
+      queryClient.invalidateQueries(["messages", selectedUser?.id]);
+      queryClient.invalidateQueries(["chats"]);
+      
+      // Optionally clear the cache directly
+      queryClient.setQueryData(["messages", selectedUser?.id], []);
+    },
+  });
+
+  // Update the dropdown menu handler
+  const handleClearChat = async () => {
+    if (window.confirm('Are you sure you want to clear all messages? This cannot be undone.')) {
+      try {
+        await clearChatMutation.mutateAsync(selectedUser.id);
+      } catch (error) {
+        console.error("Error clearing chat:", error);
+      }
     }
   };
 
@@ -508,17 +766,82 @@ export default function Chats() {
                 >
                   <IconPhone className="h-4 w-4 text-muted-foreground" />
                 </Button>
-                <Button
-                  size="icon"
-                  variant="ghost"
-                  className="h-8 w-8 rounded-full"
-                >
-                  <IconDotsVertical className="h-4 w-4 text-muted-foreground" />
-                </Button>
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button
+                      size="icon"
+                      variant="ghost"
+                      className="h-8 w-8 rounded-full"
+                    >
+                      <IconDotsVertical className="h-4 w-4 text-muted-foreground" />
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="end" className="w-[200px]">
+                    <DropdownMenuItem
+                      onClick={handleClearChat}
+                      className="text-destructive"
+                    >
+                      Clear Chat
+                      <DropdownMenuShortcut>
+                        <IconTrash className="h-4 w-4" />
+                      </DropdownMenuShortcut>
+                    </DropdownMenuItem>
+                    
+                    <DropdownMenuItem>
+                      Mute Notifications
+                      <DropdownMenuShortcut>
+                        <IconBell className="h-4 w-4" />
+                      </DropdownMenuShortcut>
+                    </DropdownMenuItem>
+
+                    <DropdownMenuItem>
+                      Disappearing Messages
+                      <DropdownMenuShortcut>
+                        <IconTimer className="h-4 w-4" />
+                      </DropdownMenuShortcut>
+                    </DropdownMenuItem>
+
+                    <DropdownMenuItem
+                      onClick={() => {
+                        if (window.confirm('Are you sure you want to block this user?')) {
+                          // Add your block user logic here
+                          chatService.blockUser(selectedUser.id);
+                        }
+                      }}
+                      className="text-destructive"
+                    >
+                      Block User
+                      <DropdownMenuShortcut>
+                        <IconBlock className="h-4 w-4" />
+                      </DropdownMenuShortcut>
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
               </div>
             </div>
 
-            {/* Updated Messages Container */}
+            {/* Selection Mode Header */}
+            {selectionMode && (
+              <div className="flex items-center justify-between px-4 py-2 border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+                <div className="flex items-center gap-2">
+                  <button
+                    onClick={handleExitSelectionMode}
+                    className="p-2 hover:bg-muted rounded-full"
+                  >
+                    <IconArrowLeft className="h-5 w-5" />
+                  </button>
+                  <span className="font-medium">{selectedMessages.length} selected</span>
+                </div>
+                <button
+                  onClick={handleBulkDelete}
+                  className="text-destructive hover:bg-muted p-2 rounded-full"
+                >
+                  <IconTrash className="h-5 w-5" />
+                </button>
+              </div>
+            )}
+
+            {/* Messages Container */}
             <ScrollArea 
               ref={scrollAreaRef}
               className="flex-1 w-full"
@@ -529,6 +852,10 @@ export default function Chats() {
                     <Message
                       message={message}
                       isCurrentUser={message.sender.id !== selectedUser.id}
+                      onMessageAction={handleMessageAction}
+                      isSelected={selectedMessages.some(m => m.id === message.id)}
+                      onSelect={handleMessageSelect}
+                      selectionMode={selectionMode}
                     />
                   </div>
                 ))}
@@ -593,7 +920,7 @@ export default function Chats() {
                   className="h-[40px] w-[40px] shrink-0"
                   disabled={!messageInput.trim()}
                 >
-                  <IconSend className="h-4 w-4" />
+                  {editingMessage ? <IconEdit className="h-4 w-4" /> : <IconSend className="h-4 w-4" />}
                 </Button>
               </form>
             </div>

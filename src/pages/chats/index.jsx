@@ -77,7 +77,7 @@ function Message({ message, isCurrentUser }) {
 function ChatList({ search, setSearch, filteredChatList, selectedUser, handleChatSelect }) {
   return (
     <div className={cn(
-      "flex flex-col border-r absolute md:relative w-full md:w-[280px] xl:w-[340px] bg-background z-20 h-full",
+      "flex flex-col md:flex-none flex-1 border-r  md:relative w-full md:w-[280px] xl:w-[340px] bg-background z-20 h-full",
       selectedUser ? "hidden md:flex" : "flex"
     )}>
       {/* Search Header */}
@@ -600,7 +600,7 @@ export default function Chats() {
           </div>
         ) : (
           <div className="hidden md:flex flex-1 items-center justify-center">
-            <p className="text-muted-foreground">
+            <p className="text-muted-foreground whitespace-nowrap md:text-sm xl:text-lg">
               Select a chat to start messaging
             </p>
           </div>

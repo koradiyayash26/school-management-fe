@@ -254,7 +254,7 @@ function ChatList({
                   src={chat.user.profile_image}
                   alt={chat.user.username}
                 />
-                <AvatarFallback>
+                <AvatarFallback className="dark:border-none border dark:bg-muted bg-white">
                   {chat.user.username[0].toUpperCase()}
                 </AvatarFallback>
               </Avatar>
@@ -839,7 +839,7 @@ function Chats() {
                     src={selectedUser.profile_image}
                     alt={selectedUser.username}
                   />
-                  <AvatarFallback>
+                  <AvatarFallback className="border dark:border-none">
                     {selectedUser.username[0].toUpperCase()}
                   </AvatarFallback>
                 </Avatar>

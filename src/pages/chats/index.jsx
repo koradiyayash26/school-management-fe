@@ -839,7 +839,9 @@ function Chats() {
         <div className="flex items-center justify-between gap-2">
           <div className="flex-1">
             <div className="flex items-center gap-2">
-              <span className="text-xs text-muted-foreground">Editing message</span>
+              <span className="text-xs text-muted-foreground">
+                Editing message
+              </span>
               <IconEdit className="h-3 w-3 text-muted-foreground" />
             </div>
             <p className="text-sm text-muted-foreground line-clamp-2 mt-1">
@@ -852,13 +854,41 @@ function Chats() {
             className="h-6 w-6 shrink-0"
             onClick={() => {
               setEditingMessage(null);
-              setMessageInput('');
+              setMessageInput("");
             }}
           >
             <IconX className="h-4 w-4" />
           </Button>
         </div>
       </div>
+    );
+  };
+
+  // Add this component inside Chats function before the return statement
+  const AttachmentDropdown = () => {
+    return (
+      <DropdownMenu>
+        <DropdownMenuTrigger asChild>
+          <Button
+            type="button"
+            variant="ghost"
+            size="icon"
+            className="sm:hidden h-8 w-8"
+          >
+            <IconPlus className="h-4 w-4 text-muted-foreground" />
+          </Button>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent align="start" className="w-[200px]">
+          <DropdownMenuItem>
+            <IconPhotoPlus className="h-4 w-4 mr-2" />
+            Add Image
+          </DropdownMenuItem>
+          <DropdownMenuItem>
+            <IconPaperclip className="h-4 w-4 mr-2" />
+            Attach File
+          </DropdownMenuItem>
+        </DropdownMenuContent>
+      </DropdownMenu>
     );
   };
 
@@ -1111,7 +1141,7 @@ function Chats() {
             <div className="border-t shrink-0 bg-background">
               {/* Add EditMessageBox above the form */}
               <EditMessageBox />
-              
+
               <div className="p-4">
                 <form
                   onSubmit={handleSendMessage}
@@ -1120,19 +1150,15 @@ function Chats() {
                   <div className="relative flex-1 min-w-0">
                     <div className="flex items-center gap-2 rounded-md border border-input bg-background px-3 py-2">
                       <div className="flex gap-1 shrink-0">
+                        {/* Dropdown for small screens */}
+                        <AttachmentDropdown />
+
+                        {/* Regular buttons for larger screens */}
                         <Button
                           type="button"
                           variant="ghost"
                           size="icon"
                           className="hidden sm:inline-flex h-8 w-8"
-                        >
-                          <IconPlus className="h-4 w-4 text-muted-foreground" />
-                        </Button>
-                        <Button
-                          type="button"
-                          variant="ghost"
-                          size="icon"
-                          className="h-8 w-8"
                         >
                           <IconPhotoPlus className="h-4 w-4 text-muted-foreground" />
                         </Button>
@@ -1140,7 +1166,7 @@ function Chats() {
                           type="button"
                           variant="ghost"
                           size="icon"
-                          className="h-8 w-8"
+                          className="hidden sm:inline-flex h-8 w-8"
                         >
                           <IconPaperclip className="h-4 w-4 text-muted-foreground" />
                         </Button>

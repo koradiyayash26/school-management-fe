@@ -33,7 +33,17 @@ import {
   DropdownMenuShortcut,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import ErrorBoundary from '@/components/ErrorBoundary';
+import ErrorBoundary from "@/components/ErrorBoundary";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import toast, { Toaster } from "react-hot-toast";
 
 // Message Status Component
 function MessageStatus({ message, isCurrentUser }) {
@@ -53,13 +63,21 @@ function MessageStatus({ message, isCurrentUser }) {
 }
 
 // Message Component
-function Message({ message, isCurrentUser, onMessageAction, isSelected, onSelect, selectionMode }) {
+function Message({
+  message,
+  isCurrentUser,
+  onMessageAction,
+  isSelected,
+  onSelect,
+  selectionMode,
+}) {
   const [showActions, setShowActions] = useState(false);
 
   const handleMessageClick = (e) => {
     if (selectionMode) {
       onSelect(message);
-    } else if (e.detail === 2) { // Double click
+    } else if (e.detail === 2) {
+      // Double click
       onSelect(message);
     }
   };
@@ -74,31 +92,43 @@ function Message({ message, isCurrentUser, onMessageAction, isSelected, onSelect
       onClick={handleMessageClick}
     >
       {/* Radio Selection */}
-      <div className={cn(
-        "absolute top-1/2 -translate-y-1/2 transition-opacity",
-        isCurrentUser ? "right-1" : "left-1",
-        selectionMode ? "opacity-100" : "opacity-0"
-      )}>
-        <div className={cn(
-          "h-5 w-5 rounded-full border-2 flex items-center justify-center",
-          isSelected ? "border-primary bg-primary" : "border-muted-foreground"
-        )}>
-          {isSelected && <IconCheck className="h-3 w-3 text-primary-foreground" />}
+      <div
+        className={cn(
+          "absolute top-1/2 -translate-y-1/2 transition-opacity",
+          isCurrentUser ? "left-1" : "left-1",
+          selectionMode ? "opacity-100" : "opacity-0"
+        )}
+      >
+        <div
+          className={cn(
+            "h-5 w-5 border-2 flex items-center justify-center",
+            isSelected ? "border-primary bg-primary" : "border-muted-foreground"
+          )}
+        >
+          {isSelected && (
+            <IconCheck className="h-5 w-5 text-primary-foreground" />
+          )}
         </div>
       </div>
 
       <div
         className="inline-block max-w-[65%] relative group"
-        onMouseEnter={() => isCurrentUser && !selectionMode && setShowActions(true)}
-        onMouseLeave={() => isCurrentUser && !selectionMode && setShowActions(false)}
+        onMouseEnter={() =>
+          isCurrentUser && !selectionMode && setShowActions(true)
+        }
+        onMouseLeave={() =>
+          isCurrentUser && !selectionMode && setShowActions(false)
+        }
       >
         {/* Message Actions Dropdown - Only show for current user's messages */}
         {isCurrentUser && (
-          <div className={cn(
-            "absolute top-1/2 -translate-y-1/2 z-10 transition-opacity",
-            "-left-10",
-            showActions && !selectionMode ? "opacity-100" : "opacity-0"
-          )}>
+          <div
+            className={cn(
+              "absolute top-1/2 -translate-y-1/2 z-10 transition-opacity",
+              "-left-10",
+              showActions && !selectionMode ? "opacity-100" : "opacity-0"
+            )}
+          >
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button
@@ -114,17 +144,17 @@ function Message({ message, isCurrentUser, onMessageAction, isSelected, onSelect
                   <span className="sr-only">Open menu</span>
                 </Button>
               </DropdownMenuTrigger>
-              <DropdownMenuContent 
-                align={isCurrentUser ? "start" : "end"} 
+              <DropdownMenuContent
+                align={isCurrentUser ? "start" : "end"}
                 className="w-[160px]"
                 onCloseAutoFocus={(e) => e.preventDefault()}
               >
                 {/* Only show Edit option if message is not read */}
                 {!message.is_read && (
-                  <DropdownMenuItem 
+                  <DropdownMenuItem
                     onClick={(e) => {
                       e.stopPropagation();
-                      onMessageAction('edit', message);
+                      onMessageAction("edit", message);
                     }}
                   >
                     Edit
@@ -133,10 +163,10 @@ function Message({ message, isCurrentUser, onMessageAction, isSelected, onSelect
                     </DropdownMenuShortcut>
                   </DropdownMenuItem>
                 )}
-                <DropdownMenuItem 
+                <DropdownMenuItem
                   onClick={(e) => {
                     e.stopPropagation();
-                    onMessageAction('delete', message);
+                    onMessageAction("delete", message);
                   }}
                   className="text-destructive"
                 >
@@ -157,15 +187,17 @@ function Message({ message, isCurrentUser, onMessageAction, isSelected, onSelect
             isCurrentUser ? "bg-primary text-primary-foreground" : "bg-muted",
             "rounded-2xl px-3 py-2"
           )}
-          style={{ wordBreak: 'break-word' }}
+          style={{ wordBreak: "break-word" }}
         >
-          <div className="text-sm whitespace-pre-wrap">
-            {message.message}
-          </div>
-          <div className={cn(
-            "mt-1 flex items-center justify-end gap-1 text-[10px]",
-            isCurrentUser ? "text-primary-foreground/60" : "text-muted-foreground"
-          )}>
+          <div className="text-sm whitespace-pre-wrap">{message.message}</div>
+          <div
+            className={cn(
+              "mt-1 flex items-center justify-end gap-1 text-[10px]",
+              isCurrentUser
+                ? "text-primary-foreground/60"
+                : "text-muted-foreground"
+            )}
+          >
             <span>{format(new Date(message.timestamp), "HH:mm")}</span>
             <MessageStatus message={message} isCurrentUser={isCurrentUser} />
           </div>
@@ -176,12 +208,20 @@ function Message({ message, isCurrentUser, onMessageAction, isSelected, onSelect
 }
 
 // ChatList Component
-function ChatList({ search, setSearch, filteredChatList, selectedUser, handleChatSelect }) {
+function ChatList({
+  search,
+  setSearch,
+  filteredChatList,
+  selectedUser,
+  handleChatSelect,
+}) {
   return (
-    <div className={cn(
-      "flex flex-col md:flex-none flex-1 border-r  md:relative w-full md:w-[280px] xl:w-[340px] bg-background z-20 h-full",
-      selectedUser ? "hidden md:flex" : "flex"
-    )}>
+    <div
+      className={cn(
+        "flex flex-col md:flex-none flex-1 border-r  md:relative w-full md:w-[280px] xl:w-[340px] bg-background z-20 h-full",
+        selectedUser ? "hidden md:flex" : "flex"
+      )}
+    >
       {/* Search Header */}
       <div className="border-b p-4">
         <h2 className="text-lg font-semibold tracking-tight mb-4">Messages</h2>
@@ -210,8 +250,13 @@ function ChatList({ search, setSearch, filteredChatList, selectedUser, handleCha
               )}
             >
               <Avatar className="h-9 w-9">
-                <AvatarImage src={chat.user.profile_image} alt={chat.user.username} />
-                <AvatarFallback>{chat.user.username[0].toUpperCase()}</AvatarFallback>
+                <AvatarImage
+                  src={chat.user.profile_image}
+                  alt={chat.user.username}
+                />
+                <AvatarFallback>
+                  {chat.user.username[0].toUpperCase()}
+                </AvatarFallback>
               </Avatar>
               <div className="flex-1 overflow-hidden">
                 <div className="flex items-center justify-between">
@@ -272,13 +317,20 @@ function ChatArea({
           >
             <IconArrowLeft className="h-5 w-5" />
           </button>
-          
+
           <Avatar className="h-8 w-8">
-            <AvatarImage src={selectedUser.profile_image} alt={selectedUser.username} />
-            <AvatarFallback>{selectedUser.username[0].toUpperCase()}</AvatarFallback>
+            <AvatarImage
+              src={selectedUser.profile_image}
+              alt={selectedUser.username}
+            />
+            <AvatarFallback>
+              {selectedUser.username[0].toUpperCase()}
+            </AvatarFallback>
           </Avatar>
           <div>
-            <p className="text-sm font-medium leading-none">{selectedUser.username}</p>
+            <p className="text-sm font-medium leading-none">
+              {selectedUser.username}
+            </p>
             <p className="text-xs text-muted-foreground">
               {selectedUser.status || "Online"}
             </p>
@@ -313,7 +365,11 @@ function ChatArea({
             <DropdownMenuContent align="end" className="w-[200px]">
               <DropdownMenuItem
                 onClick={() => {
-                  if (window.confirm('Are you sure you want to clear all messages? This cannot be undone.')) {
+                  if (
+                    window.confirm(
+                      "Are you sure you want to clear all messages? This cannot be undone."
+                    )
+                  ) {
                     // Add your clear chat logic here
                     chatService.clearChat(selectedUser.id);
                   }
@@ -325,7 +381,7 @@ function ChatArea({
                   <IconTrash className="h-4 w-4" />
                 </DropdownMenuShortcut>
               </DropdownMenuItem>
-              
+
               <DropdownMenuItem>
                 Mute Notifications
                 <DropdownMenuShortcut>
@@ -342,7 +398,9 @@ function ChatArea({
 
               <DropdownMenuItem
                 onClick={() => {
-                  if (window.confirm('Are you sure you want to block this user?')) {
+                  if (
+                    window.confirm("Are you sure you want to block this user?")
+                  ) {
                     // Add your block user logic here
                     chatService.blockUser(selectedUser.id);
                   }
@@ -462,6 +520,8 @@ function Chats() {
   const [selectedMessages, setSelectedMessages] = useState([]);
   const [selectionMode, setSelectionMode] = useState(false);
   const [editingMessage, setEditingMessage] = useState(null);
+  const [isOpenClearDialog, setIsOpenClearDialog] = useState(false);
+  const [isClearing, setIsClearing] = useState(false);
 
   // Send message mutation
   const sendMessageMutation = useMutation({
@@ -512,7 +572,8 @@ function Chats() {
   // Fetch messages for selected user
   const { data: messages = [] } = useQuery({
     queryKey: ["messages", selectedUser?.id],
-    queryFn: () => selectedUser ? chatService.getChatMessages(selectedUser.id) : [],
+    queryFn: () =>
+      selectedUser ? chatService.getChatMessages(selectedUser.id) : [],
     enabled: !!selectedUser,
   });
 
@@ -567,18 +628,18 @@ function Chats() {
 
     try {
       socketService.connect();
-      
+
       messageUnsubscribe = socketService.onMessage((data) => {
-        if (data.type === 'new_message') {
+        if (data.type === "new_message") {
           queryClient.invalidateQueries(["messages", selectedUser?.id]);
           queryClient.invalidateQueries(["chats"]);
-        } else if (data.type === 'chat_cleared') {
+        } else if (data.type === "chat_cleared") {
           queryClient.invalidateQueries(["messages", selectedUser?.id]);
           queryClient.invalidateQueries(["chats"]);
         }
       });
     } catch (error) {
-      console.error('Error setting up WebSocket:', error);
+      console.error("Error setting up WebSocket:", error);
     }
 
     return () => {
@@ -587,9 +648,12 @@ function Chats() {
   }, [selectedUser?.id, queryClient]);
 
   // Filter conversations based on search
-  const filteredChatList = chats?.filter((chat) =>
-    chat?.user?.username?.toLowerCase().includes(search.toLowerCase()) ?? false
-  ) ?? [];
+  const filteredChatList =
+    chats?.filter(
+      (chat) =>
+        chat?.user?.username?.toLowerCase().includes(search.toLowerCase()) ??
+        false
+    ) ?? [];
 
   // Mark messages as read when selecting a chat
   const markMessagesAsRead = useMutation({
@@ -612,11 +676,11 @@ function Chats() {
 
   // Handle message actions (edit/delete)
   const handleMessageAction = async (action, message) => {
-    if (action === 'edit') {
+    if (action === "edit") {
       setEditingMessage(message);
       setMessageInput(message.message);
-    } else if (action === 'delete') {
-      if (window.confirm('Are you sure you want to delete this message?')) {
+    } else if (action === "delete") {
+      if (window.confirm("Are you sure you want to delete this message?")) {
         try {
           await chatService.deleteMessage(message.id);
           queryClient.invalidateQueries(["messages", selectedUser?.id]);
@@ -633,10 +697,10 @@ function Chats() {
       setSelectionMode(true);
       setSelectedMessages([message]);
     } else {
-      setSelectedMessages(prev => {
-        const isSelected = prev.some(m => m.id === message.id);
+      setSelectedMessages((prev) => {
+        const isSelected = prev.some((m) => m.id === message.id);
         if (isSelected) {
-          const newSelection = prev.filter(m => m.id !== message.id);
+          const newSelection = prev.filter((m) => m.id !== message.id);
           if (newSelection.length === 0) {
             setSelectionMode(false);
           }
@@ -658,7 +722,7 @@ function Chats() {
   const handleBulkDelete = async () => {
     if (window.confirm(`Delete ${selectedMessages.length} messages?`)) {
       try {
-        await chatService.deleteBulkMessages(selectedMessages.map(m => m.id));
+        await chatService.deleteBulkMessages(selectedMessages.map((m) => m.id));
         queryClient.invalidateQueries(["messages", selectedUser?.id]);
         setSelectionMode(false);
         setSelectedMessages([]);
@@ -675,20 +739,28 @@ function Chats() {
       // Invalidate both messages and chat list queries
       queryClient.invalidateQueries(["messages", selectedUser?.id]);
       queryClient.invalidateQueries(["chats"]);
-      
+
       // Optionally clear the cache directly
       queryClient.setQueryData(["messages", selectedUser?.id], []);
+      setTimeout(() => {
+        toast.success("Chat Clear Successfully");
+      }, 1000);
     },
   });
 
   // Update the dropdown menu handler
   const handleClearChat = async () => {
-    if (window.confirm('Are you sure you want to clear all messages? This cannot be undone.')) {
-      try {
-        await clearChatMutation.mutateAsync(selectedUser.id);
-      } catch (error) {
-        console.error("Error clearing chat:", error);
-      }
+    try {
+      setIsClearing(true);
+      await clearChatMutation.mutateAsync(selectedUser.id);
+      setIsOpenClearDialog(false);
+    } catch (error) {
+      console.error("Error clearing chat:", error);
+      toast.error(error);
+      setIsClearing(false);
+    } finally {
+      setIsClearing(false);
+      setIsOpenClearDialog(false);
     }
   };
 
@@ -714,6 +786,31 @@ function Chats() {
 
   return (
     <div className="h-[calc(100vh-8rem)] flex flex-col overflow-hidden rounded-lg border bg-background shadow">
+      <Toaster
+        position="top-center"
+        reverseOrder={false}
+        gutter={8}
+        containerClassName=""
+        containerStyle={{}}
+        toastOptions={{
+          // Define default options
+          className: "",
+          duration: 5000,
+          style: {
+            background: "#363636",
+            color: "#fff",
+          },
+
+          // Default options for specific types
+          success: {
+            duration: 3000,
+            theme: {
+              primary: "green",
+              secondary: "black",
+            },
+          },
+        }}
+      />
       <div className="flex h-full overflow-hidden">
         {/* Chat List Sidebar */}
         <ChatList
@@ -736,10 +833,15 @@ function Chats() {
                 >
                   <IconArrowLeft className="h-5 w-5" />
                 </button>
-                
+
                 <Avatar className="h-8 w-8 shrink-0">
-                  <AvatarImage src={selectedUser.profile_image} alt={selectedUser.username} />
-                  <AvatarFallback>{selectedUser.username[0].toUpperCase()}</AvatarFallback>
+                  <AvatarImage
+                    src={selectedUser.profile_image}
+                    alt={selectedUser.username}
+                  />
+                  <AvatarFallback>
+                    {selectedUser.username[0].toUpperCase()}
+                  </AvatarFallback>
                 </Avatar>
                 <div className="min-w-0 overflow-hidden">
                   <p className="text-sm font-medium leading-none truncate">
@@ -766,6 +868,54 @@ function Chats() {
                 >
                   <IconPhone className="h-4 w-4 text-muted-foreground" />
                 </Button>
+                {/* dialog */}
+                <Dialog
+                  open={isOpenClearDialog}
+                  onOpenChange={setIsOpenClearDialog}
+                >
+                  <div className="block md:flex gap-4">
+                    <DialogTrigger asChild>
+                      <Button
+                        variant="destructive"
+                        className="bg-red-600 text-white hidden hover:bg-red-700 w-full sm:w-auto"
+                      >
+                        Clear ChatBoto
+                      </Button>
+                    </DialogTrigger>
+                  </div>
+                  <DialogContent className="sm:max-w-[425px]">
+                    <DialogHeader>
+                      <DialogTitle className="text-left">
+                        Clear Chat
+                      </DialogTitle>
+                      <DialogDescription className="text-left">
+                        Click clear to clear chat.
+                      </DialogDescription>
+                    </DialogHeader>
+                    <DialogFooter>
+                      <div className="flex flex-col justify-end mt-2 lg:mt-0">
+                        <Button
+                          variant="destructive"
+                          className="bg-red-600 text-white hover:bg-red-700 w-full sm:w-auto"
+                          onClick={handleClearChat}
+                          disabled={isClearing}
+                        >
+                          {isClearing ? "Clearing..." : "Clear"}
+                        </Button>
+                      </div>
+                      <div className="flex flex-col justify-end">
+                        <Button
+                          variant="destructive"
+                          className="bg-white text-black hover:bg-gray-200 w-full sm:w-auto"
+                          onClick={() => setIsOpenClearDialog(false)}
+                        >
+                          Cancel
+                        </Button>
+                      </div>
+                    </DialogFooter>
+                  </DialogContent>
+                </Dialog>
+                {/* diaoload */}
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
                     <Button
@@ -778,7 +928,7 @@ function Chats() {
                   </DropdownMenuTrigger>
                   <DropdownMenuContent align="end" className="w-[200px]">
                     <DropdownMenuItem
-                      onClick={handleClearChat}
+                      onClick={() => setIsOpenClearDialog(true)}
                       className="text-destructive"
                     >
                       Clear Chat
@@ -786,7 +936,7 @@ function Chats() {
                         <IconTrash className="h-4 w-4" />
                       </DropdownMenuShortcut>
                     </DropdownMenuItem>
-                    
+
                     <DropdownMenuItem>
                       Mute Notifications
                       <DropdownMenuShortcut>
@@ -803,7 +953,11 @@ function Chats() {
 
                     <DropdownMenuItem
                       onClick={() => {
-                        if (window.confirm('Are you sure you want to block this user?')) {
+                        if (
+                          window.confirm(
+                            "Are you sure you want to block this user?"
+                          )
+                        ) {
                           // Add your block user logic here
                           chatService.blockUser(selectedUser.id);
                         }
@@ -830,7 +984,9 @@ function Chats() {
                   >
                     <IconArrowLeft className="h-5 w-5" />
                   </button>
-                  <span className="font-medium">{selectedMessages.length} selected</span>
+                  <span className="font-medium">
+                    {selectedMessages.length} selected
+                  </span>
                 </div>
                 <button
                   onClick={handleBulkDelete}
@@ -842,10 +998,7 @@ function Chats() {
             )}
 
             {/* Messages Container */}
-            <ScrollArea 
-              ref={scrollAreaRef}
-              className="flex-1 w-full"
-            >
+            <ScrollArea ref={scrollAreaRef} className="flex-1 w-full">
               <div className="flex flex-col space-y-4 py-4 w-full overflow-hidden">
                 {messages?.map((message) => (
                   <div key={message.id} className="w-full overflow-hidden">
@@ -853,7 +1006,9 @@ function Chats() {
                       message={message}
                       isCurrentUser={message.sender.id !== selectedUser.id}
                       onMessageAction={handleMessageAction}
-                      isSelected={selectedMessages.some(m => m.id === message.id)}
+                      isSelected={selectedMessages.some(
+                        (m) => m.id === message.id
+                      )}
                       onSelect={handleMessageSelect}
                       selectionMode={selectionMode}
                     />
@@ -876,7 +1031,10 @@ function Chats() {
 
             {/* Message Input */}
             <div className="border-t p-4 shrink-0 bg-background">
-              <form onSubmit={handleSendMessage} className="flex items-center gap-2">
+              <form
+                onSubmit={handleSendMessage}
+                className="flex items-center gap-2"
+              >
                 <div className="relative flex-1 min-w-0">
                   <div className="flex items-center gap-2 rounded-md border border-input bg-background px-3 py-2">
                     <div className="flex gap-1 shrink-0">
@@ -920,7 +1078,11 @@ function Chats() {
                   className="h-[40px] w-[40px] shrink-0"
                   disabled={!messageInput.trim()}
                 >
-                  {editingMessage ? <IconEdit className="h-4 w-4" /> : <IconSend className="h-4 w-4" />}
+                  {editingMessage ? (
+                    <IconEdit className="h-4 w-4" />
+                  ) : (
+                    <IconSend className="h-4 w-4" />
+                  )}
                 </Button>
               </form>
             </div>

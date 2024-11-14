@@ -19,6 +19,7 @@ import {
   BiBell as IconBell,
   BiTimer as IconTimer,
   BiBlock as IconBlock,
+  BiX as IconX,
 } from "react-icons/bi";
 import { cn } from "@/lib/utils";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -829,6 +830,38 @@ function Chats() {
     );
   }
 
+  // Add this component inside Chats function before the return statement
+  const EditMessageBox = () => {
+    if (!editingMessage) return null;
+
+    return (
+      <div className="border-t border-b bg-muted/30 px-4 py-2">
+        <div className="flex items-center justify-between gap-2">
+          <div className="flex-1">
+            <div className="flex items-center gap-2">
+              <span className="text-xs text-muted-foreground">Editing message</span>
+              <IconEdit className="h-3 w-3 text-muted-foreground" />
+            </div>
+            <p className="text-sm text-muted-foreground line-clamp-2 mt-1">
+              {editingMessage.message}
+            </p>
+          </div>
+          <Button
+            variant="ghost"
+            size="icon"
+            className="h-6 w-6 shrink-0"
+            onClick={() => {
+              setEditingMessage(null);
+              setMessageInput('');
+            }}
+          >
+            <IconX className="h-4 w-4" />
+          </Button>
+        </div>
+      </div>
+    );
+  };
+
   return (
     <div className="h-[calc(100vh-8rem)] flex flex-col overflow-hidden rounded-lg border bg-background shadow">
       <Toaster
@@ -1075,61 +1108,66 @@ function Chats() {
             )}
 
             {/* Message Input */}
-            <div className="border-t p-4 shrink-0 bg-background">
-              <form
-                onSubmit={handleSendMessage}
-                className="flex items-center gap-2"
-              >
-                <div className="relative flex-1 min-w-0">
-                  <div className="flex items-center gap-2 rounded-md border border-input bg-background px-3 py-2">
-                    <div className="flex gap-1 shrink-0">
-                      <Button
-                        type="button"
-                        variant="ghost"
-                        size="icon"
-                        className="hidden sm:inline-flex h-8 w-8"
-                      >
-                        <IconPlus className="h-4 w-4 text-muted-foreground" />
-                      </Button>
-                      <Button
-                        type="button"
-                        variant="ghost"
-                        size="icon"
-                        className="h-8 w-8"
-                      >
-                        <IconPhotoPlus className="h-4 w-4 text-muted-foreground" />
-                      </Button>
-                      <Button
-                        type="button"
-                        variant="ghost"
-                        size="icon"
-                        className="h-8 w-8"
-                      >
-                        <IconPaperclip className="h-4 w-4 text-muted-foreground" />
-                      </Button>
-                    </div>
-                    <input
-                      type="text"
-                      placeholder="Type a message..."
-                      className="flex-1 bg-transparent text-sm focus-visible:outline-none min-w-0"
-                      value={messageInput}
-                      onChange={(e) => setMessageInput(e.target.value)}
-                    />
-                  </div>
-                </div>
-                <Button
-                  type="submit"
-                  size="icon"
-                  className="h-[40px] w-[40px] shrink-0"
-                  disabled={!messageInput.trim()}
+            <div className="border-t shrink-0 bg-background">
+              {/* Add EditMessageBox above the form */}
+              <EditMessageBox />
+              
+              <div className="p-4">
+                <form
+                  onSubmit={handleSendMessage}
+                  className="flex items-center gap-2"
                 >
-                  {editingMessage ? (
-                    <IconEdit className="h-4 w-4" />
-                  ) : (
-                    <IconSend className="h-4 w-4" />
-                  )}
-                </Button>
-              </form>
+                  <div className="relative flex-1 min-w-0">
+                    <div className="flex items-center gap-2 rounded-md border border-input bg-background px-3 py-2">
+                      <div className="flex gap-1 shrink-0">
+                        <Button
+                          type="button"
+                          variant="ghost"
+                          size="icon"
+                          className="hidden sm:inline-flex h-8 w-8"
+                        >
+                          <IconPlus className="h-4 w-4 text-muted-foreground" />
+                        </Button>
+                        <Button
+                          type="button"
+                          variant="ghost"
+                          size="icon"
+                          className="h-8 w-8"
+                        >
+                          <IconPhotoPlus className="h-4 w-4 text-muted-foreground" />
+                        </Button>
+                        <Button
+                          type="button"
+                          variant="ghost"
+                          size="icon"
+                          className="h-8 w-8"
+                        >
+                          <IconPaperclip className="h-4 w-4 text-muted-foreground" />
+                        </Button>
+                      </div>
+                      <input
+                        type="text"
+                        placeholder="Type a message..."
+                        className="flex-1 bg-transparent text-sm focus-visible:outline-none min-w-0"
+                        value={messageInput}
+                        onChange={(e) => setMessageInput(e.target.value)}
+                      />
+                    </div>
+                  </div>
+                  <Button
+                    type="submit"
+                    size="icon"
+                    className="h-[40px] w-[40px] shrink-0"
+                    disabled={!messageInput.trim()}
+                  >
+                    {editingMessage ? (
+                      <IconEdit className="h-4 w-4" />
+                    ) : (
+                      <IconSend className="h-4 w-4" />
+                    )}
+                  </Button>
+                </form>
+              </div>
             </div>
           </div>
         ) : (

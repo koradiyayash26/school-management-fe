@@ -72,6 +72,8 @@ function Message({
   selectionMode,
 }) {
   const [showActions, setShowActions] = useState(false);
+  const [isOpenDeleteMessageDialog, setIsOpenDeleteMessageDialog] =
+    useState(false);
 
   const handleMessageClick = (e) => {
     if (selectionMode) {
@@ -129,6 +131,54 @@ function Message({
               showActions && !selectionMode ? "opacity-100" : "opacity-0"
             )}
           >
+            <Dialog
+              open={isOpenDeleteMessageDialog}
+              onOpenChange={setIsOpenDeleteMessageDialog}
+            >
+              <div className="block md:flex gap-4">
+                <DialogTrigger asChild>
+                  <Button
+                    variant="destructive"
+                    className="bg-red-600 text-white hidden hover:bg-red-700 w-full sm:w-auto"
+                  >
+                    Delete Message
+                  </Button>
+                </DialogTrigger>
+              </div>
+              <DialogContent className="sm:max-w-[425px]">
+                <DialogHeader>
+                  <DialogTitle className="text-left">
+                    Delete Message
+                  </DialogTitle>
+                  <DialogDescription className="text-left">
+                    Click delete to delete message.
+                  </DialogDescription>
+                </DialogHeader>
+                <DialogFooter>
+                  <div className="flex flex-col justify-end mt-2 lg:mt-0">
+                    <Button
+                      variant="destructive"
+                      className="bg-red-600 text-white hover:bg-red-700 w-full sm:w-auto"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        onMessageAction("delete", message);
+                      }}
+                    >
+                      Delete
+                    </Button>
+                  </div>
+                  <div className="flex flex-col justify-end">
+                    <Button
+                      variant="destructive"
+                      className="bg-white text-black hover:bg-gray-200 w-full sm:w-auto"
+                      onClick={() => setIsOpenDeleteMessageDialog(false)}
+                    >
+                      Cancel
+                    </Button>
+                  </div>
+                </DialogFooter>
+              </DialogContent>
+            </Dialog>
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button
@@ -164,11 +214,8 @@ function Message({
                   </DropdownMenuItem>
                 )}
                 <DropdownMenuItem
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    onMessageAction("delete", message);
-                  }}
                   className="text-destructive"
+                  onClick={() => setIsOpenDeleteMessageDialog(true)}
                 >
                   Delete
                   <DropdownMenuShortcut>
@@ -680,13 +727,11 @@ function Chats() {
       setEditingMessage(message);
       setMessageInput(message.message);
     } else if (action === "delete") {
-      if (window.confirm("Are you sure you want to delete this message?")) {
-        try {
-          await chatService.deleteMessage(message.id);
-          queryClient.invalidateQueries(["messages", selectedUser?.id]);
-        } catch (error) {
-          console.error("Error deleting message:", error);
-        }
+      try {
+        await chatService.deleteMessage(message.id);
+        queryClient.invalidateQueries(["messages", selectedUser?.id]);
+      } catch (error) {
+        console.error("Error deleting message:", error);
       }
     }
   };

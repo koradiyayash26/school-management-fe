@@ -64,7 +64,7 @@ export const chatService = {
       return {
         ...response.data,
         is_delivered: false,
-        is_read: false
+        is_read: false,
       };
     } catch (error) {
       console.error("Error sending message:", error);
@@ -109,11 +109,14 @@ export const chatService = {
 
   deleteMessage: async (messageId) => {
     try {
-      const response = await apiClient.delete(`chats/api/messages/${messageId}/`, {
-        headers: {
-          Authorization: `Bearer ${getToken()}`,
-        },
-      });
+      const response = await apiClient.delete(
+        `chats/api/messages/${messageId}/`,
+        {
+          headers: {
+            Authorization: `Bearer ${getToken()}`,
+          },
+        }
+      );
       return response.data;
     } catch (error) {
       console.error("Error deleting message:", error);
@@ -159,23 +162,8 @@ export const chatService = {
 
   clearChat: async (userId) => {
     try {
-      const response = await apiClient.delete(`chats/api/chats/${userId}/clear/`, {
-        headers: {
-          Authorization: `Bearer ${getToken()}`,
-        },
-      });
-      return response.data;
-    } catch (error) {
-      console.error("Error clearing chat:", error);
-      throw error;
-    }
-  },
-
-  blockUser: async (userId) => {
-    try {
-      const response = await apiClient.post(
-        `chats/api/users/${userId}/block/`,
-        {},
+      const response = await apiClient.delete(
+        `chats/api/chats/${userId}/clear/`,
         {
           headers: {
             Authorization: `Bearer ${getToken()}`,
@@ -184,11 +172,10 @@ export const chatService = {
       );
       return response.data;
     } catch (error) {
-      console.error("Error blocking user:", error);
+      console.error("Error clearing chat:", error);
       throw error;
     }
   },
-
   toggleMuteNotifications: async (userId, isMuted) => {
     try {
       const response = await apiClient.post(
@@ -223,5 +210,5 @@ export const chatService = {
       console.error("Error setting disappearing messages:", error);
       throw error;
     }
-  }
+  },
 };

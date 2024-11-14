@@ -18,7 +18,6 @@ import {
   BiCheck as IconCheck,
   BiBell as IconBell,
   BiTimer as IconTimer,
-  BiBlock as IconBlock,
   BiX as IconX,
 } from "react-icons/bi";
 import { cn } from "@/lib/utils";
@@ -441,23 +440,6 @@ function ChatArea({
                 Disappearing Messages
                 <DropdownMenuShortcut>
                   <IconTimer className="h-4 w-4" />
-                </DropdownMenuShortcut>
-              </DropdownMenuItem>
-
-              <DropdownMenuItem
-                onClick={() => {
-                  if (
-                    window.confirm("Are you sure you want to block this user?")
-                  ) {
-                    // Add your block user logic here
-                    chatService.blockUser(selectedUser.id);
-                  }
-                }}
-                className="text-destructive"
-              >
-                Block User
-                <DropdownMenuShortcut>
-                  <IconBlock className="h-4 w-4" />
                 </DropdownMenuShortcut>
               </DropdownMenuItem>
             </DropdownMenuContent>
@@ -1056,25 +1038,6 @@ function Chats() {
                       Disappearing Messages
                       <DropdownMenuShortcut>
                         <IconTimer className="h-4 w-4" />
-                      </DropdownMenuShortcut>
-                    </DropdownMenuItem>
-
-                    <DropdownMenuItem
-                      onClick={() => {
-                        if (
-                          window.confirm(
-                            "Are you sure you want to block this user?"
-                          )
-                        ) {
-                          // Add your block user logic here
-                          chatService.blockUser(selectedUser.id);
-                        }
-                      }}
-                      className="text-destructive"
-                    >
-                      Block User
-                      <DropdownMenuShortcut>
-                        <IconBlock className="h-4 w-4" />
                       </DropdownMenuShortcut>
                     </DropdownMenuItem>
                   </DropdownMenuContent>

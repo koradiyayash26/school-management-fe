@@ -44,8 +44,9 @@ function Sidebar({ collapsed, onToggle }) {
             : "w-[220px] lg:w-[280px] transition-all duration-300 ease-in-out"
         }`}
       >
-        <ScrollArea className="flex-1">
-          <div className="flex h-full max-h-screen flex-col gap-2 sticky top-0">
+        <div className="flex h-full max-h-screen flex-col gap-2 sticky top-0">
+          {/* if get any scroll problem than set that scroollare to one set up */}
+          <ScrollArea className="flex-1">
             <div
               className={`flex h-14 ${
                 collapsed && "justify-center"
@@ -124,8 +125,8 @@ function Sidebar({ collapsed, onToggle }) {
                 <ChevronLeft onClick={onToggle} className="h-6 w-6" />
               )}
             </div>
-          </div>
-        </ScrollArea>
+          </ScrollArea>
+        </div>
       </div>
     </>
   );

@@ -65,6 +65,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
+import { cn } from "@/lib/utils";
 
 const headers = [
   { label: "ID", value: "id" },
@@ -117,6 +118,130 @@ const defaultVisibleColumns = [
   "district",
   "standard",
 ];
+
+function StudentDetailsDialog({ student, open, onOpenChange }) {
+  const details = [
+    {
+      label: "Personal Information",
+      items: [
+        {
+          label: "Full Name",
+          value: `${student.first_name} ${student.middle_name} ${student.last_name}`,
+        },
+        { label: "GR Number", value: student.grno },
+        { label: "Mother's Name", value: student.mother_name },
+        { label: "Gender", value: student.gender },
+        { label: "Birth Date", value: student.birth_date },
+        { label: "Birth Place", value: student.birth_place },
+        { label: "Mobile", value: student.mobile_no },
+      ],
+    },
+    {
+      label: "Academic Information",
+      items: [
+        {
+          label: "Standard",
+          value: student.standard === "13" ? "Balvatika" : student.standard,
+        },
+        { label: "Section", value: student.section },
+        { label: "Academic Year", value: student.academic_year__year },
+        { label: "Status", value: student.status },
+        { label: "UDISE Number", value: student.udise_no },
+      ],
+    },
+    {
+      label: "Address Information",
+      items: [
+        { label: "Address", value: student.address },
+        { label: "City", value: student.city },
+        { label: "District", value: student.district },
+      ],
+    },
+    {
+      label: "Bank Details",
+      items: [
+        { label: "Bank Name", value: student.bank_name },
+        { label: "Account Number", value: student.account_no },
+        { label: "IFSC Code", value: student.ifsc_code },
+        { label: "Aadhar Number", value: student.aadhar_no },
+      ],
+    },
+  ];
+
+  return (
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      <DialogContent className="sm:max-w-[85vw] md:max-w-[75vw] lg:max-w-[65vw] xl:max-w-[55vw] max-h-[85vh]">
+        <DialogHeader>
+          <DialogTitle className="text-xl md:text-2xl font-bold">
+            Student Information
+          </DialogTitle>
+          <DialogDescription className="text-sm md:text-base">
+            Detailed information about the student
+          </DialogDescription>
+        </DialogHeader>
+
+        <ScrollArea className="h-[60vh] w-full rounded-md">
+          <div className="space-y-6 py-4 px-1">
+            {details.map((section, sectionIndex) => (
+              <div key={sectionIndex} className="space-y-4">
+                <h3 className="text-lg md:text-xl font-semibold text-primary">
+                  {section.label}
+                </h3>
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                  {section.items.map((item, itemIndex) => (
+                    <div
+                      key={itemIndex}
+                      className={cn(
+                        "p-4 rounded-lg border bg-card transition-colors",
+                        "hover:bg-accent hover:text-accent-foreground",
+                        item.value?.length > 50 && "sm:col-span-2 lg:col-span-3"
+                      )}
+                    >
+                      <div className="space-y-2">
+                        <Label className="text-sm font-medium text-muted-foreground">
+                          {item.label}
+                        </Label>
+                        <p className="text-sm md:text-base font-medium break-words">
+                          {item.value || "-"}
+                        </p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            ))}
+          </div>
+          <DialogFooter className="sm:justify-between mt-4 gap-2">
+            <Button
+              variant="outline"
+              onClick={() => onOpenChange(false)}
+              className="w-full sm:w-auto"
+            >
+              Close
+            </Button>
+            <div className="flex gap-2 w-full sm:w-auto">
+              <Button
+                variant="outline"
+                className="flex-1 sm:flex-none"
+                onClick={() => {
+                  window.print();
+                }}
+              >
+                Print
+              </Button>
+              <Link
+                to={`/student/edit/${student.id}`}
+                className="flex-1 sm:flex-none"
+              >
+                <Button className="w-full">Edit</Button>
+              </Link>
+            </div>
+          </DialogFooter>
+        </ScrollArea>
+      </DialogContent>
+    </Dialog>
+  );
+}
 
 function StudentsPage() {
   const { data, isLoading, error, refetch } = useStudents();
@@ -280,6 +405,9 @@ function StudentsPage() {
       setFileError("");
     }
   };
+
+  const [selectedStudent, setSelectedStudent] = useState(null);
+  const [showDetails, setShowDetails] = useState(false);
 
   if (isLoading)
     return (
@@ -500,7 +628,14 @@ function StudentsPage() {
                   </TableRow>
                 ) : (
                   visibleStudents.map((student) => (
-                    <TableRow key={student.id}>
+                    <TableRow
+                      key={student.id}
+                      className="cursor-pointer hover:bg-muted/50"
+                      onClick={() => {
+                        setSelectedStudent(student);
+                        setShowDetails(true);
+                      }}
+                    >
                       {headers.map(
                         (header) =>
                           columnVisibility[header.value] && (
@@ -616,6 +751,13 @@ function StudentsPage() {
             </Pagination>
           </div>
         </div>
+        {selectedStudent && (
+          <StudentDetailsDialog
+            student={selectedStudent}
+            open={showDetails}
+            onOpenChange={setShowDetails}
+          />
+        )}
       </>
     </>
   );

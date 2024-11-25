@@ -24,13 +24,17 @@ const ActionsPopup = ({ id, openAlertDeleteBox, Birth, Bonafide }) => {
     navigate(`/student/edit/${id}`);
   };
 
+  const handleTriggerClick = (e) => {
+    e.stopPropagation();
+  };
+
   return (
     <>
-      <DropdownMenu className="">
-        <DropdownMenuTrigger asChild>
+      <DropdownMenu>
+        <DropdownMenuTrigger asChild onClick={handleTriggerClick}>
           <Button
             variant="outline"
-            className="flex h-8 w-8 p-0 data-[state=open]:bg-muted  border"
+            className="flex h-8 w-8 p-0 data-[state=open]:bg-muted border"
           >
             <Ellipsis className="h-6 w-6 rotate-90" />
             <span className="sr-only">Open menu</span>
@@ -38,7 +42,7 @@ const ActionsPopup = ({ id, openAlertDeleteBox, Birth, Bonafide }) => {
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end" className="w-[160px]">
           {Bonafide ? (
-            <Link to={`/bonafide/${id}/`}>
+            <Link to={`/bonafide/${id}/`} onClick={(e) => e.stopPropagation()}>
               <DropdownMenuItem>
                 Bonafide
                 <DropdownMenuShortcut>
@@ -47,7 +51,12 @@ const ActionsPopup = ({ id, openAlertDeleteBox, Birth, Bonafide }) => {
               </DropdownMenuItem>
             </Link>
           ) : (
-            <DropdownMenuItem onClick={() => editStudent(id)}>
+            <DropdownMenuItem
+              onClick={(e) => {
+                e.stopPropagation();
+                editStudent(id);
+              }}
+            >
               Edit
               <DropdownMenuShortcut>
                 <SquarePen className="h-4 w-4" />
@@ -55,7 +64,7 @@ const ActionsPopup = ({ id, openAlertDeleteBox, Birth, Bonafide }) => {
             </DropdownMenuItem>
           )}
           {Birth ? (
-            <Link to={`/birth/${id}/`}>
+            <Link to={`/birth/${id}/`} onClick={(e) => e.stopPropagation()}>
               <DropdownMenuItem>
                 Birth Certificate
                 <DropdownMenuShortcut>
@@ -64,7 +73,12 @@ const ActionsPopup = ({ id, openAlertDeleteBox, Birth, Bonafide }) => {
               </DropdownMenuItem>
             </Link>
           ) : (
-            <DropdownMenuItem onClick={() => openAlertDeleteBox(id)}>
+            <DropdownMenuItem
+              onClick={(e) => {
+                e.stopPropagation();
+                openAlertDeleteBox(id);
+              }}
+            >
               Delete
               <DropdownMenuShortcut>
                 <Trash2 className="h-4 w-4" />

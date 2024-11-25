@@ -10,13 +10,18 @@ import {
   UsersRound,
 } from "lucide-react";
 
-
 export const MENU = [
   {
     lable: "HOME",
     path: "/",
     icon: () => <Home className="h-4 w-4" />,
     Permission: "",
+  },
+  {
+    lable: "GENERAL REGISTER",
+    path: "/student",
+    icon: () => <ClipboardList className="h-4 w-4" />,
+    Permission: "General Register",
   },
   {
     lable: "CHATS",
@@ -30,12 +35,7 @@ export const MENU = [
     icon: () => <Users className="h-4 w-4" />,
     Permission: "Standard Report",
   },
-  {
-    lable: "GENERAL REGISTER",
-    path: "/student",
-    icon: () => <ClipboardList className="h-4 w-4" />,
-    Permission: "General Register",
-  },
+
   {
     lable: "STUDENT",
     path: "/update",

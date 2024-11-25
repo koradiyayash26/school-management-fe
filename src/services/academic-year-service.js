@@ -10,6 +10,20 @@ const getAcademicYearList = async () => {
   return response.data;
 };
 
+const getAcademicYearData = async (id) => {
+  try {
+    const response = await apiClient.get(`/academic-year/update-delete/${id}/`, {
+      headers: {
+        Authorization: `Bearer ${getToken()}`,
+      },
+    });
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching certificate data:", error);
+    throw error;
+  }
+};
+
 const postAcademicYear = async (data) => {
   return await apiClient.post(`/academic-year/create-list/`, data, {
     headers: {
@@ -19,7 +33,6 @@ const postAcademicYear = async (data) => {
 };
 
 const updateAcademicYear = async (data, id) => {
-  console.log(data, id);
   return await apiClient.patch(`/academic-year/update-delete/${id}/`, data, {
     headers: {
       Authorization: `Bearer ${getToken()}`,
@@ -27,4 +40,4 @@ const updateAcademicYear = async (data, id) => {
   });
 };
 
-export { getAcademicYearList, postAcademicYear,updateAcademicYear };
+export { getAcademicYearList, postAcademicYear,updateAcademicYear,getAcademicYearData };

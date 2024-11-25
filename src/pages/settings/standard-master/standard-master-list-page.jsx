@@ -34,7 +34,7 @@ function StandardMasterList() {
 
   return (
     <>
-      <h1>Standard Master List</h1>
+      <h1 className="uppercase text-2xl font-bold mb-4">Standard Master List</h1>
       <div className="block md:flex md:justify-between gap-2">
         <div className="flex gap-2 md:m-0 mt-4">
           <Link to="/setting/standard-master/add">

@@ -3,28 +3,27 @@ import { Card } from "@/components/ui/card";
 import { useNavigate, useParams } from "react-router-dom";
 import { useMutation } from "@tanstack/react-query";
 import Spinner from "@/components/spinner/spinner";
-import FeeTypeMasterFormPage from "./fee-type-master-form-page";
-import { updateFeeTypeMaster } from "@/services/fee-type-master";
-import { useFeeTypeMasterGet } from "@/hooks/use-fee-type-master";
-const FeeTypeMasterUpdate = () => {
+import AcademicYearFormPage from "./academic-year-form";
+import { useAcademicYearGetData } from "@/hooks/use-academic-year";
+import { updateAcademicYear } from "@/services/academic-year-service";
+const AcademicYearUpdate = () => {
   const navigate = useNavigate();
   const { id } = useParams();
 
-  const { data, isLoading, error, refetch } = useFeeTypeMasterGet(id);
+  const { data, isLoading, error, refetch } = useAcademicYearGetData(id);
 
-  const standardMasterData = data || {};
-  console.log(standardMasterData);
+  const year = data || {};
 
   const defaultValues = {
-    name: standardMasterData?.name || "",
-    is_active: standardMasterData?.is_active || false,
+    year: year?.year || "",
+    is_current: year?.is_current || false,
   };
 
   const mutation = useMutation({
-    mutationFn: (data) => updateFeeTypeMaster(data, id),
+    mutationFn: (data) => updateAcademicYear(data, id),
     onSuccess: () => {
       refetch();
-      navigate("/setting/fee-type-master");
+      navigate("/setting/academic-year");
     },
   });
 
@@ -46,9 +45,11 @@ const FeeTypeMasterUpdate = () => {
 
   return (
     <>
-      <h1 className="uppercase text-2xl font-bold mb-4">UPDATE FEE TYPE MASTER</h1>
+      <h1 className="uppercase text-2xl font-bold mb-4">
+        UPDATE ACADEMIC YEAR
+      </h1>
       <Card className="">
-        <FeeTypeMasterFormPage
+        <AcademicYearFormPage
           defaultValues={defaultValues}
           onSubmit={onSubmit}
           isLoadin={isLoading}
@@ -58,4 +59,4 @@ const FeeTypeMasterUpdate = () => {
   );
 };
 
-export default FeeTypeMasterUpdate;
+export default AcademicYearUpdate;

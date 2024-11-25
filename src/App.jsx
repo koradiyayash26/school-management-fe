@@ -44,6 +44,9 @@ import UserAddPage from "./pages/settings/user/user-add-page";
 import UserDetailsPage from "./pages/settings/user/user-details-page";
 import { UserPermissionsProvider } from "./contextAPI";
 import Chats from "./pages/chats";
+import AcademicYearList from "./pages/settings/academic-year/academic-year-list-page";
+import AcademicYearAddPage from "./pages/settings/academic-year/academic-year-add";
+import AcademicYearUpdate from "./pages/settings/academic-year/academic-year-update";
 
 const App = () => {
   return (
@@ -214,6 +217,18 @@ const App = () => {
                       <Route
                         element={<UserDetailsPage />}
                         path="/setting/user/details/:id"
+                      />
+                      <Route
+                        element={<AcademicYearList />}
+                        path="/setting/academic-year"
+                      />
+                      <Route
+                        element={<AcademicYearAddPage />}
+                        path="/setting/academic-year/add"
+                      />
+                      <Route
+                        element={<AcademicYearUpdate />}
+                        path="/setting/academic-year/edit/:id"
                       />
                     </Route>
                     {/* Settings */}

@@ -26,7 +26,7 @@ const FeeTypeMasterAddPage = () => {
 
   return (
     <>
-      <h1>ADD FEE TYPE MASTER</h1>
+      <h1 className="uppercase text-2xl font-bold mb-4">ADD FEE TYPE MASTER</h1>
       <Card className="">
         <FeeTypeMasterFormPage defaultValues={defaultValues} onSubmit={onSubmit}/>
       </Card>

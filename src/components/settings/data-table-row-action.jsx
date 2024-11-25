@@ -19,6 +19,8 @@ const ActionsPopupSettings = ({ id,mode }) => {
       navigate(`/setting/standard-master/edit/${id}`);
     }else if(mode === "fee-type"){
       navigate(`/setting/fee-type-master/edit/${id}`);
+    }else if(mode === "academic-year"){
+      navigate(`/setting/academic-year/edit/${id}`);
     }
   };
 

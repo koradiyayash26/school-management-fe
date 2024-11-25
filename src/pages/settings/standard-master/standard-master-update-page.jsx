@@ -17,7 +17,7 @@ const StandardMasterUpdate = () => {
 
   const defaultValues = {
     name: standardMasterData?.name || "",
-    is_active: standardMasterData?.is_active || "",
+    is_active: standardMasterData?.is_active || false,
   };
 
   const mutation = useMutation({
@@ -46,7 +46,7 @@ const StandardMasterUpdate = () => {
 
   return (
     <>
-      <h1>UPDATE STANDARD MASTER</h1>
+      <h1 className="uppercase text-2xl font-bold mb-4">UPDATE STANDARD MASTER</h1>
       <Card className="">
         <StandardMasterForm
           defaultValues={defaultValues}

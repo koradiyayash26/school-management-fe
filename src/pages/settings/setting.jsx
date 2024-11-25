@@ -11,7 +11,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { useUserList } from "@/hooks/use-settings";
-import { Calculator, UserRoundCog, Users } from "lucide-react";
+import { Calculator,CalendarClock, UserRoundCog, Users } from "lucide-react";
 import React from "react";
 import { Link } from "react-router-dom";
 
@@ -32,6 +32,11 @@ const Setting = () => {
       title: "Fee Type Master",
       path: "/setting/fee-type-master",
       icon: Calculator,
+    },
+    {
+      title: "Academic Year",
+      path: "/setting/academic-year",
+      icon: CalendarClock,
     },
   ];
 

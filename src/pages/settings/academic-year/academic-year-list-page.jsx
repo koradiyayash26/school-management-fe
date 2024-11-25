@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import {
   Table,
   TableBody,
@@ -12,15 +12,18 @@ import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import { Link } from "react-router-dom";
 import Spinner from "@/components/spinner/spinner";
 import ActionsPopupSettings from "@/components/settings/data-table-row-action";
-import { useFeeTypeMasterList } from "@/hooks/use-fee-type-master";
+import { useAcademicYear } from "@/hooks/use-academic-year";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { Terminal } from "lucide-react";
 
 const headers = [
   { label: "ID", value: "id" },
-  { label: "Standard", value: "name" },
+  { label: "Year", value: "year" },
+  { label: "Status", value: "is_current" },
 ];
 
-function FeeTypeMasterList() {
-  const { data, isLoading, error, refetch } = useFeeTypeMasterList();
+function AcademicYearList() {
+  const { data, isLoading, error, refetch } = useAcademicYear();
   const feeTypeMaster = data || [];
 
   if (isLoading)
@@ -34,10 +37,16 @@ function FeeTypeMasterList() {
 
   return (
     <>
-      <h1 className="uppercase text-2xl font-bold mb-4">Fee Type Master List</h1>
+      <h1 className="uppercase text-2xl font-bold mb-4">Academic Year List</h1>
+      <Alert className="">
+        <AlertTitle>Note :</AlertTitle>
+        <AlertDescription>
+          If Multiple Year Status Active Than Display Data Of Last Changes.
+        </AlertDescription>
+      </Alert>
       <div className="block md:flex md:justify-between gap-2">
         <div className="flex gap-2 md:m-0 mt-4">
-          <Link to="/setting/fee-type-master/add">
+          <Link to="/setting/academic-year/add">
             <Button>Add</Button>
           </Link>
         </div>
@@ -53,15 +62,28 @@ function FeeTypeMasterList() {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {feeTypeMaster.map((fee) => (
-              <TableRow key={fee.id}>
+            {feeTypeMaster.map((year) => (
+              <TableRow key={year.id}>
                 {headers.map((header) => (
-                  <TableCell key={header.value} className="capitalize">
-                    {fee[header.value] || "-"}
+                  <TableCell
+                    key={header.value}
+                    className="capitalize whitespace-nowrap"
+                  >
+                    {header.value === "is_current" ? (
+                      year[header.value] ? (
+                        <span className="bg-green-600 text-white px-2 py-1 rounded-sm">
+                          Active
+                        </span>
+                      ) : (
+                        "-"
+                      )
+                    ) : (
+                      year[header.value] || "-"
+                    )}
                   </TableCell>
                 ))}
                 <TableCell>
-                  <ActionsPopupSettings id={fee.id} mode="fee-type" />
+                  <ActionsPopupSettings id={year.id} mode="academic-year" />
                 </TableCell>
               </TableRow>
             ))}
@@ -73,4 +95,4 @@ function FeeTypeMasterList() {
   );
 }
 
-export default FeeTypeMasterList;
+export default AcademicYearList;

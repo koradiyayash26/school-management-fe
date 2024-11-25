@@ -26,7 +26,7 @@ const StandardMasterAdd = () => {
 
   return (
     <>
-      <h1>ADD STANDARD MASTER</h1>
+      <h1 className="uppercase text-2xl font-bold mb-4">ADD STANDARD MASTER</h1>
       <Card className="">
         <StandardMasterForm defaultValues={defaultValues} onSubmit={onSubmit} />
       </Card>

@@ -27,19 +27,61 @@ import UserProfileDialogbox from "../user-profile-dialog/dialogbox";
 
 export default function Header() {
   const navigate = useNavigate();
+  const [selectedClass, setSelectedClass] = useState(
+    localStorage.getItem("schoolType") === null
+      ? "Primary"
+      : localStorage.getItem("schoolType")
+  );
 
   let username = localStorage.getItem("user");
+
+  const handleClassChange = (newClass) => {
+    setSelectedClass(newClass);
+    localStorage.setItem("schoolType", newClass);
+    window.location.reload();
+  };
 
   const logout = () => {
     localStorage.clear();
     navigate("/login");
   };
 
-
   return (
     <header className="flex h-14 items-center gap-4 border-b bg-muted/40 px-4 lg:h-[60px] lg:px-6">
       <MobileSidebar />
-      <div className="w-full flex-1"></div>
+      <div className="w-full flex-1">
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button
+              variant="outline"
+              size="sm"
+              className="w-[120px] md:w-[140px]"
+            >
+              {selectedClass}
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent className="space-y-1">
+            <DropdownMenuItem
+              className={selectedClass === "Primary" ? "bg-accent" : ""}
+              onClick={() => handleClassChange("Primary")}
+            >
+              Primary
+            </DropdownMenuItem>
+            <DropdownMenuItem
+              className={selectedClass === "Secondary" ? "bg-accent" : ""}
+              onClick={() => handleClassChange("Secondary")}
+            >
+              Secondary
+            </DropdownMenuItem>
+            <DropdownMenuItem
+              className={selectedClass === "High Secondary" ? "bg-accent" : ""}
+              onClick={() => handleClassChange("High Secondary")}
+            >
+              High Secondary
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
+      </div>
       <ModeToggle />
       <Sheet>
         <DropdownMenu>

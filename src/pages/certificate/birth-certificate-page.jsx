@@ -32,11 +32,16 @@ const BirthCertificatePage = () => {
   };
 
   const handleDownloadPdf = () => {
-    alert("PDF Downloaded");
+    // window.location.href = `/birth.html?id=${id}`;
+    window.open(`/birth.html?id=${id}`, "_blank");
   };
 
   if (isLoading) {
-    return <><Spinner/></>;
+    return (
+      <>
+        <Spinner />
+      </>
+    );
   }
 
   if (error) {

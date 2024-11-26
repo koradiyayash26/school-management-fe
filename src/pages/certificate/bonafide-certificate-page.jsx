@@ -30,11 +30,16 @@ const BonafideCertificatePage = () => {
   };
 
   const handleDownloadPdf = () => {
-    alert("PDF Downloaded");
+    // window.location.href = `/bonafide.html?id=${id}`;
+    window.open(`/bonafide.html?id=${id}`, "_blank");
   };
 
   if (isLoading) {
-    return <><Spinner/></>;
+    return (
+      <>
+        <Spinner />
+      </>
+    );
   }
 
   if (error) {
@@ -55,7 +60,9 @@ const BonafideCertificatePage = () => {
                   </div>
                   <div className="space-y-0.5 font-medium dark:text-white text-left rtl:text-right ms-3">
                     <div>
-                      {studentData.first_name || "N/A"}&nbsp;{studentData.middle_name || "N/A"}&nbsp;{studentData.last_name || "N/A"}
+                      {studentData.first_name || "N/A"}&nbsp;
+                      {studentData.middle_name || "N/A"}&nbsp;
+                      {studentData.last_name || "N/A"}
                     </div>
                     <div className="text-sm text-gray-500 dark:text-gray-400">
                       Birth Date - &nbsp;
@@ -84,10 +91,14 @@ const BonafideCertificatePage = () => {
                   </span>
                   &nbsp; is studying in this school in present standard -&nbsp;
                   <span className="underline">
-                    {studentData.standard == 13 ? "Balvatika" : studentData.standard || "N/A"}
+                    {studentData.standard == 13
+                      ? "Balvatika"
+                      : studentData.standard || "N/A"}
                   </span>
                   . As per GR No -{" "}
-                  <span className="underline">{studentData.grno || "N/A"} </span>
+                  <span className="underline">
+                    {studentData.grno || "N/A"}{" "}
+                  </span>
                   of our school his date is&nbsp;
                   <span className="underline">
                     {studentData.birth_date || "N/A"}
@@ -98,7 +109,8 @@ const BonafideCertificatePage = () => {
                   </span>
                   . His caste is{" "}
                   <span className="underline">
-                    {studentData.religion || "N/A"}&nbsp;{studentData.caste || "N/A"}
+                    {studentData.religion || "N/A"}&nbsp;
+                    {studentData.caste || "N/A"}
                   </span>
                   . For the assurance of which this certificate is written.
                 </p>

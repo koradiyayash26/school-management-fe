@@ -54,7 +54,11 @@ function Sidebar({ collapsed, onToggle }) {
             >
               <NavLink to="/" className="flex items-center gap-2 font-semibold">
                 <Package2 className="h-6 w-6" />
-                {!collapsed && <span>Thinker PVT LTD</span>}
+                {!collapsed && (
+                  <span className="hover:underline hover:underline-offset-4 uppercase">
+                    Thinkers PVT LTD
+                  </span>
+                )}
               </NavLink>
             </div>
             <div className="flex-1 mt-[10px]">

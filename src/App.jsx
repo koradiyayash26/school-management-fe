@@ -47,6 +47,7 @@ import Chats from "./pages/chats";
 import AcademicYearList from "./pages/settings/academic-year/academic-year-list-page";
 import AcademicYearAddPage from "./pages/settings/academic-year/academic-year-add";
 import AcademicYearUpdate from "./pages/settings/academic-year/academic-year-update";
+import { CasteReport } from "./pages/caste-report";
 
 const App = () => {
   return (
@@ -179,6 +180,12 @@ const App = () => {
                       />
                     </Route>
                     {/* Payment */}
+                    {/* caste report */}
+                    <Route
+                      element={<CasteReport />}
+                      path="/caste-report"
+                    />
+                    {/* caste report */}
                     {/* Settings */}
                     <Route
                       element={

@@ -1,6 +1,7 @@
 import {
   Calculator,
   ClipboardList,
+  Contact,
   Home,
   IndianRupee,
   Medal,
@@ -35,7 +36,12 @@ export const MENU = [
     icon: () => <Users className="h-4 w-4" />,
     Permission: "Standard Report",
   },
-
+  {
+    lable: "CASTE REPORT",
+    path: "/caste-report",
+    icon: () => <Contact className="h-4 w-4" />,
+    Permission: "Standard Report",
+  },
   {
     lable: "STUDENT",
     path: "/update",
@@ -69,7 +75,7 @@ export const MENU = [
 ];
 
 export const studentDetail = {
-  grno: 1,
+  // grno: 1,
   first_name: "",
   last_name: "",
   middle_name: "",

@@ -105,12 +105,12 @@ export const GrDetails = ({ academicYear, form, categories }) => {
 
   return (
     <>
-      <div className="md:grid md:grid-cols-3 space-y-4 gap-8">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6 lg:gap-8">
         <FormField
           control={form.control}
           name="grno"
           render={({ field }) => (
-            <FormItem className="flex flex-col self-end">
+            <FormItem className="h-[90px]">
               <FormLabel>Grno*</FormLabel>
               <FormControl>
                 <Input
@@ -128,7 +128,7 @@ export const GrDetails = ({ academicYear, form, categories }) => {
           control={form.control}
           name="first_name"
           render={({ field }) => (
-            <FormItem>
+            <FormItem className="h-[90px]">
               <FormLabel>First Name*</FormLabel>
               <FormControl>
                 <Input disabled={loading} placeholder="Firstname" {...field} />
@@ -141,7 +141,7 @@ export const GrDetails = ({ academicYear, form, categories }) => {
           control={form.control}
           name="middle_name"
           render={({ field }) => (
-            <FormItem>
+            <FormItem className="h-[90px]">
               <FormLabel>Middle Name*</FormLabel>
               <FormControl>
                 <Input disabled={loading} placeholder="MiddleName" {...field} />
@@ -154,7 +154,7 @@ export const GrDetails = ({ academicYear, form, categories }) => {
           control={form.control}
           name="last_name"
           render={({ field }) => (
-            <FormItem>
+            <FormItem className="h-[90px]">
               <FormLabel>Last Name*</FormLabel>
               <FormControl>
                 <Input disabled={loading} placeholder="LastName" {...field} />
@@ -167,7 +167,7 @@ export const GrDetails = ({ academicYear, form, categories }) => {
           control={form.control}
           name="mother_name"
           render={({ field }) => (
-            <FormItem>
+            <FormItem className="h-[90px]">
               <FormLabel>Mother Name</FormLabel>
               <FormControl>
                 <Input disabled={loading} placeholder="MotherName" {...field} />
@@ -180,7 +180,7 @@ export const GrDetails = ({ academicYear, form, categories }) => {
           control={form.control}
           name="birth_place"
           render={({ field }) => (
-            <FormItem>
+            <FormItem className="h-[90px]">
               <FormLabel>Birth Place</FormLabel>
               <FormControl>
                 <Input disabled={loading} placeholder="BirthPlace" {...field} />
@@ -193,7 +193,7 @@ export const GrDetails = ({ academicYear, form, categories }) => {
           control={form.control}
           name="religion"
           render={({ field }) => (
-            <FormItem>
+            <FormItem className="h-[90px]">
               <FormLabel>Religion*</FormLabel>
               <Select
                 disabled={loading}
@@ -225,7 +225,7 @@ export const GrDetails = ({ academicYear, form, categories }) => {
           control={form.control}
           name="category"
           render={({ field }) => (
-            <FormItem>
+            <FormItem className="h-[90px]">
               <FormLabel>Category*</FormLabel>
               <Select
                 disabled={loading}
@@ -257,7 +257,7 @@ export const GrDetails = ({ academicYear, form, categories }) => {
           control={form.control}
           name="caste"
           render={({ field }) => (
-            <FormItem>
+            <FormItem className="h-[90px]">
               <FormLabel>Caste</FormLabel>
               <FormControl>
                 <Input disabled={loading} placeholder="Caste" {...field} />
@@ -270,7 +270,7 @@ export const GrDetails = ({ academicYear, form, categories }) => {
           control={form.control}
           name="admission_std"
           render={({ field }) => (
-            <FormItem>
+            <FormItem className="h-[90px]">
               <FormLabel>Admission Std*</FormLabel>
               <Select
                 disabled={loading}
@@ -302,7 +302,7 @@ export const GrDetails = ({ academicYear, form, categories }) => {
           control={form.control}
           name="standard"
           render={({ field }) => (
-            <FormItem>
+            <FormItem className="h-[90px]">
               <FormLabel>Standard*</FormLabel>
               <Select
                 disabled={loading}
@@ -334,7 +334,7 @@ export const GrDetails = ({ academicYear, form, categories }) => {
           control={form.control}
           name="section"
           render={({ field }) => (
-            <FormItem>
+            <FormItem className="h-[90px]">
               <FormLabel>Section*</FormLabel>
               <Select
                 disabled={loading}
@@ -366,7 +366,7 @@ export const GrDetails = ({ academicYear, form, categories }) => {
           control={form.control}
           name="academic_year"
           render={({ field }) => (
-            <FormItem>
+            <FormItem className="h-[90px]">
               <FormLabel>Academic Year*</FormLabel>
               <Select
                 disabled={loading}
@@ -398,7 +398,7 @@ export const GrDetails = ({ academicYear, form, categories }) => {
           control={form.control}
           name="last_school"
           render={({ field }) => (
-            <FormItem>
+            <FormItem className="h-[90px]">
               <FormLabel>Last School</FormLabel>
               <FormControl>
                 <Input
@@ -415,7 +415,7 @@ export const GrDetails = ({ academicYear, form, categories }) => {
           control={form.control}
           name="city"
           render={({ field }) => (
-            <FormItem>
+            <FormItem className="h-[90px]">
               <FormLabel>City*</FormLabel>
               <FormControl>
                 <Input disabled={loading} placeholder="City" {...field} />
@@ -428,7 +428,7 @@ export const GrDetails = ({ academicYear, form, categories }) => {
           control={form.control}
           name="district"
           render={({ field }) => (
-            <FormItem>
+            <FormItem className="h-[90px]">
               <FormLabel>District*</FormLabel>
               <FormControl>
                 <Input disabled={loading} placeholder="District" {...field} />
@@ -441,7 +441,7 @@ export const GrDetails = ({ academicYear, form, categories }) => {
           control={form.control}
           name="address"
           render={({ field }) => (
-            <FormItem>
+            <FormItem className="h-[90px]">
               <FormLabel>Address</FormLabel>
               <FormControl>
                 <Input disabled={loading} placeholder="address" {...field} />
@@ -454,7 +454,7 @@ export const GrDetails = ({ academicYear, form, categories }) => {
           control={form.control}
           name="mobile_no"
           render={({ field }) => (
-            <FormItem>
+            <FormItem className="h-[90px]">
               <FormLabel>Mobile No</FormLabel>
               <FormControl>
                 <Input disabled={loading} placeholder="Mobile No" {...field} />
@@ -467,7 +467,7 @@ export const GrDetails = ({ academicYear, form, categories }) => {
           control={form.control}
           name="status"
           render={({ field }) => (
-            <FormItem>
+            <FormItem className="h-[90px]">
               <FormLabel>Status*</FormLabel>
               <Select
                 disabled={loading}
@@ -499,7 +499,7 @@ export const GrDetails = ({ academicYear, form, categories }) => {
           control={form.control}
           name="gender"
           render={({ field }) => (
-            <FormItem>
+            <FormItem className="h-[90px]">
               <FormLabel>Gender*</FormLabel>
               <Select
                 disabled={loading}
@@ -531,7 +531,7 @@ export const GrDetails = ({ academicYear, form, categories }) => {
           control={form.control}
           name="udise_no"
           render={({ field }) => (
-            <FormItem>
+            <FormItem className="h-[90px]">
               <FormLabel>UDISE NO</FormLabel>
               <FormControl>
                 <Input disabled={loading} placeholder="UDISE NO" {...field} />
@@ -544,7 +544,7 @@ export const GrDetails = ({ academicYear, form, categories }) => {
           control={form.control}
           name="aadhar_no"
           render={({ field }) => (
-            <FormItem>
+            <FormItem className="h-[90px]">
               <FormLabel>Aadhar No</FormLabel>
               <FormControl>
                 <Input disabled={loading} placeholder="Aadhar No" {...field} />
@@ -557,16 +557,18 @@ export const GrDetails = ({ academicYear, form, categories }) => {
           control={form.control}
           name="birth_date"
           render={({ field }) => (
-            <FormItem className="flex flex-col self-end">
-              <FormLabel>Date Of Birth*</FormLabel>
+            <FormItem className="h-[90px]">
+              <div>
+                <FormLabel>Date Of Birth*</FormLabel>
+              </div>
               <Popover>
                 <PopoverTrigger asChild>
                   <FormControl>
                     <Button
                       variant={"outline"}
                       className={
-                        ("pl-3 text-left font-normal",
-                        !field.value && "text-muted-foreground")
+                        ("pl-3 text-left font-normal w-full",
+                        !field.value && "text-muted-foreground w-full")
                       }
                     >
                       {field.value ? (
@@ -601,7 +603,7 @@ export const GrDetails = ({ academicYear, form, categories }) => {
           control={form.control}
           name="admission_date"
           render={({ field }) => (
-            <FormItem>
+            <FormItem className="h-[90px]">
               <FormLabel>Admission Date*</FormLabel>
               <Select
                 disabled={loading}

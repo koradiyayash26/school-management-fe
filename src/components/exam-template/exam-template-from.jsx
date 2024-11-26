@@ -67,7 +67,7 @@ const ExamTemplateForm = ({ defaultValues, onSubmit, loading }) => {
           onSubmit={form.handleSubmit(onSubmit)}
           className="space-y-2 w-full"
         >
-          <div className="md:grid md:grid-cols-3 gap-8 space-y-4 md:space-y-0 mb-4">
+          <div className="md:grid md:grid-cols-2 lg:grid-cols-3 gap-8 space-y-4 md:space-y-0 mb-4">
             <FormField
               className=""
               control={form.control}
@@ -140,7 +140,9 @@ const ExamTemplateForm = ({ defaultValues, onSubmit, loading }) => {
               name="date"
               render={({ field }) => (
                 <FormItem className="flex flex-col self-end">
-                  <FormLabel>Date*</FormLabel>
+                  <div>
+                    <FormLabel>Date*</FormLabel>
+                  </div>
                   <Popover>
                     <PopoverTrigger asChild>
                       <FormControl>

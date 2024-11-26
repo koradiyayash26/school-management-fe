@@ -23,54 +23,54 @@ export const SchoolLeaveDetails = ({ form }) => {
 
   return (
     <>
-      <div className="md:grid md:grid-cols-3 gap-8 space-y-4">
-      <FormField
-        control={form.control}
-        name="left_school_date"
-        render={({ field }) => (
-          <FormItem className="flex flex-col self-end">
-            <FormLabel>Left School Date</FormLabel>
-            <Popover>
-              <PopoverTrigger asChild>
-                <FormControl>
-                  <Button
-                    variant={"outline"}
-                    className={
-                      ("pl-3 text-left font-normal",
-                      !field.value && "text-muted-foreground")
+      <div className="md:grid md:grid-cols-2 lg:grid-cols-3 gap-8 space-y-4">
+        <FormField
+          control={form.control}
+          name="left_school_date"
+          render={({ field }) => (
+            <FormItem className="flex flex-col self-end">
+              <FormLabel>Left School Date</FormLabel>
+              <Popover>
+                <PopoverTrigger asChild>
+                  <FormControl>
+                    <Button
+                      variant={"outline"}
+                      className={
+                        ("pl-3 text-left font-normal",
+                        !field.value && "text-muted-foreground")
+                      }
+                    >
+                      {field.value ? (
+                        format(new Date(field.value), "yyyy-MM-dd")
+                      ) : (
+                        <span>Pick a Date</span>
+                      )}
+                      <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                    </Button>
+                  </FormControl>
+                </PopoverTrigger>
+                <PopoverContent className="w-auto p-0" align="start">
+                  <Calendar
+                    mode="single"
+                    selected={field.value ? new Date(field.value) : null}
+                    onSelect={(date) => {
+                      if (date) {
+                        field.onChange(format(date, "yyyy-MM-dd"));
+                      } else {
+                        field.onChange("");
+                      }
+                    }}
+                    disabled={(date) =>
+                      date > new Date() || date < new Date("1900-01-01")
                     }
-                  >
-                    {field.value ? (
-                      format(new Date(field.value), "yyyy-MM-dd")
-                    ) : (
-                      <span>Pick a Date</span>
-                    )}
-                    <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
-                  </Button>
-                </FormControl>
-              </PopoverTrigger>
-              <PopoverContent className="w-auto p-0" align="start">
-                <Calendar
-                  mode="single"
-                  selected={field.value ? new Date(field.value) : null}
-                  onSelect={(date) => {
-                    if (date) {
-                      field.onChange(format(date, "yyyy-MM-dd"));
-                    } else {
-                      field.onChange("");
-                    }
-                  }}
-                  disabled={(date) =>
-                    date > new Date() || date < new Date("1900-01-01")
-                  }
-                  initialFocus
-                />
-              </PopoverContent>
-            </Popover>
-            <FormMessage />
-          </FormItem>
-        )}
-      />
+                    initialFocus
+                  />
+                </PopoverContent>
+              </Popover>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
         <FormField
           control={form.control}
           name="left_school_std"

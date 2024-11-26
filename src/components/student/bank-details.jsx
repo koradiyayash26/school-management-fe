@@ -13,7 +13,7 @@ export const BankDetails = ({ categories, form, defaultValues }) => {
 
   return (
     <>
-      <div className="md:grid md:grid-cols-3 gap-8 space-y-4">
+      <div className="md:grid md:grid-cols-2 lg:grid-cols-3 gap-8 space-y-4">
         <FormField
           control={form.control}
           name="account_no"

@@ -557,7 +557,7 @@ export const GrDetails = ({ academicYear, form, categories }) => {
           control={form.control}
           name="birth_date"
           render={({ field }) => (
-            <FormItem className="h-[90px]">
+            <FormItem className="h-[90px] flex flex-col self-end">
               <div>
                 <FormLabel>Date Of Birth*</FormLabel>
               </div>

@@ -21,11 +21,25 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Checkbox } from "@/components/ui/checkbox";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 const formSchema = z.object({
   name: z.coerce.number().min(1, { message: "Enter Standard Number" }),
   is_active: z.boolean().default(true),
+  school_type: z.string().min(1, { message: "Please select a category" }),
 });
+
+const school_type = [
+  { _id: "Primary", name: "Primary" },
+  { _id: "Secondary", name: "Secondary" },
+  { _id: "High Secondary", name: "High Secondary" },
+];
 
 const StandardMasterForm = ({ defaultValues, onSubmit, isLoading }) => {
   const form = useForm({
@@ -47,7 +61,7 @@ const StandardMasterForm = ({ defaultValues, onSubmit, isLoading }) => {
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="md:grid md:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6 lg:gap-8">
             <FormField
               className=""
               control={form.control}
@@ -62,6 +76,38 @@ const StandardMasterForm = ({ defaultValues, onSubmit, isLoading }) => {
                       {...field}
                     />
                   </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="school_type"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>School Type*</FormLabel>
+                  <Select
+                    disabled={isLoading}
+                    onValueChange={field.onChange}
+                    value={field.value}
+                    defaultValue={field.value}
+                  >
+                    <FormControl>
+                      <SelectTrigger>
+                        <SelectValue
+                          defaultValue={field.value}
+                          placeholder="Select a School Type"
+                        />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      {school_type.map((std) => (
+                        <SelectItem key={std._id} value={std._id}>
+                          {std.name}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
                   <FormMessage />
                 </FormItem>
               )}

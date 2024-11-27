@@ -17,6 +17,7 @@ import ActionsPopupSettings from "@/components/settings/data-table-row-action";
 const headers = [
   { label: "ID", value: "id" },
   { label: "Standard", value: "name" },
+  { label: "Class", value: "school_type" },
 ];
 
 function StandardMasterList() {

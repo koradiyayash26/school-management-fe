@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { useMutation } from "@tanstack/react-query";
 import StandardMasterForm from "./standard-master-form-page";
 import { postStandardMaster } from "@/services/standard-master-service";
+import toast, { Toaster } from "react-hot-toast";
 
 const StandardMasterAdd = () => {
   const defaultValues = {
@@ -16,7 +17,10 @@ const StandardMasterAdd = () => {
   const mutation = useMutation({
     mutationFn: (data) => postStandardMaster(data),
     onSuccess: () => {
-      navigate("/setting/standard-master");
+      toast.success("Standard Add Successfully");
+      setTimeout(() => {
+        navigate("/setting/standard-master");
+      }, 1000); // Add a small delay before navigation
     },
   });
 
@@ -26,6 +30,31 @@ const StandardMasterAdd = () => {
 
   return (
     <>
+      <Toaster
+        position="top-center"
+        reverseOrder={false}
+        gutter={8}
+        containerClassName=""
+        containerStyle={{}}
+        toastOptions={{
+          // Define default options
+          className: "",
+          duration: 5000,
+          style: {
+            background: "#363636",
+            color: "#fff",
+          },
+
+          // Default options for specific types
+          success: {
+            duration: 3000,
+            theme: {
+              primary: "green",
+              secondary: "black",
+            },
+          },
+        }}
+      />
       <h1 className="uppercase text-2xl font-bold mb-4">ADD STANDARD MASTER</h1>
       <Card className="">
         <StandardMasterForm defaultValues={defaultValues} onSubmit={onSubmit} />

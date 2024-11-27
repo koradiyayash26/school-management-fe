@@ -1,3 +1,4 @@
+import { getSchoolType } from "@/hooks/use-school-type";
 import apiClient from "@/lib/api-client";
 import { getToken } from "@/utils/token";
 
@@ -5,6 +6,8 @@ const examTemplateGet = async () => {
   let response = await apiClient.get("/exam-template/search/", {
     headers: {
       Authorization: `Bearer ${getToken()}`,
+    }, params: {
+      school_type: getSchoolType(),
     },
   });
   return response.data;

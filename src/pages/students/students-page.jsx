@@ -66,6 +66,7 @@ import {
 } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
 import { cn } from "@/lib/utils";
+import { getSchoolType } from "@/hooks/use-school-type";
 
 const headers = [
   { label: "ID", value: "id" },
@@ -326,6 +327,9 @@ function StudentsPage() {
         headers: {
           Authorization: `Bearer ${getToken()}`,
         },
+        params: {
+          school_type: getSchoolType(),
+        },
         responseType: "blob", // This is important
       });
 
@@ -335,7 +339,7 @@ function StudentsPage() {
 
       const link = document.createElement("a");
       link.href = window.URL.createObjectURL(blob);
-      link.download = "General Register.xlsx";
+      link.download = `General Register of ${getSchoolType()}.xlsx`;
       document.body.appendChild(link); // Needed for Firefox
       link.click();
 

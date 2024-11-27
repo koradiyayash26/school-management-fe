@@ -1,3 +1,4 @@
+import { getSchoolType } from "@/hooks/use-school-type";
 import apiClient from "@/lib/api-client";
 import { getToken } from "@/utils/token";
 
@@ -5,6 +6,9 @@ const getPaymentStudentNames = async () => {
   let response = await apiClient.get("/students/search/", {
     headers: {
       Authorization: `Bearer ${getToken()}`,
+    },
+    params: {
+      school_type: getSchoolType(),
     },
   });
   return response.data;
@@ -14,6 +18,9 @@ const getPaymentFeeList = async () => {
   let response = await apiClient.get("/payments/search/", {
     headers: {
       Authorization: `Bearer ${getToken()}`,
+    },
+    params: {
+      school_type: getSchoolType(),
     },
   });
   return response.data;

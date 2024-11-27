@@ -1,3 +1,4 @@
+import { getSchoolType } from "@/hooks/use-school-type";
 import apiClient from "@/lib/api-client";
 import { getToken } from "@/utils/token";
 
@@ -5,6 +6,9 @@ const getStandard = async () => {
   let response = await apiClient.get("/standards/standard-counter/", {
     headers: {
       Authorization: `Bearer ${getToken()}`,
+    },
+    params: {
+      school_type: getSchoolType(),
     },
   });
   return response.data;

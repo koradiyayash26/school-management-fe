@@ -126,6 +126,11 @@ function StudentDetailsDialog({ student, open, onOpenChange }) {
       label: "Personal Information",
       items: [
         {
+          label: "Student Image",
+          value: student.student_img,
+          isImage: true,
+        },
+        {
           label: "Full Name",
           value: `${student.first_name} ${student.middle_name} ${student.last_name}`,
         },
@@ -195,16 +200,33 @@ function StudentDetailsDialog({ student, open, onOpenChange }) {
                       className={cn(
                         "p-4 rounded-lg border bg-card transition-colors",
                         "hover:bg-accent hover:text-accent-foreground",
-                        item.value?.length > 50 && "sm:col-span-2 lg:col-span-3"
+                        (item.value?.length > 50 || item.isImage) &&
+                          "sm:col-span-2 lg:col-span-3"
                       )}
                     >
                       <div className="space-y-2">
                         <Label className="text-sm font-medium text-muted-foreground">
                           {item.label}
                         </Label>
-                        <p className="text-sm md:text-base font-medium break-words">
-                          {item.value || "-"}
-                        </p>
+                        {item.isImage ? (
+                          item.value ? (
+                            <div className="flex justify-center">
+                              <img
+                                src={`http://127.0.0.1:8000/media/${item.value}`}
+                                alt="Student"
+                                className="h-48 w-auto object-contain rounded-md"
+                              />
+                            </div>
+                          ) : (
+                            <p className="text-sm md:text-base font-medium">
+                              No image available
+                            </p>
+                          )
+                        ) : (
+                          <p className="text-sm md:text-base font-medium break-words">
+                            {item.value || "-"}
+                          </p>
+                        )}
                       </div>
                     </div>
                   ))}

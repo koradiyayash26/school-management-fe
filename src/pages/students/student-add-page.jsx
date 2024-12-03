@@ -46,17 +46,33 @@ const StudentAddPage = () => {
       }
     });
 
-    const formattedData = {
-      ...data,
-      academic_year: academicYearId, // Send the matched ID
-      birth_date: format(new Date(data.birth_date), "yyyy-MM-dd"),
-      left_school_date: data.left_school_date
-        ? format(new Date(data.left_school_date), "yyyy-MM-dd")
-        : null,
-    };
+    // Create FormData to handle file upload
+    const formData = new FormData();
 
-    mutation.mutate(formattedData);
+    // Add all form fields to FormData
+    Object.keys(data).forEach((key) => {
+      if (key === "student_img" && data[key] instanceof File) {
+        formData.append("student_img", data[key]);
+      } else if (key === "birth_date") {
+        formData.append(
+          "birth_date",
+          format(new Date(data[key]), "yyyy-MM-dd")
+        );
+      } else if (key === "left_school_date" && data[key]) {
+        formData.append(
+          "left_school_date",
+          format(new Date(data[key]), "yyyy-MM-dd")
+        );
+      } else if (key === "academic_year") {
+        formData.append("academic_year", academicYearId);
+      } else {
+        formData.append(key, data[key]);
+      }
+    });
+
+    mutation.mutate(formData);
   };
+
   return (
     <>
       <Toaster

@@ -98,7 +98,7 @@ export const studentDetail = {
   gender: "કુમાર",
   udise_no: "",
   aadhar_no: "",
-  academic_year: "",
+  academic_year: "2024-25",
   account_no: "",
   name_on_passbook: "",
   bank_name: "",

@@ -32,7 +32,6 @@ const getStudent = async (id) => {
 };
 
 const updateStudent = async (formattedData, id) => {
-  console.log(id);
   return await apiClient.patch(`/students/${id}/edit/`, formattedData, {
     headers: {
       Authorization: `Bearer ${getToken()}`,

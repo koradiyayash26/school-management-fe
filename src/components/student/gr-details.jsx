@@ -20,13 +20,17 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { CalendarIcon, Trash } from "lucide-react";
+import { CalendarIcon, Pencil, Trash2 } from "lucide-react";
 import { useState } from "react";
 import { format } from "date-fns";
 import { Calendar } from "../ui/calendar";
+import { Avatar, AvatarImage } from "@/components/ui/avatar";
 
 export const GrDetails = ({ academicYear, form, categories }) => {
   const [loading, setLoading] = useState(false);
+  const [fileError, setFileError] = useState(null);
+
+  const [imagePreview, setImagePreview] = useState(null);
 
   const religions = [
     { _id: "હિન્દુ", name: "હિન્દુ" },
@@ -628,6 +632,131 @@ export const GrDetails = ({ academicYear, form, categories }) => {
                 </SelectContent>
               </Select>
               <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <FormField
+          control={form.control}
+          name="student_img"
+          render={({ field: { value, onChange, ...field } }) => (
+            <FormItem className="">
+              <FormLabel>Student Image</FormLabel>
+              <div className="flex items-center gap-4">
+                {imagePreview || value ? (
+                  <div className="relative">
+                    <Avatar className="sm:h-40 h-48 w-full sm:w-80 rounded-sm overflow-hidden">
+                      <AvatarImage
+                        src={
+                          imagePreview ||
+                          (value?.startsWith("/media")
+                            ? `http://127.0.0.1:8000${value}`
+                            : value)
+                        }
+                        alt="Student image"
+                        className="object-contain rounded-sm h-full w-full"
+                      />
+                    </Avatar>
+                    <div className="absolute sm:top-2 sm:right-6 right-2 top-12 flex gap-2">
+                      <Button
+                        type="button"
+                        variant="secondary"
+                        size="icon"
+                        className="sm:h-8 sm:w-8 w-6 h-6 bg-black/80 hover:bg-black border"
+                        onClick={() => {
+                          const fileInput = document.createElement("input");
+                          fileInput.type = "file";
+                          fileInput.accept = "image/jpeg,image/jpg,image/png";
+                          fileInput.onchange = (e) => {
+                            const file = e.target.files?.[0];
+                            if (file) {
+                              // Validate file type
+                              const validTypes = [
+                                "image/jpeg",
+                                "image/png",
+                                "image/jpg",
+                              ];
+                              if (!validTypes.includes(file.type)) {
+                                setFileError(
+                                  "Please select only JPG, JPEG or PNG files"
+                                );
+                                return;
+                              }
+                              // Validate file size (5MB)
+                              const fiveMB = 5 * 1024 * 1024;
+                              if (file.size > fiveMB) {
+                                setFileError("File size must be less than 5MB");
+                                return;
+                              }
+                              setFileError(null);
+                              onChange(file);
+                              setImagePreview(URL.createObjectURL(file));
+                            }
+                          };
+                          fileInput.click();
+                        }}
+                      >
+                        <Pencil className="h-4 w-4 text-white" />
+                      </Button>
+                      <Button
+                        type="button"
+                        variant="destructive"
+                        size="icon"
+                        className="sm:h-8 sm:w-8 w-6 h-6 bg-red-500 hover:bg-red-600"
+                        onClick={() => {
+                          onChange(null);
+                          setImagePreview(null);
+                          setFileError(null);
+                        }}
+                      >
+                        <Trash2 className="h-4 w-4" />
+                      </Button>
+                    </div>
+                  </div>
+                ) : (
+                  <div className="w-full">
+                    <Input
+                      type="file"
+                      className=""
+                      accept="image/jpeg,image/jpg,image/png"
+                      disabled={loading}
+                      onChange={(e) => {
+                        const file = e.target.files?.[0];
+                        if (file) {
+                          // Validate file type
+                          const validTypes = [
+                            "image/jpeg",
+                            "image/png",
+                            "image/jpg",
+                          ];
+                          if (!validTypes.includes(file.type)) {
+                            setFileError(
+                              "Please select only JPG, JPEG or PNG files"
+                            );
+                            return;
+                          }
+                          // Validate file size (5MB)
+                          const fiveMB = 5 * 1024 * 1024;
+                          if (file.size > fiveMB) {
+                            setFileError("File size must be less than 5MB");
+                            return;
+                          }
+                          setFileError(null);
+                          onChange(file);
+                          setImagePreview(URL.createObjectURL(file));
+                        }
+                      }}
+                      {...field}
+                    />
+                  </div>
+                )}
+              </div>
+              <FormMessage />
+              {fileError && (
+                <p className="text-sm font-medium text-destructive mt-2">
+                  {fileError}
+                </p>
+              )}
             </FormItem>
           )}
         />

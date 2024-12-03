@@ -16,6 +16,7 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 
 const formSchema = z.object({
+  student_img: z.any().optional(),
   grno: z.coerce.number().min(1, { message: "Grno is required" }),
   first_name: z
     .string()
@@ -162,14 +163,17 @@ function StudentForm({ academicYear, defaultValues, onSubmit }) {
         >
           <Tabs defaultValue="gr-details" className="w-full">
             <TabsList className="grid w-full grid-cols-3 h-auto">
-              <TabsTrigger value="gr-details" className="whitespace-pre-wrap ">
-                GR Details
+              <TabsTrigger value="gr-details" className="whitespace-pre-wrap">
+                <span className="hidden sm:block">GR Details</span>
+                <span className="sm:hidden">GR</span>
               </TabsTrigger>
               <TabsTrigger value="bank-details" className="whitespace-pre-wrap">
-                Bank Details
+                <span className="hidden sm:block">Bank Details</span>
+                <span className="sm:hidden">Bank</span>
               </TabsTrigger>
               <TabsTrigger value="slr" className="whitespace-pre-wrap">
-                School Leave Reason
+                <span className="hidden sm:block">School Leave Reason</span>
+                <span className="sm:hidden">Leave</span>
               </TabsTrigger>
             </TabsList>
             <TabsContent value="gr-details">

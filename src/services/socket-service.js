@@ -1,4 +1,3 @@
-import { io } from 'socket.io-client';
 import { getToken } from '@/utils/token';
 
 class SocketService {
@@ -11,38 +10,49 @@ class SocketService {
   connect() {
     if (this.connected) return;
 
-    try {
-      const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
-      const token = localStorage.getItem('token');
-      this.socket = new WebSocket(`${protocol}//${window.location.host}/ws/chat/?token=${token}`);
+    const token = getToken();
+    this.socket = new WebSocket(`ws://127.0.0.1:8000/ws/socket-server/?token=${token}`);
 
-      this.socket.onopen = () => {
-        console.log('WebSocket Connected');
-        this.connected = true;
-      };
+    this.socket.onopen = () => {
+      console.log('WebSocket Connected');
+      this.connected = true;
+    };
 
-      this.socket.onmessage = (event) => {
-        try {
-          const data = JSON.parse(event.data);
-          this.messageHandlers.forEach(handler => handler(data));
-        } catch (error) {
-          console.error('Error processing message:', error);
+    this.socket.onmessage = (event) => {
+      try {
+        const data = JSON.parse(event.data);
+        switch (data.type) {
+          case 'chat_message':
+            this.messageHandlers.forEach(handler => handler({
+              type: 'new_message',
+              message: {
+                id: data.message_id,
+                message: data.message,
+                sender: { id: data.sender_id },
+                timestamp: data.timestamp,
+                is_delivered: false,
+                is_read: false
+              }
+            }));
+            break;
+          default:
+            this.messageHandlers.forEach(handler => handler(data));
         }
-      };
+      } catch (error) {
+        console.error('Error processing message:', error);
+      }
+    };
 
-      this.socket.onclose = () => {
-        console.log('WebSocket Disconnected');
-        this.connected = false;
-        setTimeout(() => this.connect(), 5000);
-      };
+    this.socket.onclose = () => {
+      console.log('WebSocket Disconnected');
+      this.connected = false;
+      setTimeout(() => this.connect(), 5000);
+    };
 
-      this.socket.onerror = (error) => {
-        console.error('WebSocket Error:', error);
-        this.connected = false;
-      };
-    } catch (error) {
-      console.error('Error connecting to WebSocket:', error);
-    }
+    this.socket.onerror = (error) => {
+      console.error('WebSocket Error:', error);
+      this.connected = false;
+    };
   }
 
   disconnect() {
@@ -71,6 +81,14 @@ class SocketService {
     } else {
       console.warn('WebSocket is not connected');
     }
+  }
+
+  sendChatMessage(receiverId, message) {
+    this.send({
+      type: 'chat_message',
+      receiver_id: receiverId,
+      message: message
+    });
   }
 }
 

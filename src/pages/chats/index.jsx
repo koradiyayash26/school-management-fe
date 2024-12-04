@@ -589,13 +589,28 @@ function Chats() {
         await chatService.editMessage(editingMessage.id, messageInput.trim());
         setEditingMessage(null);
       } else {
-        await chatService.sendMessage(selectedUser.id, messageInput.trim());
+        // Send via WebSocket instead of REST API
+        socketService.sendChatMessage(selectedUser.id, messageInput.trim());
+        
+        // Optimistically add message to UI
+        const optimisticMessage = {
+          id: Date.now(), // temporary ID
+          message: messageInput.trim(),
+          sender: { id: selectedUser.id }, // current user
+          timestamp: new Date().toISOString(),
+          is_delivered: false,
+          is_read: false
+        };
+        
+        queryClient.setQueryData(['messages', selectedUser.id], 
+          old => [...(old || []), optimisticMessage]
+        );
       }
-      setMessageInput("");
-      queryClient.invalidateQueries(["messages", selectedUser?.id]);
+      setMessageInput('');
       scrollToBottom();
     } catch (error) {
-      console.error("Error sending/editing message:", error);
+      console.error('Error sending/editing message:', error);
+      toast.error('Failed to send message');
     }
   };
 
@@ -654,28 +669,29 @@ function Chats() {
   useEffect(() => {
     if (!selectedUser) return;
 
-    let messageUnsubscribe = () => {};
+    socketService.connect();
 
-    try {
-      socketService.connect();
-
-      messageUnsubscribe = socketService.onMessage((data) => {
-        if (data.type === "new_message") {
-          queryClient.invalidateQueries(["messages", selectedUser?.id]);
-          queryClient.invalidateQueries(["chats"]);
-        } else if (data.type === "chat_cleared") {
-          queryClient.invalidateQueries(["messages", selectedUser?.id]);
-          queryClient.invalidateQueries(["chats"]);
+    const messageHandler = (data) => {
+      if (data.type === 'new_message') {
+        // Update messages
+        queryClient.invalidateQueries(['messages', selectedUser?.id]);
+        
+        // Update chat list to show latest message
+        queryClient.invalidateQueries(['chats']);
+        
+        // Auto scroll if near bottom
+        if (!showScrollButton) {
+          scrollToBottom();
         }
-      });
-    } catch (error) {
-      console.error("Error setting up WebSocket:", error);
-    }
+      }
+    };
+
+    const unsubscribe = socketService.onMessage(messageHandler);
 
     return () => {
-      messageUnsubscribe();
+      unsubscribe();
     };
-  }, [selectedUser?.id, queryClient]);
+  }, [selectedUser?.id, queryClient, showScrollButton, scrollToBottom]);
 
   // Filter conversations based on search
   const filteredChatList =

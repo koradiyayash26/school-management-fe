@@ -98,6 +98,12 @@ class SocketService {
       message: message
     });
   }
+  deleteMessage(messageId) {
+    this.send({
+      type: 'delete_message',
+      message_id: messageId,
+    });
+  }
 }
 
 export const socketService = new SocketService();

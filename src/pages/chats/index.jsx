@@ -673,7 +673,7 @@ function Chats() {
     socketService.connect();
 
     const messageHandler = (data) => {
-      if (data.type === 'new_message') {
+      if (data.type === 'new_message' ||  data.type === 'delete_message') {
         // Update messages
         queryClient.invalidateQueries(['messages', selectedUser?.id]);
         
@@ -728,7 +728,8 @@ function Chats() {
       setMessageInput(message.message);
     } else if (action === "delete") {
       try {
-        await chatService.deleteMessage(message.id);
+        socketService.deleteMessage(message.id)
+        // await chatService.deleteMessage(message.id);
         queryClient.invalidateQueries(["messages", selectedUser?.id]);
       } catch (error) {
         console.error("Error deleting message:", error);

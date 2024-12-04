@@ -587,6 +587,7 @@ function Chats() {
     try {
       if (editingMessage) {
         await chatService.editMessage(editingMessage.id, messageInput.trim());
+        await socketService.editMessage(editingMessage.id, messageInput.trim());
         setEditingMessage(null);
       } else {
         // Send via WebSocket instead of REST API

@@ -90,6 +90,14 @@ class SocketService {
       message: message
     });
   }
+
+  editMessage(messageId, message) {
+    this.send({
+      type: 'edit_message',
+      message_id: messageId,
+      message: message
+    });
+  }
 }
 
 export const socketService = new SocketService();

@@ -259,6 +259,7 @@ function Message({
                 : "text-muted-foreground"
             )}
           >
+            {message.is_edited && <span>Edited</span>}
             <span>{format(new Date(message.timestamp), "HH:mm")}</span>
             <MessageStatus message={message} isCurrentUser={isCurrentUser} />
           </div>
@@ -781,7 +782,6 @@ function Chats() {
         console.error("Error deleting message:", error);
       }
     } else if (action === "delete_all") {
-      alert(action);
       try {
         socketService.deleteMessage(message.id, "delete_all");
         // await chatService.deleteMessage(message.id);

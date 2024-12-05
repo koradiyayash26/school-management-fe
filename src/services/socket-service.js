@@ -1,4 +1,4 @@
-import { getToken } from '@/utils/token';
+import { getToken } from "@/utils/token";
 
 class SocketService {
   constructor() {
@@ -11,10 +11,12 @@ class SocketService {
     if (this.connected) return;
 
     const token = getToken();
-    this.socket = new WebSocket(`ws://127.0.0.1:8000/ws/socket-server/?token=${token}`);
+    this.socket = new WebSocket(
+      `ws://127.0.0.1:8000/ws/socket-server/?token=${token}`
+    );
 
     this.socket.onopen = () => {
-      console.log('WebSocket Connected');
+      console.log("WebSocket Connected");
       this.connected = true;
     };
 
@@ -22,49 +24,64 @@ class SocketService {
       try {
         const data = JSON.parse(event.data);
         switch (data.type) {
-
-          case 'chat_message':
-            this.messageHandlers.forEach(handler => handler({
-              type: 'new_message',
-              message: {
-                id: data.message_id,
-                message: data.message,
-                sender: { 
-                  id: data.sender_id,
-                  username: data.sender_username
+          case "chat_message":
+            this.messageHandlers.forEach((handler) =>
+              handler({
+                type: "new_message",
+                message: {
+                  id: data.message_id,
+                  message: data.message,
+                  sender: {
+                    id: data.sender_id,
+                    username: data.sender_username,
+                  },
+                  timestamp: data.timestamp,
+                  is_delivered: false,
+                  is_read: false,
                 },
-                timestamp: data.timestamp,
-                is_delivered: false,
-                is_read: false
-              }
-            }));
+              })
+            );
             break;
 
-          case 'chat_cleared':
-            this.messageHandlers.forEach(handler => handler({
-              type: 'chat_cleared',
-              sender_id: data.sender_id,
-              receiver_id: data.receiver_id,
-              last_message: null
-            }));
+          case "chat_cleared":
+            this.messageHandlers.forEach((handler) =>
+              handler({
+                type: "chat_cleared",
+                sender_id: data.sender_id,
+                receiver_id: data.receiver_id,
+                last_message: null,
+              })
+            );
+            break;
+
+          case "delete_message":
+            this.messageHandlers.forEach((handler) =>
+              handler({
+                type: "delete_message",
+                message_id: data.message_id,
+                sender_id: data.sender_id,
+                receiver_id: data.receiver_id,
+                delete_type: data.delete_type,
+              })
+            );
             break;
 
           default:
-            this.messageHandlers.forEach(handler => handler(data));
+            this.messageHandlers.forEach((handler) => handler(data));
         }
       } catch (error) {
-        console.error('Error processing message:', error);
+        console.error("Error processing message:", error);
       }
     };
 
     this.socket.onclose = () => {
-      console.log('WebSocket Disconnected');
+      console.log("WebSocket Disconnected");
       this.connected = false;
       setTimeout(() => this.connect(), 5000);
     };
 
     this.socket.onerror = (error) => {
-      console.error('WebSocket Error:', error);
+      console.error("WebSocket Error:", error);
       this.connected = false;
     };
   }
@@ -78,8 +95,8 @@ class SocketService {
   }
 
   onMessage(callback) {
-    if (typeof callback !== 'function') {
-      throw new Error('Callback must be a function');
+    if (typeof callback !== "function") {
+      throw new Error("Callback must be a function");
     }
     this.messageHandlers.add(callback);
     return () => this.messageHandlers.delete(callback);
@@ -90,43 +107,43 @@ class SocketService {
       try {
         this.socket.send(JSON.stringify(message));
       } catch (error) {
-        console.error('Error sending message:', error);
+        console.error("Error sending message:", error);
       }
     } else {
-      console.warn('WebSocket is not connected');
+      console.warn("WebSocket is not connected");
     }
   }
 
   sendChatMessage(receiverId, message) {
     this.send({
-      type: 'chat_message',
+      type: "chat_message",
       receiver_id: receiverId,
-      message: message
+      message: message,
     });
   }
 
   editMessage(messageId, message) {
     this.send({
-      type: 'edit_message',
+      type: "edit_message",
       message_id: messageId,
-      message: message
+      message: message,
     });
   }
 
-  deleteMessage(messageId) {
+  deleteMessage(messageId, deleteType) {
     this.send({
-      type: 'delete_message',
+      type: "delete_message",
       message_id: messageId,
+      deleteTypeMessage: deleteType,
     });
   }
 
   clearChatMessage(receiverId) {
     this.send({
-      type: 'clear_chat',
+      type: "clear_chat",
       receiver_id: receiverId,
     });
   }
-  
 }
 
 export const socketService = new SocketService();

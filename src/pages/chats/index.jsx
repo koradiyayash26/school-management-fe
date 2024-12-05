@@ -161,10 +161,22 @@ function Message({
                       className="bg-red-600 text-white hover:bg-red-700 w-full sm:w-auto"
                       onClick={(e) => {
                         e.stopPropagation();
+                        onMessageAction("delete_all", message);
+                      }}
+                    >
+                      Delete for everyone
+                    </Button>
+                  </div>
+                  <div className="flex flex-col justify-end mt-2 lg:mt-0">
+                    <Button
+                      variant="destructive"
+                      className="bg-red-600 text-white hover:bg-red-700 w-full sm:w-auto"
+                      onClick={(e) => {
+                        e.stopPropagation();
                         onMessageAction("delete", message);
                       }}
                     >
-                      Delete
+                      Delete for me
                     </Button>
                   </div>
                   <div className="flex flex-col justify-end">
@@ -231,8 +243,10 @@ function Message({
         <div
           className={cn(
             "relative",
-            isCurrentUser ? "bg-primary text-primary-foreground" : "bg-muted",
-            "rounded-2xl px-3 py-2"
+            isCurrentUser
+              ? "bg-primary rounded-[16px_16px_0px_16px] text-primary-foreground"
+              : "bg-muted rounded-[16px_16px_16px_0px]",
+            "px-3 py-2"
           )}
           style={{ wordBreak: "break-word" }}
         >
@@ -245,6 +259,7 @@ function Message({
                 : "text-muted-foreground"
             )}
           >
+            {message.is_edited && <span>Edited</span>}
             <span>{format(new Date(message.timestamp), "HH:mm")}</span>
             <MessageStatus message={message} isCurrentUser={isCurrentUser} />
           </div>
@@ -709,7 +724,7 @@ function Chats() {
           queryClient.invalidateQueries(["messages", selectedUser?.id]);
           queryClient.invalidateQueries(["chats"]);
 
-          if (!showScrollButton) {
+          if (selectedUser?.id === data.receiver_id && !showScrollButton) {
             scrollToBottom();
           }
         }, 2000);
@@ -757,9 +772,23 @@ function Chats() {
       setMessageInput(message.message);
     } else if (action === "delete") {
       try {
-        socketService.deleteMessage(message.id);
+        socketService.deleteMessage(message.id, "delete");
         // await chatService.deleteMessage(message.id);
         queryClient.invalidateQueries(["messages", selectedUser?.id]);
+        setTimeout(() => {
+          toast.success("Message Delete Successfully");
+        }, 1000);
+      } catch (error) {
+        console.error("Error deleting message:", error);
+      }
+    } else if (action === "delete_all") {
+      try {
+        socketService.deleteMessage(message.id, "delete_all");
+        // await chatService.deleteMessage(message.id);
+        queryClient.invalidateQueries(["messages", selectedUser?.id]);
+        setTimeout(() => {
+          toast.success("Message Delete Everyone Successfully");
+        }, 1000);
       } catch (error) {
         console.error("Error deleting message:", error);
       }

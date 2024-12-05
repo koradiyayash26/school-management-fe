@@ -666,7 +666,6 @@ function Chats() {
       scrollToBottom("auto");
     }
   }, [selectedUser?.id, scrollToBottom]);
-  
 
   // WebSocket connection and message handling
   useEffect(() => {
@@ -705,9 +704,7 @@ function Chats() {
         if (!showScrollButton) {
           scrollToBottom();
         }
-
       } else if (data.type === "delete_message") {
-
         setTimeout(() => {
           queryClient.invalidateQueries(["messages", selectedUser?.id]);
           queryClient.invalidateQueries(["chats"]);
@@ -830,7 +827,14 @@ function Chats() {
   const handleClearChat = async () => {
     try {
       setIsClearing(true);
-      await clearChatMutation.mutateAsync(selectedUser.id);
+      // await clearChatMutation.mutateAsync(selectedUser.id);
+      socketService.clearChatMessage(selectedUser.id);
+      setTimeout(() => {
+        toast.success("Chat Clear Successfully");
+      }, 1000);
+      queryClient.invalidateQueries(["messages", selectedUser?.id]);
+      queryClient.invalidateQueries(["chats"]);
+
       setIsOpenClearDialog(false);
     } catch (error) {
       console.error("Error clearing chat:", error);

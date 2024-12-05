@@ -44,6 +44,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import toast, { Toaster } from "react-hot-toast";
+import sendSound from "/sounds/send-sound.mp3";
 
 // Message Status Component
 function MessageStatus({ message, isCurrentUser }) {
@@ -568,6 +569,9 @@ function Chats() {
   const [isOpenClearDialog, setIsOpenClearDialog] = useState(false);
   const [isClearing, setIsClearing] = useState(false);
 
+  // Create an audio object
+  const sendSoundAudio = new Audio(sendSound);
+
   // Send message mutation
   const sendMessageMutation = useMutation({
     mutationFn: async ({ userId, message }) => {
@@ -603,10 +607,14 @@ function Chats() {
       if (editingMessage) {
         await chatService.editMessage(editingMessage.id, messageInput.trim());
         await socketService.editMessage(editingMessage.id, messageInput.trim());
+        sendSoundAudio.play();
         setEditingMessage(null);
       } else {
         // Send via WebSocket instead of REST API
         socketService.sendChatMessage(selectedUser.id, messageInput.trim());
+
+        // Play the send sound
+        sendSoundAudio.play();
 
         // Optimistically add message to UI
         const optimisticMessage = {
@@ -775,6 +783,7 @@ function Chats() {
         socketService.deleteMessage(message.id, "delete");
         // await chatService.deleteMessage(message.id);
         queryClient.invalidateQueries(["messages", selectedUser?.id]);
+        sendSoundAudio.play();
         setTimeout(() => {
           toast.success("Message Delete Successfully");
         }, 1000);
@@ -786,6 +795,7 @@ function Chats() {
         socketService.deleteMessage(message.id, "delete_all");
         // await chatService.deleteMessage(message.id);
         queryClient.invalidateQueries(["messages", selectedUser?.id]);
+        sendSoundAudio.play();
         setTimeout(() => {
           toast.success("Message Delete Everyone Successfully");
         }, 1000);

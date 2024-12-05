@@ -22,6 +22,7 @@ class SocketService {
       try {
         const data = JSON.parse(event.data);
         switch (data.type) {
+
           case 'chat_message':
             this.messageHandlers.forEach(handler => handler({
               type: 'new_message',
@@ -38,6 +39,16 @@ class SocketService {
               }
             }));
             break;
+
+          case 'chat_cleared':
+            this.messageHandlers.forEach(handler => handler({
+              type: 'chat_cleared',
+              sender_id: data.sender_id,
+              receiver_id: data.receiver_id,
+              last_message: null
+            }));
+            break;
+
           default:
             this.messageHandlers.forEach(handler => handler(data));
         }
@@ -101,12 +112,21 @@ class SocketService {
       message: message
     });
   }
+
   deleteMessage(messageId) {
     this.send({
       type: 'delete_message',
       message_id: messageId,
     });
   }
+
+  clearChatMessage(receiverId) {
+    this.send({
+      type: 'clear_chat',
+      receiver_id: receiverId,
+    });
+  }
+  
 }
 
 export const socketService = new SocketService();

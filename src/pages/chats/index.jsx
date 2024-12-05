@@ -666,6 +666,7 @@ function Chats() {
       scrollToBottom("auto");
     }
   }, [selectedUser?.id, scrollToBottom]);
+  
 
   // WebSocket connection and message handling
   useEffect(() => {
@@ -704,7 +705,7 @@ function Chats() {
         if (!showScrollButton) {
           scrollToBottom();
         }
-        
+
       } else if (data.type === "delete_message") {
 
         setTimeout(() => {

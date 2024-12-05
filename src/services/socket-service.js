@@ -28,7 +28,10 @@ class SocketService {
               message: {
                 id: data.message_id,
                 message: data.message,
-                sender: { id: data.sender_id },
+                sender: { 
+                  id: data.sender_id,
+                  username: data.sender_username
+                },
                 timestamp: data.timestamp,
                 is_delivered: false,
                 is_read: false

@@ -592,7 +592,7 @@ function Chats() {
       } else {
         // Send via WebSocket instead of REST API
         socketService.sendChatMessage(selectedUser.id, messageInput.trim());
-        
+
         // Optimistically add message to UI
         const optimisticMessage = {
           id: Date.now(), // temporary ID
@@ -600,18 +600,19 @@ function Chats() {
           sender: { id: selectedUser.id }, // current user
           timestamp: new Date().toISOString(),
           is_delivered: false,
-          is_read: false
+          is_read: false,
         };
-        
-        queryClient.setQueryData(['messages', selectedUser.id], 
-          old => [...(old || []), optimisticMessage]
-        );
+
+        queryClient.setQueryData(["messages", selectedUser.id], (old) => [
+          ...(old || []),
+          optimisticMessage,
+        ]);
       }
-      setMessageInput('');
+      setMessageInput("");
       scrollToBottom();
     } catch (error) {
-      console.error('Error sending/editing message:', error);
-      toast.error('Failed to send message');
+      console.error("Error sending/editing message:", error);
+      toast.error("Failed to send message");
     }
   };
 
@@ -668,22 +669,52 @@ function Chats() {
 
   // WebSocket connection and message handling
   useEffect(() => {
-    if (!selectedUser) return;
-
     socketService.connect();
 
     const messageHandler = (data) => {
-      if (data.type === 'new_message' ||  data.type === 'delete_message') {
-        // Update messages
-        queryClient.invalidateQueries(['messages', selectedUser?.id]);
-        
+      if (data.type === "new_message") {
+        // Update messages for current chat
+        queryClient.invalidateQueries(["messages", selectedUser?.id]);
+
         // Update chat list to show latest message
-        queryClient.invalidateQueries(['chats']);
-        
-        // Auto scroll if near bottom
+        queryClient.setQueryData(["chats"], (oldChats) => {
+          if (!oldChats) return oldChats;
+
+          return oldChats.map((chat) => {
+            if (
+              chat.user.id === data.message.sender.id ||
+              chat.user.id === selectedUser?.id
+            ) {
+              return {
+                ...chat,
+                last_message: {
+                  message: data.message.message,
+                  timestamp: data.message.timestamp,
+                },
+                unread_count:
+                  chat.user.id === data.message.sender.id
+                    ? (chat.unread_count || 0) + 1
+                    : chat.unread_count,
+              };
+            }
+            return chat;
+          });
+        });
+
         if (!showScrollButton) {
           scrollToBottom();
         }
+        
+      } else if (data.type === "delete_message") {
+
+        setTimeout(() => {
+          queryClient.invalidateQueries(["messages", selectedUser?.id]);
+          queryClient.invalidateQueries(["chats"]);
+
+          if (!showScrollButton) {
+            scrollToBottom();
+          }
+        }, 2000);
       }
     };
 
@@ -728,7 +759,7 @@ function Chats() {
       setMessageInput(message.message);
     } else if (action === "delete") {
       try {
-        socketService.deleteMessage(message.id)
+        socketService.deleteMessage(message.id);
         // await chatService.deleteMessage(message.id);
         queryClient.invalidateQueries(["messages", selectedUser?.id]);
       } catch (error) {

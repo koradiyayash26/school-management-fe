@@ -46,6 +46,48 @@ import {
 import toast, { Toaster } from "react-hot-toast";
 import sendSound from "/sounds/send-sound.mp3";
 
+// Add these helper functions at the top of your file
+const isToday = (date) => {
+  const today = new Date();
+  return (
+    date.getDate() === today.getDate() &&
+    date.getMonth() === today.getMonth() &&
+    date.getFullYear() === today.getFullYear()
+  );
+};
+
+const isYesterday = (date) => {
+  const yesterday = new Date();
+  yesterday.setDate(yesterday.getDate() - 1);
+  return (
+    date.getDate() === yesterday.getDate() &&
+    date.getMonth() === yesterday.getMonth() &&
+    date.getFullYear() === yesterday.getFullYear()
+  );
+};
+
+const formatMessageDate = (date) => {
+  if (isToday(date)) {
+    return "Today";
+  } else if (isYesterday(date)) {
+    return "Yesterday";
+  } else {
+    return format(date, "dd-MM-yyyy");
+  }
+};
+
+const groupMessagesByDate = (messages) => {
+  const grouped = {};
+  messages?.forEach((message) => {
+    const date = formatMessageDate(new Date(message.timestamp));
+    if (!grouped[date]) {
+      grouped[date] = [];
+    }
+    grouped[date].push(message);
+  });
+  return grouped;
+};
+
 // Message Status Component
 function MessageStatus({ message, isCurrentUser }) {
   if (!isCurrentUser) return null;
@@ -66,6 +108,7 @@ function MessageStatus({ message, isCurrentUser }) {
 // Message Component
 function Message({
   message,
+  selectedMessageLenght,
   isCurrentUser,
   onMessageAction,
   isSelected,
@@ -194,18 +237,20 @@ function Message({
             </Dialog>
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  className="h-8 w-8 rounded-full hover:bg-muted"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    setShowActions(true);
-                  }}
-                >
-                  <IconDotsVertical className="h-4 w-4" />
-                  <span className="sr-only">Open menu</span>
-                </Button>
+                {selectedMessageLenght < 1 && (
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    className="h-8 w-8 rounded-full hover:bg-muted"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setShowActions(true);
+                    }}
+                  >
+                    <IconDotsVertical className="h-4 w-4" />
+                    <span className="sr-only">Open menu</span>
+                  </Button>
+                )}
               </DropdownMenuTrigger>
               <DropdownMenuContent
                 align={isCurrentUser ? "start" : "end"}
@@ -254,10 +299,10 @@ function Message({
           <div className="text-sm whitespace-pre-wrap">{message.message}</div>
           <div
             className={cn(
-              "mt-1 flex items-center justify-end gap-1 text-[10px]",
+              "mt-1 flex items-center gap-1 text-[10px]",
               isCurrentUser
-                ? "text-primary-foreground/60"
-                : "text-muted-foreground"
+                ? "text-primary-foreground/60 justify-end"
+                : "text-muted-foreground justify-start"
             )}
           >
             {message.is_edited && <span>Edited</span>}
@@ -278,6 +323,20 @@ function ChatList({
   selectedUser,
   handleChatSelect,
 }) {
+  const formatLastMessageDate = (timestamp) => {
+    if (!timestamp) return "";
+
+    const date = new Date(timestamp);
+
+    if (isToday(date)) {
+      return "Today"; // Changed from format(date, "HH:mm") to "Today"
+    } else if (isYesterday(date)) {
+      return "Yesterday";
+    } else {
+      return format(date, "dd-MM-yyyy");
+    }
+  };
+
   return (
     <div
       className={cn(
@@ -326,12 +385,15 @@ function ChatList({
                   <span className="font-medium">{chat.user.username}</span>
                   {chat.last_message && (
                     <span className="text-xs text-muted-foreground">
-                      {format(new Date(chat.last_message.timestamp), "HH:mm")}
+                      {/* {format(new Date(chat.last_message.timestamp), "HH:mm")} */}
+                      <span>
+                        {formatLastMessageDate(chat.last_message.timestamp)}
+                      </span>
                     </span>
                   )}
                 </div>
                 <div className="flex items-center gap-2">
-                  <span className="truncate overflow-hidden w-[180px]  text-xs text-muted-foreground">
+                  <span className="truncate overflow-hidden w-[180px] text-xs text-muted-foreground">
                     {chat.last_message?.message || "No messages yet"}
                   </span>
                   {chat.unread_count > 0 && (
@@ -464,29 +526,50 @@ function ChatArea({
       </div>
 
       {/* Messages Container */}
-      <ScrollArea ref={scrollAreaRef} className="flex-1">
-        <div className="space-y-4 p-4">
-          {messages?.map((message) => (
-            <div
-              key={message.id}
-              data-message-id={message.id}
-              className="message-item"
-            >
-              <Message
-                message={message}
-                isCurrentUser={message.sender.id !== selectedUser.id}
-              />
-            </div>
-          ))}
-        </div>
+      <ScrollArea ref={scrollAreaRef} className="flex-1 w-full">
+        {messages?.length > 0 ? (
+          <div className="flex flex-col space-y-4 py-4 w-full overflow-hidden">
+            {Object.entries(groupMessagesByDate(messages)).map(
+              ([date, dateMessages]) => (
+                <div key={date} className="space-y-4">
+                  <div className="flex items-center justify-center">
+                    <div className="bg-muted px-3 py-1 rounded-full text-xs text-muted-foreground">
+                      {date}
+                    </div>
+                  </div>
+                  {dateMessages.map((message) => (
+                    <div key={message.id} className="w-full overflow-hidden">
+                      <Message
+                        message={message}
+                        isCurrentUser={message.sender.id !== selectedUser.id}
+                        onMessageAction={handleMessageAction}
+                        isSelected={selectedMessages.some(
+                          (m) => m.id === message.id
+                        )}
+                        onSelect={handleMessageSelect}
+                        selectionMode={selectionMode}
+                      />
+                    </div>
+                  ))}
+                </div>
+              )
+            )}
+          </div>
+        ) : (
+          <div className="h-[calc(100vh-16rem)] flex flex-col items-center justify-center text-muted-foreground">
+            <IconMessages className="h-12 w-12 mb-2 opacity-50" />
+            <p className="text-lg">No conversations yet</p>
+            <p className="text-sm">Start chatting by sending a message</p>
+          </div>
+        )}
       </ScrollArea>
 
       {/* Scroll to Bottom Button */}
       {showScrollButton && (
-        <div className="absolute bottom-22 right-6 z-10">
+        <div className="absolute bottom-36 right-10 z-10">
           <button
             onClick={() => scrollToBottom()}
-            className="bg-primary hover:bg-primary/90 text-primary-foreground w-10 h-10 rounded-full shadow-lg flex items-center justify-center transition-all hover:scale-105"
+            className="dark:bg-primary bg-black hover:bg-primary/90 text-primary-foreground w-10 h-10 rounded-full dark:shadow-xl shadow-md dark:shadow-black shadow-white flex items-center justify-center transition-all hover:scale-105"
           >
             <BiArrowToBottom className="h-5 w-5" />
           </button>
@@ -494,54 +577,59 @@ function ChatArea({
       )}
 
       {/* Message Input */}
-      <div className="border-t p-2 sm:p-4">
-        <form onSubmit={handleSendMessage} className="flex items-center gap-2">
-          <div className="relative flex-1">
-            <div className="flex items-center gap-2 rounded-md border border-input bg-background px-2 sm:px-3 py-2">
-              <div className="flex gap-1">
-                <Button
-                  type="button"
-                  variant="ghost"
-                  size="icon"
-                  className="hidden sm:inline-flex h-8 w-8"
-                >
-                  <IconPlus className="h-4 w-4 text-muted-foreground" />
-                </Button>
-                <Button
-                  type="button"
-                  variant="ghost"
-                  size="icon"
-                  className="h-8 w-8"
-                >
-                  <IconPhotoPlus className="h-4 w-4 text-muted-foreground" />
-                </Button>
-                <Button
-                  type="button"
-                  variant="ghost"
-                  size="icon"
-                  className="h-8 w-8"
-                >
-                  <IconPaperclip className="h-4 w-4 text-muted-foreground" />
-                </Button>
-              </div>
-              <input
-                type="text"
-                placeholder="Type a message..."
-                className="flex-1 bg-transparent text-sm focus-visible:outline-none"
-                value={messageInput}
-                onChange={(e) => setMessageInput(e.target.value)}
-              />
-            </div>
-          </div>
-          <Button
-            type="submit"
-            size="icon"
-            className="h-[40px] w-[40px]"
-            disabled={!messageInput.trim()}
+      <div className="border-t shrink-0 bg-background">
+        <div className="p-4">
+          <form
+            onSubmit={handleSendMessage}
+            className="flex items-center gap-2"
           >
-            <IconSend className="h-4 w-4" />
-          </Button>
-        </form>
+            <div className="relative flex-1 min-w-0">
+              <div className="flex items-center gap-2 rounded-md border border-input bg-background px-3 py-2">
+                <div className="flex gap-1 shrink-0">
+                  {/* Dropdown for small screens */}
+                  <AttachmentDropdown />
+
+                  {/* Regular buttons for larger screens */}
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    size="icon"
+                    className="hidden sm:inline-flex h-8 w-8"
+                  >
+                    <IconPhotoPlus className="h-4 w-4 text-muted-foreground" />
+                  </Button>
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    size="icon"
+                    className="hidden sm:inline-flex h-8 w-8"
+                  >
+                    <IconPaperclip className="h-4 w-4 text-muted-foreground" />
+                  </Button>
+                </div>
+                <input
+                  type="text"
+                  placeholder="Type a message..."
+                  className="flex-1 bg-transparent text-sm focus-visible:outline-none min-w-0"
+                  value={messageInput}
+                  onChange={(e) => setMessageInput(e.target.value)}
+                />
+              </div>
+            </div>
+            <Button
+              type="submit"
+              size="icon"
+              className="h-[40px] w-[40px] shrink-0"
+              disabled={!messageInput.trim()}
+            >
+              {editingMessage ? (
+                <IconEdit className="h-4 w-4" />
+              ) : (
+                <IconSend className="h-4 w-4" />
+              )}
+            </Button>
+          </form>
+        </div>
       </div>
     </div>
   );
@@ -1218,25 +1306,44 @@ function Chats() {
             <ScrollArea ref={scrollAreaRef} className="flex-1 w-full">
               <div className="flex flex-col space-y-4 py-4 w-full overflow-hidden">
                 {messages?.length > 0 ? (
-                  messages.map((message) => (
-                    <div key={message.id} className="w-full overflow-hidden">
-                      <Message
-                        message={message}
-                        isCurrentUser={message.sender.id !== selectedUser.id}
-                        onMessageAction={handleMessageAction}
-                        isSelected={selectedMessages.some(
-                          (m) => m.id === message.id
-                        )}
-                        onSelect={handleMessageSelect}
-                        selectionMode={selectionMode}
-                      />
-                    </div>
-                  ))
+                  <div className="flex flex-col space-y-4 py-4 w-full overflow-hidden">
+                    {Object.entries(groupMessagesByDate(messages)).map(
+                      ([date, dateMessages]) => (
+                        <div key={date} className="space-y-1">
+                          <div className="flex items-center justify-center">
+                            <div className="bg-muted px-3 py-1 rounded text-xs text-muted-foreground">
+                              {date}
+                            </div>
+                          </div>
+                          {dateMessages.map((message) => (
+                            <div
+                              key={message.id}
+                              className="w-full overflow-hidden"
+                            >
+                              <Message
+                                message={message}
+                                selectedMessageLenght={selectedMessages.length}
+                                isCurrentUser={
+                                  message.sender.id !== selectedUser.id
+                                }
+                                onMessageAction={handleMessageAction}
+                                isSelected={selectedMessages.some(
+                                  (m) => m.id === message.id
+                                )}
+                                onSelect={handleMessageSelect}
+                                selectionMode={selectionMode}
+                              />
+                            </div>
+                          ))}
+                        </div>
+                      )
+                    )}
+                  </div>
                 ) : (
-                  <div className="flex flex-col items-center justify-center h-[calc(100vh-19rem)] text-muted-foreground">
+                  <div className="h-[calc(100vh-19rem)] flex flex-col items-center justify-center text-muted-foreground">
                     <IconMessages className="h-12 w-12 mb-2 opacity-50" />
-                    <p className="text-sm">No conversations yet</p>
-                    <p className="text-sm whitespace-nowrap">
+                    <p className="text-lg">No conversations yet</p>
+                    <p className="text-sm">
                       Start chatting by sending a message
                     </p>
                   </div>

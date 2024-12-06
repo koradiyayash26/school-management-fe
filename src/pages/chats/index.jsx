@@ -131,9 +131,9 @@ function Message({
   return (
     <div
       className={cn(
-        "flex w-full px-7 py-1 group relative hover:bg-muted/10 transition-colors",
+        "flex w-full px-7 py-1 group relative dark:hover:bg-muted/10 hover:bg-[#e4e4e7] transition-colors",
         isCurrentUser ? "justify-end" : "justify-start",
-        isSelected && "bg-muted/20"
+        isSelected && "dark:bg-muted/20 bg-[#d4d4d8]"
       )}
       onClick={handleMessageClick}
     >
@@ -290,8 +290,8 @@ function Message({
           className={cn(
             "relative",
             isCurrentUser
-              ? "bg-primary rounded-[16px_16px_0px_16px] text-primary-foreground"
-              : "bg-muted rounded-[16px_16px_16px_0px]",
+              ? "bg-primary border-2 rounded-[16px_16px_0px_16px] text-primary-foreground"
+              : "bg-muted border rounded-[16px_16px_16px_0px]",
             "px-3 py-2"
           )}
           style={{ wordBreak: "break-word" }}

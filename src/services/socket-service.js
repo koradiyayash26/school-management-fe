@@ -137,6 +137,13 @@ class SocketService {
       deleteTypeMessage: deleteType,
     });
   }
+  // it was used to delete selected message delete for that user
+  deleteBulkMessages(messageIds) {
+    this.send({
+      type: "delete_bulk_messages",
+      message_ids: messageIds,
+    });
+  }
 
   clearChatMessage(receiverId) {
     this.send({

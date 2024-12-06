@@ -569,6 +569,8 @@ function Chats() {
   const [isOpenClearDialog, setIsOpenClearDialog] = useState(false);
   const [isClearing, setIsClearing] = useState(false);
 
+  const [isBulkMessageDeleteDialogbox, setIsBulkMessageDeleteDialogbox] =
+    useState(false);
   // Create an audio object
   const sendSoundAudio = new Audio(sendSound);
 
@@ -834,16 +836,21 @@ function Chats() {
 
   // Handle bulk delete
   const handleBulkDelete = async () => {
-    if (window.confirm(`Delete ${selectedMessages.length} messages?`)) {
-      try {
-        await chatService.deleteBulkMessages(selectedMessages.map((m) => m.id));
-        queryClient.invalidateQueries(["messages", selectedUser?.id]);
-        setSelectionMode(false);
-        setSelectedMessages([]);
-      } catch (error) {
-        console.error("Error deleting messages:", error);
-      }
+    // if (window.confirm(`Delete ${selectedMessages.length} messages?`)) {
+    try {
+      // await chatService.deleteBulkMessages(selectedMessages.map((m) => m.id));
+      socketService.deleteBulkMessages(selectedMessages.map((m) => m.id));
+      sendSoundAudio.play();
+      setTimeout(() => {
+        toast.success(`Messages deleted successfully`);
+      });
+      queryClient.invalidateQueries(["messages", selectedUser?.id]);
+      setSelectionMode(false);
+      setSelectedMessages([]);
+    } catch (error) {
+      console.error("Error deleting messages:", error);
     }
+    // }
   };
 
   // Add this mutation
@@ -1152,8 +1159,54 @@ function Chats() {
                     {selectedMessages.length} selected
                   </span>
                 </div>
+                <Dialog
+                  open={isBulkMessageDeleteDialogbox}
+                  onOpenChange={setIsBulkMessageDeleteDialogbox}
+                >
+                  <div className="block md:flex gap-4">
+                    <DialogTrigger asChild>
+                      <Button
+                        variant="destructive"
+                        className="bg-red-600 text-white hidden hover:bg-red-700 w-full sm:w-auto"
+                      >
+                        Delete Message
+                      </Button>
+                    </DialogTrigger>
+                  </div>
+                  <DialogContent className="sm:max-w-[425px]">
+                    <DialogHeader>
+                      <DialogTitle className="text-left">
+                        Delete Message
+                      </DialogTitle>
+                      <DialogDescription className="text-left">
+                        Click delete to delete {selectedMessages.length}{" "}
+                        messages.
+                      </DialogDescription>
+                    </DialogHeader>
+                    <DialogFooter>
+                      <div className="flex flex-col justify-end mt-2 lg:mt-0">
+                        <Button
+                          variant="destructive"
+                          className="bg-red-600 text-white hover:bg-red-700 w-full sm:w-auto"
+                          onClick={handleBulkDelete}
+                        >
+                          Delete
+                        </Button>
+                      </div>
+                      <div className="flex flex-col justify-end">
+                        <Button
+                          variant="destructive"
+                          className="bg-white text-black hover:bg-gray-200 w-full sm:w-auto"
+                          onClick={() => setIsBulkMessageDeleteDialogbox(false)}
+                        >
+                          Cancel
+                        </Button>
+                      </div>
+                    </DialogFooter>
+                  </DialogContent>
+                </Dialog>
                 <button
-                  onClick={handleBulkDelete}
+                  onClick={() => setIsBulkMessageDeleteDialogbox(true)}
                   className="text-destructive hover:bg-muted p-2 rounded-full"
                 >
                   <IconTrash className="h-5 w-5" />
@@ -1164,20 +1217,30 @@ function Chats() {
             {/* Messages Container */}
             <ScrollArea ref={scrollAreaRef} className="flex-1 w-full">
               <div className="flex flex-col space-y-4 py-4 w-full overflow-hidden">
-                {messages?.map((message) => (
-                  <div key={message.id} className="w-full overflow-hidden">
-                    <Message
-                      message={message}
-                      isCurrentUser={message.sender.id !== selectedUser.id}
-                      onMessageAction={handleMessageAction}
-                      isSelected={selectedMessages.some(
-                        (m) => m.id === message.id
-                      )}
-                      onSelect={handleMessageSelect}
-                      selectionMode={selectionMode}
-                    />
+                {messages?.length > 0 ? (
+                  messages.map((message) => (
+                    <div key={message.id} className="w-full overflow-hidden">
+                      <Message
+                        message={message}
+                        isCurrentUser={message.sender.id !== selectedUser.id}
+                        onMessageAction={handleMessageAction}
+                        isSelected={selectedMessages.some(
+                          (m) => m.id === message.id
+                        )}
+                        onSelect={handleMessageSelect}
+                        selectionMode={selectionMode}
+                      />
+                    </div>
+                  ))
+                ) : (
+                  <div className="flex flex-col items-center justify-center h-[calc(100vh-19rem)] text-muted-foreground">
+                    <IconMessages className="h-12 w-12 mb-2 opacity-50" />
+                    <p className="text-sm">No conversations yet</p>
+                    <p className="text-sm whitespace-nowrap">
+                      Start chatting by sending a message
+                    </p>
                   </div>
-                ))}
+                )}
               </div>
             </ScrollArea>
 

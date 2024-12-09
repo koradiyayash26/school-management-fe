@@ -2,14 +2,25 @@ import {
   Calculator,
   ClipboardList,
   Contact,
+  HandCoins,
   Home,
   IndianRupee,
+  LayoutPanelLeft,
   Medal,
   MessageSquareMore,
   StickyNote,
+  User,
+  User2,
   Users,
   UsersRound,
 } from "lucide-react";
+import { FaUserEdit, FaUserGraduate, FaUsers } from "react-icons/fa";
+import {
+  PiRanking,
+  PiRankingDuotone,
+  PiRankingFill,
+  PiRankingLight,
+} from "react-icons/pi";
 
 export const MENU = [
   {
@@ -50,16 +61,30 @@ export const MENU = [
   },
   {
     lable: "FEES",
-    path: "/fee-type",
-    icon: () => <Calculator className="h-4 w-4" />,
+    // path: "/fee-type",
+    icon: () => <HandCoins className="h-4 w-4" />,
     Permission: "Fee Types",
+    submenu: [
+      {
+        lable: "FEE STRUCTURE",
+        path: "/fee-type",
+        icon: () => <LayoutPanelLeft className="h-4 w-4" />,
+        permission: "Fee Types",
+      },
+      {
+        lable: "PAYMENT",
+        path: "/payment",
+        icon: () => <IndianRupee className="h-4 w-4" />,
+        permission: "Payment",
+      },
+    ],
   },
-  {
-    lable: "PAYMENT",
-    path: "/payment",
-    icon: () => <IndianRupee className="h-4 w-4" />,
-    Permission: "Payment",
-  },
+  // {
+  //   lable: "PAYMENT",
+  //   path: "/payment",
+  //   icon: () => <IndianRupee className="h-4 w-4" />,
+  //   Permission: "Payment",
+  // },
   {
     lable: "REPORT",
     path: "/report",
@@ -67,10 +92,24 @@ export const MENU = [
     Permission: "Fee Report",
   },
   {
-    lable: "EXAM",
-    path: "/exam-template",
-    icon: () => <Medal className="h-4 w-4" />,
+    lable: "RESULT",
+    // path: "/exam-template",
+    icon: () => <FaUserGraduate className="h-4 w-4" />,
     Permission: "Exam",
+    submenu: [
+      {
+        lable: "TEST",
+        path: "/exam-template",
+        icon: () => <Medal className="h-4 w-4" />,
+        permission: "Exam",
+      },
+      {
+        lable: "EXAM",
+        path: "/exam-result",
+        icon: () => <PiRanking className="h-4 w-4" />,
+        permission: "Exam",
+      },
+    ],
   },
 ];
 

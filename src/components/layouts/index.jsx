@@ -17,7 +17,13 @@ function DashboardLayout() {
   };
 
   return (
-    <div className={`grid min-h-screen w-full ${collapsed ? 'md:grid-cols-[80px_1fr] transition-all duration-300 ease-in-out' : 'md:grid-cols-[220px_1fr] lg:grid-cols-[280px_1fr] transition-all duration-300 ease-in-out'}`}>
+    <div
+      className={`grid min-h-screen w-full ${
+        collapsed
+          ? "md:grid-cols-[90px_1fr] transition-all duration-300 ease-in-out"
+          : "md:grid-cols-[220px_1fr] lg:grid-cols-[280px_1fr] transition-all duration-300 ease-in-out"
+      }`}
+    >
       <Sidebar collapsed={collapsed} onToggle={handleSidebarToggle} />
       <div className="flex flex-col overflow-x-hidden">
         <Header />

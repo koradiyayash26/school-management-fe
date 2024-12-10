@@ -80,7 +80,7 @@ const App = () => {
                     {/* Standard Report */}
                     <Route
                       element={
-                        <ProtectedRoutes requiredPermission="Standard Report" />
+                        <ProtectedRoutes requiredPermission="Standard And Caste Report" />
                       }
                     >
                       <Route element={<StandardPage />} path="/standard" />
@@ -88,25 +88,37 @@ const App = () => {
                         element={<StandardDetailPage />}
                         path="/standard/:id"
                       />
+                      {/* caste report */}
+                      <Route element={<CasteReport />} path="/caste-report" />
+                      {/* caste report */}
                     </Route>
                     {/* Standard Report */}
                     {/* Certificate */}
-                    <Route element={<CertificatePage />} path="/certificate/" />
                     <Route
-                      element={<BonafideCertificatePage />}
-                      path="/bonafide/:id"
-                    />
-                    <Route
-                      element={<BirthCertificatePage />}
-                      path="/birth/:id"
-                    />
+                      element={
+                        <ProtectedRoutes requiredPermission="Certificate" />
+                      }
+                    >
+                      <Route
+                        element={<CertificatePage />}
+                        path="/certificate/"
+                      />
+                      <Route
+                        element={<BonafideCertificatePage />}
+                        path="/bonafide/:id"
+                      />
+                      <Route
+                        element={<BirthCertificatePage />}
+                        path="/birth/:id"
+                      />
+                    </Route>
                     {/* Certificate */}
 
                     <Route element={<MyDocument />} path="/pdf" />
                     {/* Fee Types */}
                     <Route
                       element={
-                        <ProtectedRoutes requiredPermission="Fee Types" />
+                        <ProtectedRoutes requiredPermission="Payment Fees" />
                       }
                     >
                       <Route element={<FeesTypePage />} path="/fee-type" />
@@ -167,7 +179,9 @@ const App = () => {
                     {/* STudent Update */}
                     {/* Payment */}
                     <Route
-                      element={<ProtectedRoutes requiredPermission="Payment" />}
+                      element={
+                        <ProtectedRoutes requiredPermission="Payment Fees" />
+                      }
                     >
                       <Route element={<PaymentsPage />} path="/payment" />
                       <Route
@@ -180,12 +194,6 @@ const App = () => {
                       />
                     </Route>
                     {/* Payment */}
-                    {/* caste report */}
-                    <Route
-                      element={<CasteReport />}
-                      path="/caste-report"
-                    />
-                    {/* caste report */}
                     {/* Settings */}
                     <Route
                       element={

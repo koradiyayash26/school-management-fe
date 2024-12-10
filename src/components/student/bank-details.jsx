@@ -13,13 +13,19 @@ export const BankDetails = ({ categories, form, defaultValues }) => {
 
   return (
     <>
-      <div className="md:grid md:grid-cols-2 lg:grid-cols-3 gap-8 space-y-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6 lg:gap-8">
         <FormField
           control={form.control}
           name="account_no"
           render={({ field }) => (
-            <FormItem className="flex flex-col self-end">
-              <FormLabel>Account no</FormLabel>
+            <FormItem
+              className={`${
+                form.formState.errors.account_no ? "h-[110px]" : "h-[90px]"
+              }`}
+            >
+              <FormLabel className="dark:text-white text-dark">
+                Account no
+              </FormLabel>
               <FormControl>
                 <Input
                   type="text"
@@ -36,8 +42,16 @@ export const BankDetails = ({ categories, form, defaultValues }) => {
           control={form.control}
           name="name_on_passbook"
           render={({ field }) => (
-            <FormItem>
-              <FormLabel>Passbook Name</FormLabel>
+            <FormItem
+              className={`${
+                form.formState.errors.name_on_passbook
+                  ? "h-[110px]"
+                  : "h-[90px]"
+              }`}
+            >
+              <FormLabel className="dark:text-white text-dark">
+                Passbook Name
+              </FormLabel>
               <FormControl>
                 <Input
                   type="text"
@@ -54,8 +68,14 @@ export const BankDetails = ({ categories, form, defaultValues }) => {
           control={form.control}
           name="bank_name"
           render={({ field }) => (
-            <FormItem>
-              <FormLabel>Bank Name</FormLabel>
+            <FormItem
+              className={`${
+                form.formState.errors.bank_name ? "h-[110px]" : "h-[90px]"
+              }`}
+            >
+              <FormLabel className="dark:text-white text-dark">
+                Bank Name
+              </FormLabel>
               <FormControl>
                 <Input disabled={loading} placeholder="Bank Name" {...field} />
               </FormControl>
@@ -67,8 +87,14 @@ export const BankDetails = ({ categories, form, defaultValues }) => {
           control={form.control}
           name="ifsc_code"
           render={({ field }) => (
-            <FormItem>
-              <FormLabel>IFSC Code</FormLabel>
+            <FormItem
+              className={`${
+                form.formState.errors.ifsc_code ? "h-[110px]" : "h-[90px]"
+              }`}
+            >
+              <FormLabel className="dark:text-white text-dark">
+                IFSC Code
+              </FormLabel>
               <FormControl>
                 <Input disabled={loading} placeholder="Ifsc Code" {...field} />
               </FormControl>
@@ -80,8 +106,14 @@ export const BankDetails = ({ categories, form, defaultValues }) => {
           control={form.control}
           name="bank_address"
           render={({ field }) => (
-            <FormItem>
-              <FormLabel>Bank Address</FormLabel>
+            <FormItem
+              className={`${
+                form.formState.errors.bank_address ? "h-[110px]" : "h-[90px]"
+              }`}
+            >
+              <FormLabel className="dark:text-white text-dark">
+                Bank Address
+              </FormLabel>
               <FormControl>
                 <Input
                   disabled={loading}

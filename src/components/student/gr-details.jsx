@@ -114,8 +114,12 @@ export const GrDetails = ({ academicYear, form, categories }) => {
           control={form.control}
           name="grno"
           render={({ field }) => (
-            <FormItem className="h-[90px]">
-              <FormLabel>Grno*</FormLabel>
+            <FormItem
+              className={`${
+                form.formState.errors.grno ? "h-[110px]" : "h-[90px]"
+              }`}
+            >
+              <FormLabel className="dark:text-white text-dark">Grno*</FormLabel>
               <FormControl>
                 <Input
                   type="number"
@@ -132,8 +136,14 @@ export const GrDetails = ({ academicYear, form, categories }) => {
           control={form.control}
           name="first_name"
           render={({ field }) => (
-            <FormItem className="h-[90px]">
-              <FormLabel>First Name*</FormLabel>
+            <FormItem
+              className={`${
+                form.formState.errors.first_name ? "h-[110px]" : "h-[90px]"
+              }`}
+            >
+              <FormLabel className="dark:text-white text-dark">
+                First Name*
+              </FormLabel>
               <FormControl>
                 <Input disabled={loading} placeholder="Firstname" {...field} />
               </FormControl>
@@ -145,8 +155,14 @@ export const GrDetails = ({ academicYear, form, categories }) => {
           control={form.control}
           name="middle_name"
           render={({ field }) => (
-            <FormItem className="h-[90px]">
-              <FormLabel>Middle Name*</FormLabel>
+            <FormItem
+              className={`${
+                form.formState.errors.middle_name ? "h-[110px]" : "h-[90px]"
+              }`}
+            >
+              <FormLabel className="dark:text-white text-dark">
+                Middle Name*
+              </FormLabel>
               <FormControl>
                 <Input disabled={loading} placeholder="MiddleName" {...field} />
               </FormControl>
@@ -158,8 +174,14 @@ export const GrDetails = ({ academicYear, form, categories }) => {
           control={form.control}
           name="last_name"
           render={({ field }) => (
-            <FormItem className="h-[90px]">
-              <FormLabel>Last Name*</FormLabel>
+            <FormItem
+              className={`${
+                form.formState.errors.last_name ? "h-[110px]" : "h-[90px]"
+              }`}
+            >
+              <FormLabel className="dark:text-white text-dark">
+                Last Name*
+              </FormLabel>
               <FormControl>
                 <Input disabled={loading} placeholder="LastName" {...field} />
               </FormControl>
@@ -171,8 +193,14 @@ export const GrDetails = ({ academicYear, form, categories }) => {
           control={form.control}
           name="mother_name"
           render={({ field }) => (
-            <FormItem className="h-[90px]">
-              <FormLabel>Mother Name</FormLabel>
+            <FormItem
+              className={`${
+                form.formState.errors.mother_name ? "h-[110px]" : "h-[90px]"
+              }`}
+            >
+              <FormLabel className="dark:text-white text-dark">
+                Mother Name
+              </FormLabel>
               <FormControl>
                 <Input disabled={loading} placeholder="MotherName" {...field} />
               </FormControl>
@@ -184,8 +212,14 @@ export const GrDetails = ({ academicYear, form, categories }) => {
           control={form.control}
           name="birth_place"
           render={({ field }) => (
-            <FormItem className="h-[90px]">
-              <FormLabel>Birth Place</FormLabel>
+            <FormItem
+              className={`${
+                form.formState.errors.birth_place ? "h-[110px]" : "h-[90px]"
+              }`}
+            >
+              <FormLabel className="dark:text-white text-dark">
+                Birth Place
+              </FormLabel>
               <FormControl>
                 <Input disabled={loading} placeholder="BirthPlace" {...field} />
               </FormControl>
@@ -197,8 +231,14 @@ export const GrDetails = ({ academicYear, form, categories }) => {
           control={form.control}
           name="religion"
           render={({ field }) => (
-            <FormItem className="h-[90px]">
-              <FormLabel>Religion*</FormLabel>
+            <FormItem
+              className={`${
+                form.formState.errors.religion ? "h-[110px]" : "h-[90px]"
+              }`}
+            >
+              <FormLabel className="dark:text-white text-dark">
+                Religion*
+              </FormLabel>
               <Select
                 disabled={loading}
                 onValueChange={field.onChange}
@@ -229,8 +269,14 @@ export const GrDetails = ({ academicYear, form, categories }) => {
           control={form.control}
           name="category"
           render={({ field }) => (
-            <FormItem className="h-[90px]">
-              <FormLabel>Category*</FormLabel>
+            <FormItem
+              className={`${
+                form.formState.errors.category ? "h-[110px]" : "h-[90px]"
+              }`}
+            >
+              <FormLabel className="dark:text-white text-dark">
+                Category*
+              </FormLabel>
               <Select
                 disabled={loading}
                 onValueChange={field.onChange}
@@ -261,8 +307,12 @@ export const GrDetails = ({ academicYear, form, categories }) => {
           control={form.control}
           name="caste"
           render={({ field }) => (
-            <FormItem className="h-[90px]">
-              <FormLabel>Caste</FormLabel>
+            <FormItem
+              className={`${
+                form.formState.errors.caste ? "h-[110px]" : "h-[90px]"
+              }`}
+            >
+              <FormLabel className="dark:text-white text-dark">Caste</FormLabel>
               <FormControl>
                 <Input disabled={loading} placeholder="Caste" {...field} />
               </FormControl>
@@ -274,8 +324,14 @@ export const GrDetails = ({ academicYear, form, categories }) => {
           control={form.control}
           name="admission_std"
           render={({ field }) => (
-            <FormItem className="h-[90px]">
-              <FormLabel>Admission Std*</FormLabel>
+            <FormItem
+              className={`${
+                form.formState.errors.admission_std ? "h-[110px]" : "h-[90px]"
+              }`}
+            >
+              <FormLabel className="dark:text-white text-dark">
+                Admission Std*
+              </FormLabel>
               <Select
                 disabled={loading}
                 onValueChange={field.onChange}
@@ -306,8 +362,14 @@ export const GrDetails = ({ academicYear, form, categories }) => {
           control={form.control}
           name="standard"
           render={({ field }) => (
-            <FormItem className="h-[90px]">
-              <FormLabel>Standard*</FormLabel>
+            <FormItem
+              className={`${
+                form.formState.errors.standard ? "h-[110px]" : "h-[90px]"
+              }`}
+            >
+              <FormLabel className="dark:text-white text-dark">
+                Standard*
+              </FormLabel>
               <Select
                 disabled={loading}
                 onValueChange={field.onChange}
@@ -338,8 +400,14 @@ export const GrDetails = ({ academicYear, form, categories }) => {
           control={form.control}
           name="section"
           render={({ field }) => (
-            <FormItem className="h-[90px]">
-              <FormLabel>Section*</FormLabel>
+            <FormItem
+              className={`${
+                form.formState.errors.section ? "h-[110px]" : "h-[90px]"
+              }`}
+            >
+              <FormLabel className="dark:text-white text-dark">
+                Section*
+              </FormLabel>
               <Select
                 disabled={loading}
                 onValueChange={field.onChange}
@@ -370,8 +438,14 @@ export const GrDetails = ({ academicYear, form, categories }) => {
           control={form.control}
           name="academic_year"
           render={({ field }) => (
-            <FormItem className="h-[90px]">
-              <FormLabel>Academic Year*</FormLabel>
+            <FormItem
+              className={`${
+                form.formState.errors.academic_year ? "h-[110px]" : "h-[90px]"
+              }`}
+            >
+              <FormLabel className="dark:text-white text-dark">
+                Academic Year*
+              </FormLabel>
               <Select
                 disabled={loading}
                 onValueChange={field.onChange}
@@ -402,8 +476,14 @@ export const GrDetails = ({ academicYear, form, categories }) => {
           control={form.control}
           name="last_school"
           render={({ field }) => (
-            <FormItem className="h-[90px]">
-              <FormLabel>Last School</FormLabel>
+            <FormItem
+              className={`${
+                form.formState.errors.last_school ? "h-[110px]" : "h-[90px]"
+              }`}
+            >
+              <FormLabel className="dark:text-white text-dark">
+                Last School
+              </FormLabel>
               <FormControl>
                 <Input
                   disabled={loading}
@@ -419,8 +499,12 @@ export const GrDetails = ({ academicYear, form, categories }) => {
           control={form.control}
           name="city"
           render={({ field }) => (
-            <FormItem className="h-[90px]">
-              <FormLabel>City*</FormLabel>
+            <FormItem
+              className={`${
+                form.formState.errors.city ? "h-[110px]" : "h-[90px]"
+              }`}
+            >
+              <FormLabel className="dark:text-white text-dark">City*</FormLabel>
               <FormControl>
                 <Input disabled={loading} placeholder="City" {...field} />
               </FormControl>
@@ -432,8 +516,14 @@ export const GrDetails = ({ academicYear, form, categories }) => {
           control={form.control}
           name="district"
           render={({ field }) => (
-            <FormItem className="h-[90px]">
-              <FormLabel>District*</FormLabel>
+            <FormItem
+              className={`${
+                form.formState.errors.district ? "h-[110px]" : "h-[90px]"
+              }`}
+            >
+              <FormLabel className="dark:text-white text-dark">
+                District*
+              </FormLabel>
               <FormControl>
                 <Input disabled={loading} placeholder="District" {...field} />
               </FormControl>
@@ -445,8 +535,14 @@ export const GrDetails = ({ academicYear, form, categories }) => {
           control={form.control}
           name="address"
           render={({ field }) => (
-            <FormItem className="h-[90px]">
-              <FormLabel>Address</FormLabel>
+            <FormItem
+              className={`${
+                form.formState.errors.address ? "h-[110px]" : "h-[90px]"
+              }`}
+            >
+              <FormLabel className="dark:text-white text-dark">
+                Address
+              </FormLabel>
               <FormControl>
                 <Input disabled={loading} placeholder="address" {...field} />
               </FormControl>
@@ -458,8 +554,14 @@ export const GrDetails = ({ academicYear, form, categories }) => {
           control={form.control}
           name="mobile_no"
           render={({ field }) => (
-            <FormItem className="h-[90px]">
-              <FormLabel>Mobile No</FormLabel>
+            <FormItem
+              className={`${
+                form.formState.errors.mobile_no ? "h-[110px]" : "h-[90px]"
+              }`}
+            >
+              <FormLabel className="dark:text-white text-dark">
+                Mobile No
+              </FormLabel>
               <FormControl>
                 <Input disabled={loading} placeholder="Mobile No" {...field} />
               </FormControl>
@@ -471,8 +573,14 @@ export const GrDetails = ({ academicYear, form, categories }) => {
           control={form.control}
           name="status"
           render={({ field }) => (
-            <FormItem className="h-[90px]">
-              <FormLabel>Status*</FormLabel>
+            <FormItem
+              className={`${
+                form.formState.errors.status ? "h-[110px]" : "h-[90px]"
+              }`}
+            >
+              <FormLabel className="dark:text-white text-dark">
+                Status*
+              </FormLabel>
               <Select
                 disabled={loading}
                 onValueChange={field.onChange}
@@ -503,8 +611,14 @@ export const GrDetails = ({ academicYear, form, categories }) => {
           control={form.control}
           name="gender"
           render={({ field }) => (
-            <FormItem className="h-[90px]">
-              <FormLabel>Gender*</FormLabel>
+            <FormItem
+              className={`${
+                form.formState.errors.gender ? "h-[110px]" : "h-[90px]"
+              }`}
+            >
+              <FormLabel className="dark:text-white text-dark">
+                Gender*
+              </FormLabel>
               <Select
                 disabled={loading}
                 onValueChange={field.onChange}
@@ -535,8 +649,14 @@ export const GrDetails = ({ academicYear, form, categories }) => {
           control={form.control}
           name="udise_no"
           render={({ field }) => (
-            <FormItem className="h-[90px]">
-              <FormLabel>UDISE NO</FormLabel>
+            <FormItem
+              className={`${
+                form.formState.errors.udise_no ? "h-[110px]" : "h-[90px]"
+              }`}
+            >
+              <FormLabel className="dark:text-white text-dark">
+                UDISE NO
+              </FormLabel>
               <FormControl>
                 <Input disabled={loading} placeholder="UDISE NO" {...field} />
               </FormControl>
@@ -548,8 +668,14 @@ export const GrDetails = ({ academicYear, form, categories }) => {
           control={form.control}
           name="aadhar_no"
           render={({ field }) => (
-            <FormItem className="h-[90px]">
-              <FormLabel>Aadhar No</FormLabel>
+            <FormItem
+              className={`${
+                form.formState.errors.aadhar_no ? "h-[110px]" : "h-[90px]"
+              }`}
+            >
+              <FormLabel className="dark:text-white text-dark">
+                Aadhar No
+              </FormLabel>
               <FormControl>
                 <Input disabled={loading} placeholder="Aadhar No" {...field} />
               </FormControl>
@@ -561,9 +687,15 @@ export const GrDetails = ({ academicYear, form, categories }) => {
           control={form.control}
           name="birth_date"
           render={({ field }) => (
-            <FormItem className="h-[90px] flex flex-col self-end">
+            <FormItem
+              className={`flex flex-col self-end${
+                form.formState.errors.birth_date ? "h-[110px]" : "h-[90px]"
+              }`}
+            >
               <div>
-                <FormLabel>Date Of Birth*</FormLabel>
+                <FormLabel className="dark:text-white text-dark">
+                  Date Of Birth*
+                </FormLabel>
               </div>
               <Popover>
                 <PopoverTrigger asChild>
@@ -607,8 +739,14 @@ export const GrDetails = ({ academicYear, form, categories }) => {
           control={form.control}
           name="admission_date"
           render={({ field }) => (
-            <FormItem className="h-[90px]">
-              <FormLabel>Admission Date*</FormLabel>
+            <FormItem
+              className={`${
+                form.formState.errors.admission_date ? "h-[110px]" : "h-[90px]"
+              }`}
+            >
+              <FormLabel className="dark:text-white text-dark">
+                Admission Date*
+              </FormLabel>
               <Select
                 disabled={loading}
                 onValueChange={field.onChange}
@@ -641,7 +779,9 @@ export const GrDetails = ({ academicYear, form, categories }) => {
           name="student_img"
           render={({ field: { value, onChange, ...field } }) => (
             <FormItem className="">
-              <FormLabel>Student Image</FormLabel>
+              <FormLabel className="dark:text-white text-dark">
+                Student Image
+              </FormLabel>
               <div className="flex items-center gap-4">
                 {imagePreview || value ? (
                   <div className="relative">

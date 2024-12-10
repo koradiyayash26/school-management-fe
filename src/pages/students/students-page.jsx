@@ -28,7 +28,10 @@ import {
 } from "@/components/ui/alert-dialog";
 import toast, { Toaster } from "react-hot-toast";
 import ActionsPopup from "@/components/ui/data-table-row-actions";
-import { useStudents } from "@/hooks/use-student";
+import {
+  useStudents,
+  useStudentUpdateAcademicYearHistory,
+} from "@/hooks/use-student";
 import { useMutation } from "@tanstack/react-query";
 import { bulkImport, deleteStudent } from "@/services/student-service";
 import { Link } from "react-router-dom";
@@ -121,6 +124,11 @@ const defaultVisibleColumns = [
 ];
 
 function StudentDetailsDialog({ student, open, onOpenChange }) {
+  const { data, isLoading, error, refetch } =
+    useStudentUpdateAcademicYearHistory(student.id);
+
+  let academic_history = data?.data || [];
+
   const details = [
     {
       label: "Personal Information",
@@ -172,7 +180,44 @@ function StudentDetailsDialog({ student, open, onOpenChange }) {
         { label: "Aadhar Number", value: student.aadhar_no },
       ],
     },
+    {
+      label: "Academic History",
+      items:
+        academic_history.map((history) => ({
+          label: `Academic Year: ${history.academic_year}`,
+          value: (
+            <span className="space-y-1 block">
+              <span className="block">
+                Standard:{" "}
+                {history.standard === "13" ? "Balvatika" : history.standard}
+              </span>
+              <span className="block">Section: {history.section}</span>
+              <span className="block">Note: {history.note || "-"}</span>
+              <span className="text-sm text-muted-foreground block">
+                Updated: {new Date(history.update_date).toLocaleDateString()}
+              </span>
+            </span>
+          ),
+          isFullWidth: true,
+        })) || [],
+      isHistory: true,
+    },
   ];
+
+  if (isLoading)
+    return (
+      <>
+        <Spinner />
+      </>
+    );
+
+  if (error) {
+    return (
+      <>
+        <div>{error.message}</div>
+      </>
+    );
+  }
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>

@@ -53,12 +53,12 @@ export const MENU = [
     icon: () => <Contact className="h-4 w-4" />,
     Permission: "Standard Report",
   },
-  {
-    lable: "STUDENT",
-    path: "/update",
-    icon: () => <UsersRound className="h-4 w-4" />,
-    Permission: "Student Update and History",
-  },
+  // {
+  //   lable: "STUDENT",
+  //   path: "/update",
+  //   icon: () => <UsersRound className="h-4 w-4" />,
+  //   Permission: "Student Update and History",
+  // },
   {
     lable: "FEES",
     // path: "/fee-type",

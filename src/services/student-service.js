@@ -57,6 +57,15 @@ const bulkImport = async (formData) => {
   });
 };
 
+const getStudentUpdateAcademicYearHistory = async (id) => {
+  let response = await apiClient.get(`/students/${id}/academic-year-history/`, {
+    headers: {
+      Authorization: `Bearer ${getToken()}`,
+    },
+  });
+  return response.data;
+};
+
 export {
   getStudents,
   deleteStudent,
@@ -64,4 +73,5 @@ export {
   updateStudent,
   addStudent,
   bulkImport,
+  getStudentUpdateAcademicYearHistory,
 };

@@ -45,13 +45,13 @@ export const MENU = [
     lable: "STANDARD",
     path: "/standard",
     icon: () => <Users className="h-4 w-4" />,
-    Permission: "Standard Report",
+    Permission: "Standard And Caste Report",
   },
   {
     lable: "CASTE REPORT",
     path: "/caste-report",
     icon: () => <Contact className="h-4 w-4" />,
-    Permission: "Standard Report",
+    Permission: "Standard And Caste Report",
   },
   // {
   //   lable: "STUDENT",
@@ -63,19 +63,19 @@ export const MENU = [
     lable: "FEES",
     // path: "/fee-type",
     icon: () => <HandCoins className="h-4 w-4" />,
-    Permission: "Fee Types",
+    Permission: "Payment Fees",
     submenu: [
       {
         lable: "FEE STRUCTURE",
         path: "/fee-type",
         icon: () => <LayoutPanelLeft className="h-4 w-4" />,
-        permission: "Fee Types",
+        permission: "Payment Fees",
       },
       {
         lable: "PAYMENT",
         path: "/payment",
         icon: () => <IndianRupee className="h-4 w-4" />,
-        permission: "Payment",
+        permission: "Payment Fees",
       },
     ],
   },

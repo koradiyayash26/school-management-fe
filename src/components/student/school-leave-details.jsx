@@ -16,6 +16,7 @@ import { CalendarIcon, Trash } from "lucide-react";
 import { useState } from "react";
 import { Calendar } from "../ui/calendar";
 import { format } from "date-fns";
+import { cn } from "@/lib/utils";
 
 export const SchoolLeaveDetails = ({ form }) => {
   const [open, setOpen] = useState(false);
@@ -23,22 +24,125 @@ export const SchoolLeaveDetails = ({ form }) => {
 
   return (
     <>
-      <div className="md:grid md:grid-cols-2 lg:grid-cols-3 gap-8 space-y-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6 lg:gap-8">
+        <FormField
+          control={form.control}
+          name="left_school_std"
+          render={({ field }) => (
+            <FormItem
+              className={`${
+                form.formState.errors.left_school_std ? "h-[110px]" : "h-[90px]"
+              }`}
+            >
+              <FormLabel className="dark:text-white text-dark">
+                School Leave Standard
+              </FormLabel>
+              <FormControl>
+                <Input
+                  type="number"
+                  disabled={loading}
+                  {...field}
+                  placeholder="Left School Standard"
+                />
+              </FormControl>
+              <FormMessage className="text-sm" />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="reason"
+          render={({ field }) => (
+            <FormItem
+              className={`${
+                form.formState.errors.reason ? "h-[110px]" : "h-[90px]"
+              }`}
+            >
+              <FormLabel className="dark:text-white text-dark">
+                School Leave Reason
+              </FormLabel>
+              <FormControl>
+                <Input
+                  disabled={loading}
+                  placeholder="School Leave Reason"
+                  {...field}
+                />
+              </FormControl>
+              <FormMessage className="text-sm" />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="assesment"
+          render={({ field }) => (
+            <FormItem
+              className={`${
+                form.formState.errors.assesment ? "h-[110px]" : "h-[90px]"
+              }`}
+            >
+              <FormLabel className="dark:text-white text-dark">
+                Assesment Standard
+              </FormLabel>
+              <FormControl>
+                <Input
+                  disabled={loading}
+                  placeholder="Assesment Standard"
+                  {...field}
+                />
+              </FormControl>
+              <FormMessage className="text-sm" />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="progress"
+          render={({ field }) => (
+            <FormItem
+              className={`${
+                form.formState.errors.progress ? "h-[110px]" : "h-[90px]"
+              }`}
+            >
+              <FormLabel className="dark:text-white text-dark">
+                Progress Standard
+              </FormLabel>
+              <FormControl>
+                <Input
+                  disabled={loading}
+                  placeholder="Progress Standard"
+                  {...field}
+                />
+              </FormControl>
+              <FormMessage className="text-sm" />
+            </FormItem>
+          )}
+        />
         <FormField
           control={form.control}
           name="left_school_date"
           render={({ field }) => (
-            <FormItem className="flex flex-col self-end">
-              <FormLabel>Left School Date</FormLabel>
+            <FormItem
+              className={`${
+                form.formState.errors.left_school_date
+                  ? "h-[110px]"
+                  : "h-[90px]"
+              }`}
+            >
+              <div>
+                <FormLabel className="dark:text-white text-dark">
+                  Left School Date
+                </FormLabel>
+              </div>
               <Popover>
                 <PopoverTrigger asChild>
                   <FormControl>
                     <Button
                       variant={"outline"}
-                      className={
-                        ("pl-3 text-left font-normal",
-                        !field.value && "text-muted-foreground")
-                      }
+                      className={cn(
+                        "pl-3 text-left font-normal w-full",
+                        !field.value && "text-muted-foreground w-full"
+                      )}
                     >
                       {field.value ? (
                         format(new Date(field.value), "yyyy-MM-dd")
@@ -67,76 +171,7 @@ export const SchoolLeaveDetails = ({ form }) => {
                   />
                 </PopoverContent>
               </Popover>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name="left_school_std"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>School Leave Standard</FormLabel>
-              <FormControl>
-                <Input
-                  type="number"
-                  disabled={loading}
-                  {...field}
-                  placeholder="Left School Standard"
-                />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name="reason"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>School Leave Reason</FormLabel>
-              <FormControl>
-                <Input
-                  disabled={loading}
-                  placeholder="School Leave Reason"
-                  {...field}
-                />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name="assesment"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Assesment Standard</FormLabel>
-              <FormControl>
-                <Input
-                  disabled={loading}
-                  placeholder="Assesment Standard"
-                  {...field}
-                />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name="progress"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Progress Standard</FormLabel>
-              <FormControl>
-                <Input
-                  disabled={loading}
-                  placeholder="Progress Standard"
-                  {...field}
-                />
-              </FormControl>
-              <FormMessage />
+              <FormMessage className="text-sm" />
             </FormItem>
           )}
         />

@@ -35,7 +35,11 @@ const StudentEditPage = () => {
       navigate("/student");
     },
     onError: (error) => {
-      toast.error(error.response.data.error);
+      if (error.response.data.grno) {
+        toast.error(error.response.data.grno);
+      } else {
+        console.log(error);
+      }
     },
   });
 
@@ -96,7 +100,7 @@ const StudentEditPage = () => {
   return (
     <>
       <Toaster
-        position="top"
+        position="top-center"
         toastOptions={{
           duration: 3000,
           style: {

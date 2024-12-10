@@ -109,11 +109,17 @@ const formSchema = z.object({
     .string()
     .max(16, { message: "Aadhar Number must not exceed 16 characters" })
     .optional(),
-  assesment: z.coerce.number().optional(),
-  progress: z.coerce.number().optional(),
+  assesment: z.coerce
+    .number()
+    .max(13, { message: "Assesment Standard must 13 max" })
+    .optional(),
+  progress: z.coerce
+    .number()
+    .max(100, { message: "Progress must be 13 standard" })
+    .optional(),
   reason: z
     .string()
-    .max(100, { message: "Reason must not exceed 100 characters" })
+    .max(100, { message: "Reason must not be 100 characters" })
     .optional(),
   left_school_date: z.string().optional(),
   left_school_std: z
@@ -142,14 +148,46 @@ const formSchema = z.object({
     .optional(),
   bank_address: z
     .string()
-    .max(100, { message: "Bank Address Must not exceed 50 characters" })
+    .max(100, { message: "Bank Address Must be 50 characters" })
     .optional(),
 });
 
 function StudentForm({ academicYear, defaultValues, onSubmit }) {
   const form = useForm({
     resolver: zodResolver(formSchema),
-    defaultValues,
+    defaultValues: {
+      ...defaultValues,
+      student_img: defaultValues.student_img || null,
+      grno: defaultValues.grno || 0,
+      first_name: defaultValues.first_name || "",
+      middle_name: defaultValues.middle_name || "",
+      last_name: defaultValues.last_name || "",
+      mother_name: defaultValues.mother_name || "",
+      birth_date: defaultValues.birth_date || null,
+      birth_place: defaultValues.birth_place || "",
+      religion: defaultValues.religion || "",
+      category: defaultValues.category || "",
+      caste: defaultValues.caste || "",
+      admission_std: defaultValues.admission_std || "",
+      admission_date: defaultValues.admission_date || "",
+      standard: defaultValues.standard || "",
+      section: defaultValues.section || "",
+      last_school: defaultValues.last_school || "",
+      city: defaultValues.city || "",
+      district: defaultValues.district || "",
+      address: defaultValues.address || "",
+      mobile_no: defaultValues.mobile_no || "",
+      status: defaultValues.status || "",
+      gender: defaultValues.gender || "",
+      udise_no: defaultValues.udise_no || "",
+      aadhar_no: defaultValues.aadhar_no || "",
+      academic_year: defaultValues.academic_year || "",
+      account_no: defaultValues.account_no || "",
+      name_on_passbook: defaultValues.name_on_passbook || "",
+      bank_name: defaultValues.bank_name || "",
+      ifsc_code: defaultValues.ifsc_code || "",
+      bank_address: defaultValues.bank_address || "",
+    },
     onSubmit,
   });
 

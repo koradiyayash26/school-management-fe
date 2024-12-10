@@ -77,6 +77,17 @@ const postUserPermitions = async (id, data) => {
   });
 };
 
+const studentUpdateBulk = async () => {
+  return await apiClient.post(
+    "student-update/bulk/",
+    {}, // Assuming no data is being sent in the body
+    {
+      headers: {
+        Authorization: `Bearer ${getToken()}`,
+      },
+    }
+  );
+};
 export {
   getUserList,
   postUser,
@@ -87,4 +98,5 @@ export {
   patchUserPermittionGroupData,
   postUserPermitions,
   getUserPermitions,
+  studentUpdateBulk,
 };

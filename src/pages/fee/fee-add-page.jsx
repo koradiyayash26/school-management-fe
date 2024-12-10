@@ -8,6 +8,7 @@ import { useMutation } from "@tanstack/react-query";
 import { FeeTypeadd } from "@/services/fees-service";
 import Spinner from "@/components/spinner/spinner";
 import { useAcademicYear } from "@/hooks/use-academic-year";
+import toast, { Toaster } from "react-hot-toast";
 
 const FeeTypesAddPage = () => {
   const defaultValues = {
@@ -34,7 +35,13 @@ const FeeTypesAddPage = () => {
   const mutation = useMutation({
     mutationFn: (formattedData) => FeeTypeadd(formattedData),
     onSuccess: () => {
-      navigate("/fee-type");
+      toast.success("Fee Type Add Successfully");
+      setTimeout(() => {
+        navigate("/fee-type");
+      }, 1000);
+    },
+    onError: (error) => {
+      toast.error(error.response.data.errors.non_field_errors[0]);
     },
   });
 
@@ -76,6 +83,28 @@ const FeeTypesAddPage = () => {
 
   return (
     <>
+      <Toaster
+        position="top-center"
+        reverseOrder={false}
+        gutter={8}
+        containerClassName=""
+        containerStyle={{}}
+        toastOptions={{
+          className: "",
+          duration: 5000,
+          style: {
+            background: "#363636",
+            color: "#fff",
+          },
+          success: {
+            duration: 3000,
+            theme: {
+              primary: "green",
+              secondary: "black",
+            },
+          },
+        }}
+      />
       <Card className="">
         <FeeTypeForm
           academicYear={academicYear}

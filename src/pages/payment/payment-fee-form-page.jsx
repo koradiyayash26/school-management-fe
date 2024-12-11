@@ -236,20 +236,20 @@ const PaymentFeeFormPage = () => {
           </TableHeader>
           <TableBody>
             <TableRow>
-              <TableCell className="text-center border">
+              <TableCell className="text-center border whitespace-nowrap">
                 Name: {studentDetail.name}
               </TableCell>
-              <TableCell className="text-center border">
+              <TableCell className="text-center border whitespace-nowrap">
                 Standard:&nbsp;
                 {studentDetail.standard === "13"
                   ? "Balvatika"
                   : studentDetail.standard}
               </TableCell>
-              <TableCell className="text-center border">
+              <TableCell className="text-center border whitespace-nowrap">
                 Section: {studentDetail.section}
               </TableCell>
-              <TableCell className="text-center border">
-                Address: {studentDetail.address || "None"}
+              <TableCell className="text-center border whitespace-nowrap">
+                Address: {studentDetail.address || "-"}
               </TableCell>
             </TableRow>
           </TableBody>
@@ -267,7 +267,9 @@ const PaymentFeeFormPage = () => {
               <TableHeader>
                 <TableRow className="bg-muted/50">
                   <TableHead className="text-center border">STD</TableHead>
-                  <TableHead className="text-center border">Fee Type</TableHead>
+                  <TableHead className="text-center border whitespace-nowrap">
+                    Fee Type
+                  </TableHead>
                   <TableHead className="text-center border">
                     Total Amt.
                   </TableHead>
@@ -290,7 +292,7 @@ const PaymentFeeFormPage = () => {
                           ? "Balvatika"
                           : studentDetail.standard}
                       </TableCell>
-                      <TableCell className="text-center border">
+                      <TableCell className="text-center border whitespace-nowrap">
                         {i.fee_type__fee_master__name}
                       </TableCell>
                       <TableCell className="text-center border">
@@ -476,7 +478,10 @@ const PaymentFeeFormPage = () => {
           <TableHeader>
             <TableRow className="bg-muted/50">
               {headers.map((header, index) => (
-                <TableHead key={index} className="text-center border">
+                <TableHead
+                  key={index}
+                  className="text-center border whitespace-nowrap"
+                >
                   {header.label}
                 </TableHead>
               ))}
@@ -488,7 +493,10 @@ const PaymentFeeFormPage = () => {
             {studentPaymentHistory.map((student) => (
               <TableRow key={student.id}>
                 {headers.map((header) => (
-                  <TableCell key={header.value} className="text-center border">
+                  <TableCell
+                    key={header.value}
+                    className="text-center border whitespace-nowrap"
+                  >
                     {header.value === "standard" ? (
                       student.standard || "None"
                     ) : header.value === "paid" ? (

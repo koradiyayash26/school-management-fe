@@ -109,7 +109,7 @@ const PaymentReceiptPage = () => {
                         <TableHead className="text-white text-center ">
                           Sr.No
                         </TableHead>
-                        <TableHead className="text-white text-center border">
+                        <TableHead className="text-white text-center border whitespace-nowrap">
                           Fee Type
                         </TableHead>
                         <TableHead className="text-white text-center border">
@@ -125,7 +125,7 @@ const PaymentReceiptPage = () => {
                     <TableBody>
                       <TableRow>
                         <TableCell className="border text-center">1</TableCell>
-                        <TableCell className="border text-center">
+                        <TableCell className="border text-center whitespace-nowrap">
                           {studentData.fee_type.fee_master.name}
                         </TableCell>
                         <TableCell className="border text-center">

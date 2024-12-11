@@ -24,7 +24,7 @@ export function CasteReport() {
   const { report_data, overall_totals, grand_total } = reportData?.data || {};
 
   return (
-    <div className="container mx-auto p-4 space-y-6">
+    <div className="container mx-auto p-0 space-y-6">
       <h1 className="uppercase text-2xl font-bold mb-4">Caste Report</h1>
       {/* Overall Total Card */}
       <Card>

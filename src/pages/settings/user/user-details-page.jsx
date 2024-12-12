@@ -193,7 +193,7 @@ const UserDetailsPage = () => {
           },
         }}
       />
-      <div className="container  mx-auto px-4 py-6 sm:py-8 text-white min-h-screen">
+      <div className="text-white min-h-screen">
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 sm:mb-8 space-y-4 sm:space-y-0">
           <h1 className="text-2xl sm:text-3xl font-bold dark:text-white text-black">
             Manage User - {user.username}
@@ -297,7 +297,7 @@ const UserDetailsPage = () => {
               <InfoItem
                 icon={<Mail className="w-5 h-5 sm:w-6 sm:h-6" />}
                 label="Email"
-                value={user.email || "None"}
+                value={user.email || "-"}
               />
               <InfoItem
                 icon={<Shield className="w-5 h-5 sm:w-6 sm:h-6" />}

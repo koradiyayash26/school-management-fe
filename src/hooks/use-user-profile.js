@@ -1,9 +1,9 @@
 import { getUserProfileUsername } from "@/services/user-profile-service";
 import { useQuery } from "@tanstack/react-query";
 
-export const useUserProfileUsername = (token) => {
+export const useUserProfileUsername = () => {
   return useQuery({
-    queryKey: ["username", token],
-    queryFn: () => getUserProfileUsername(token),
+    queryKey: ["username"],
+    queryFn: () => getUserProfileUsername(),
   });
 };

@@ -1,5 +1,5 @@
 import { MobileSidebar } from "./mobile-sidebar";
-import { Eye, EyeOff, LifeBuoy, LogOut, Settings, User } from "lucide-react";
+import { LifeBuoy, LogOut, Settings, User } from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -24,16 +24,21 @@ import { Input } from "../ui/input";
 import { Label } from "../ui/label";
 import { useState } from "react";
 import UserProfileDialogbox from "../user-profile-dialog/dialogbox";
+import { useUserProfileUsername } from "@/hooks/use-user-profile";
+import Spinner from "../spinner/spinner";
 
 export default function Header() {
   const navigate = useNavigate();
+
+  const { data, isLoading, refetch, error } = useUserProfileUsername();
+
+  let userDetail = data || {};
+
   const [selectedClass, setSelectedClass] = useState(
     localStorage.getItem("schoolType") === null
       ? "Primary"
       : localStorage.getItem("schoolType")
   );
-
-  let username = localStorage.getItem("user");
 
   const handleClassChange = (newClass) => {
     setSelectedClass(newClass);
@@ -45,6 +50,18 @@ export default function Header() {
     localStorage.clear();
     navigate("/login");
   };
+
+  if (isLoading) {
+    return (
+      <>
+        <Spinner />
+      </>
+    );
+  }
+
+  if (error) {
+    console.log(error);
+  }
 
   return (
     <header className="flex h-14 items-center gap-4 border-b bg-muted/40 px-4 lg:h-[60px] lg:px-6">
@@ -91,7 +108,7 @@ export default function Header() {
               size="icon"
               className="rounded-full border-2 uppercase border-black dark:border-white"
             >
-              {username[0]}
+              {userDetail?.username[0]}
               <span className="sr-only">Toggle user menu</span>
             </Button>
           </DropdownMenuTrigger>
@@ -136,7 +153,19 @@ export default function Header() {
               <Input
                 id="name"
                 // onChange={(e) => e.target.value}
-                value={username}
+                value={userDetail?.username}
+                className="col-span-3"
+                disabled
+              />
+            </div>
+            <div className="grid md:grid-cols-4 items-center gap-4">
+              <Label htmlFor="name" className="md:text-right">
+                Email
+              </Label>
+              <Input
+                id="email"
+                // onChange={(e) => e.target.value}
+                value={userDetail?.email}
                 className="col-span-3"
                 disabled
               />
@@ -165,7 +194,7 @@ export default function Header() {
             </div> */}
           </div>
           <SheetFooter>
-            <UserProfileDialogbox />
+            <UserProfileDialogbox refetch={refetch} userDetail={userDetail} />
           </SheetFooter>
         </SheetContent>
       </Sheet>

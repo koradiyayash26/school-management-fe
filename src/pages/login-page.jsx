@@ -23,7 +23,6 @@ export default function LoginPage() {
           "jwt_token",
           JSON.stringify(response.data.jwt_token)
         );
-        localStorage.setItem("user", email);
         // navigate("/");
         window.location.href = "/";
       })

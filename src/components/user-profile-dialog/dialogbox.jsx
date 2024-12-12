@@ -16,23 +16,29 @@ import { useMutation } from "@tanstack/react-query";
 import toast, { Toaster } from "react-hot-toast";
 import {
   updatePassword,
-  updateUsername,
+  updateUsernameEmail,
 } from "@/services/user-profile-service";
 
 const passwordSchema = z.object({
   current_password: z.string().min(1, "Current password is required"),
   new_password: z
     .string()
-    .min(6, "New password must be at least 6 characters long"),
+    .min(3, "New password must be at least 3 characters long"),
 });
 
-const usernameSchema = z.object({
+const profileSchema = z.object({
   new_username: z
     .string()
-    .min(3, "Username must be at least 3 characters long"),
+    .min(3, "Username must be at least 3 characters long")
+    .optional(),
+  new_email: z
+    .string()
+    .email("Invalid email format")
+    .min(1, "Email is required")
+    .optional(),
 });
 
-const UserProfileDialogbox = () => {
+const UserProfileDialogbox = ({ refetch, userDetail }) => {
   const [mode, setMode] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const [errorPass, setErrorPass] = useState("");
@@ -40,7 +46,8 @@ const UserProfileDialogbox = () => {
   const [formData, setFormData] = useState({
     current_password: "",
     new_password: "",
-    new_username: "",
+    new_username: userDetail?.username || "",
+    new_email: userDetail?.email || "",
   });
   const [errors, setErrors] = useState({});
 
@@ -61,43 +68,50 @@ const UserProfileDialogbox = () => {
   const mutation = useMutation({
     mutationFn: (formData) => updatePassword(formData),
     onSuccess: (res) => {
+      refetch();
       setIsOpen(false);
       toast.success(res.data.detail);
     },
     onError: (error) => {
-      toast.error(`Failed To Change Password: ${error.message}`);
+      console.log(error.message);
       setErrorPass(error?.response?.data?.current_password);
     },
   });
 
-  const Usermutation = useMutation({
-    mutationFn: (formData) => updateUsername(formData),
+  const profileMutation = useMutation({
+    mutationFn: (formData) => updateUsernameEmail(formData),
     onSuccess: (res) => {
+      refetch();
       setIsOpen(false);
-      localStorage.setItem("user", formData.new_username);
       toast.success(res.data.detail);
-      setTimeout(() => {
-        window.location.reload();
-      }, 1000);
     },
     onError: (error) => {
-      toast.error(`Failed To Change Username: ${error.message}`);
+      if (error?.response?.data?.error) {
+        toast.error(error?.response?.data?.error);
+      } else {
+        toast.error(`Failed to update profile: ${error.message}`);
+      }
     },
   });
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    const validationSchema = mode ? usernameSchema : passwordSchema;
+    const validationSchema = mode ? profileSchema : passwordSchema;
     const validation = validationSchema.safeParse(formData);
 
     if (validation.success) {
       if (mode) {
-        delete formData.current_password;
-        delete formData.new_password;
-        Usermutation.mutate(formData);
+        const profileData = {
+          new_username: formData.new_username,
+          new_email: formData.new_email,
+        };
+        profileMutation.mutate(profileData);
       } else {
-        delete formData.new_username;
-        mutation.mutate(formData);
+        const passwordData = {
+          current_password: formData.current_password,
+          new_password: formData.new_password,
+        };
+        mutation.mutate(passwordData);
       }
       setErrors({});
     } else {
@@ -145,7 +159,7 @@ const UserProfileDialogbox = () => {
                 onClick={() => setMode(true)}
                 className="w-full mt-4 md:mt-0"
               >
-                Change Username
+                Username / Email
               </Button>
             </div>
           </DialogTrigger>
@@ -164,22 +178,42 @@ const UserProfileDialogbox = () => {
           <form onSubmit={handleSubmit} className="grid gap-4 py-4">
             {mode ? (
               <div>
-                <Label htmlFor="new_username" className="text-right">
-                  New Username
-                </Label>
-                <Input
-                  id="new_username"
-                  type="text"
-                  placeholder="New Username"
-                  value={formData.new_username}
-                  onChange={handleChange}
-                  className="col-span-3 mt-2"
-                />
-                {errors.new_username && (
-                  <p className="text-red-600 mt-2 text-sm">
-                    {errors.new_username._errors.join(", ")}
-                  </p>
-                )}
+                <div className="mb-4">
+                  <Label htmlFor="new_username" className="text-right">
+                    New Username
+                  </Label>
+                  <Input
+                    id="new_username"
+                    type="text"
+                    placeholder="New Username"
+                    defaultValue={userDetail?.username}
+                    onChange={handleChange}
+                    className="col-span-3 mt-2"
+                  />
+                  {errors.new_username && (
+                    <p className="text-red-600 mt-2 text-sm">
+                      {errors.new_username._errors.join(", ")}
+                    </p>
+                  )}
+                </div>
+                <div>
+                  <Label htmlFor="new_email" className="text-right">
+                    New Email
+                  </Label>
+                  <Input
+                    id="new_email"
+                    type="email"
+                    placeholder="New Email"
+                    defaultValue={userDetail?.email}
+                    onChange={handleChange}
+                    className="col-span-3 mt-2"
+                  />
+                  {errors.new_email && (
+                    <p className="text-red-600 mt-2 text-sm">
+                      {errors.new_email._errors.join(", ")}
+                    </p>
+                  )}
+                </div>
               </div>
             ) : (
               <>

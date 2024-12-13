@@ -69,11 +69,7 @@ const PermissionsCheckboxes = ({ userPermitions, onSubmit, disabled }) => {
             </div>
           </div>
         ))}
-        <Button
-          className="mt-6 w-full sm:w-auto"
-          onClick={handleSubmit}
-          disabled={disabled}
-        >
+        <Button className="mt-6" onClick={handleSubmit} disabled={disabled}>
           Update Permissions
         </Button>
       </div>
@@ -288,7 +284,7 @@ const UserDetailsPage = () => {
             </Dialog>
           </CardHeader>
           <CardContent className="p-4 sm:p-6">
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
               <InfoItem
                 icon={<User className="w-5 h-5 sm:w-6 sm:h-6" />}
                 label="Username"
@@ -302,14 +298,7 @@ const UserDetailsPage = () => {
               <InfoItem
                 icon={<Shield className="w-5 h-5 sm:w-6 sm:h-6" />}
                 label="Role"
-                value={
-                  <Badge
-                    variant={user.is_superuser ? "destructive" : "secondary"}
-                    className="bg-gray-800 text-white"
-                  >
-                    {user.is_superuser ? "Admin" : "Staff"}
-                  </Badge>
-                }
+                value={user.is_superuser ? "Admin" : "Staff"}
               />
               <InfoItem
                 icon={<Clock className="w-5 h-5 sm:w-6 sm:h-6" />}
@@ -387,14 +376,16 @@ const UserDetailsPage = () => {
 };
 
 const InfoItem = ({ icon, label, value }) => (
-  <div className="flex items-center border p-3 sm:p-4 rounded-lg">
+  <div className="w-auto lg:w-full flex items-center border p-3 sm:p-4 rounded-lg">
     <div className="flex-shrink-0">{icon}</div>
-    <div className="ml-3 sm:ml-4 flex flex-col">
+    <div className="ml-3 sm:ml-4 flex flex-col flex-1 min-w-0">
       <span className="text-xs sm:text-sm font-medium text-gray-400">
         {label}
       </span>
       {typeof value === "string" ? (
-        <span className="text-sm sm:text-lg font-semibold ">{value}</span>
+        <span className="text-sm lg:text-lg font-semibold overflow-hidden text-ellipsis break-words">
+          {value}
+        </span>
       ) : (
         value
       )}

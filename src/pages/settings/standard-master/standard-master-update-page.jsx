@@ -7,6 +7,7 @@ import StandardMasterForm from "./standard-master-form-page";
 import { updateStandardMaster } from "@/services/standard-master-service";
 import { useStandardMasterGet } from "@/hooks/use-standard-master";
 import toast, { Toaster } from "react-hot-toast";
+import { BreadcrumbComponent } from "@/components/Breadcrumb";
 const StandardMasterUpdate = () => {
   const navigate = useNavigate();
   const { id } = useParams();
@@ -76,8 +77,17 @@ const StandardMasterUpdate = () => {
           },
         }}
       />
+      {/* PAth */}
+      <BreadcrumbComponent
+        customItems={[
+          { label: "Settings", path: "/setting" },
+          { label: "Standard master", path: "/setting/standard-master" },
+          { label: "Edit Standard master" },
+        ]}
+      />
+      {/* PAth */}
       <h1 className="uppercase text-2xl font-bold mb-4">
-        UPDATE STANDARD MASTER
+        Edit STANDARD MASTER
       </h1>
       <Card className="">
         <StandardMasterForm

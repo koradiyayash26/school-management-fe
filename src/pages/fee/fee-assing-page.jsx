@@ -16,6 +16,7 @@ import { useMutation } from "@tanstack/react-query";
 import toast, { Toaster } from "react-hot-toast";
 import { assignStudentUpdatePatch } from "@/services/fees-service";
 import Spinner from "@/components/spinner/spinner";
+import { BreadcrumbComponent } from "@/components/Breadcrumb";
 
 const headers = [
   { label: "Id", value: "id" },
@@ -58,7 +59,11 @@ function FeesAssingPage() {
   });
 
   if (isLoading) {
-    return <><Spinner/></>;
+    return (
+      <>
+        <Spinner />
+      </>
+    );
   }
   if (error) {
     return <>Error</>;
@@ -153,6 +158,14 @@ function FeesAssingPage() {
           },
         }}
       />
+      {/* PAth */}
+      <BreadcrumbComponent
+        customItems={[
+          { label: "Fee Type", path: "/fee-type" },
+          { label: "Assign students" },
+        ]}
+      />
+      {/* PAth */}
       <h1>Assigned Students</h1>
       <div>
         <Button
@@ -187,7 +200,10 @@ function FeesAssingPage() {
                 )}
               </TableHead>
               {headers.map((header, index) => (
-                <TableHead key={index} className="text-center whitespace-nowrap">
+                <TableHead
+                  key={index}
+                  className="text-center whitespace-nowrap"
+                >
                   {header.label}
                 </TableHead>
               ))}
@@ -208,7 +224,10 @@ function FeesAssingPage() {
                     />
                   </TableCell>
                   {headers.map((header) => (
-                    <TableCell key={header.value} className="text-center whitespace-nowrap">
+                    <TableCell
+                      key={header.value}
+                      className="text-center whitespace-nowrap"
+                    >
                       {header.value === "standard" && student.standard === "13"
                         ? "Balvatika"
                         : student[header.value] || "-"}
@@ -257,7 +276,10 @@ function FeesAssingPage() {
                 )}
               </TableHead>
               {headers.map((header, index) => (
-                <TableHead key={index} className="text-center whitespace-nowrap">
+                <TableHead
+                  key={index}
+                  className="text-center whitespace-nowrap"
+                >
                   {header.label}
                 </TableHead>
               ))}
@@ -280,7 +302,10 @@ function FeesAssingPage() {
                     />
                   </TableCell>
                   {headers.map((header) => (
-                    <TableCell key={header.value} className="text-center whitespace-nowrap">
+                    <TableCell
+                      key={header.value}
+                      className="text-center whitespace-nowrap"
+                    >
                       {header.value === "standard" && student.standard === "13"
                         ? "Balvatika"
                         : student[header.value] || "-"}

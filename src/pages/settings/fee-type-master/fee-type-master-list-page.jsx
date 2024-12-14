@@ -13,6 +13,7 @@ import { Link } from "react-router-dom";
 import Spinner from "@/components/spinner/spinner";
 import ActionsPopupSettings from "@/components/settings/data-table-row-action";
 import { useFeeTypeMasterList } from "@/hooks/use-fee-type-master";
+import { BreadcrumbComponent } from "@/components/Breadcrumb";
 
 const headers = [
   { label: "ID", value: "id" },
@@ -34,7 +35,17 @@ function FeeTypeMasterList() {
 
   return (
     <>
-      <h1 className="uppercase text-2xl font-bold mb-4">Fee Type Master List</h1>
+      {/* PAth */}
+      <BreadcrumbComponent
+        customItems={[
+          { label: "Settings", path: "/setting" },
+          { label: "Fee type master" },
+        ]}
+      />
+      {/* PAth */}
+      <h1 className="uppercase text-2xl font-bold mb-4">
+        Fee Type Master List
+      </h1>
       <div className="block md:flex md:justify-between gap-2">
         <div className="flex gap-2 md:m-0 mt-4">
           <Link to="/setting/fee-type-master/add">

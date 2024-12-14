@@ -57,6 +57,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { BreadcrumbComponent } from "@/components/Breadcrumb";
 
 const headers = [
   { label: "ID", value: "id" },
@@ -195,6 +196,9 @@ function FeesTypePage() {
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
+      {/* PAth */}
+      <BreadcrumbComponent customItems={[{ label: "Fee Type" }]} />
+      {/* PAth */}
       <h1 className="uppercase mb-4 text-2xl font-bold">FEE TYPE</h1>
       <div className="block md:flex md:justify-between gap-2">
         <div className="w-full">
@@ -234,8 +238,12 @@ function FeesTypePage() {
               visibleStudents.map((fee) => (
                 <TableRow key={fee.id}>
                   {headers.map((header) => (
-                    <TableCell key={header.value} className="capitalize whitespace-nowrap">
-                      {header.value === "standard__name" && fee[header.value] === "13"
+                    <TableCell
+                      key={header.value}
+                      className="capitalize whitespace-nowrap"
+                    >
+                      {header.value === "standard__name" &&
+                      fee[header.value] === "13"
                         ? "Balvatika"
                         : fee[header.value] || "-"}
                     </TableCell>

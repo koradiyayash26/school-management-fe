@@ -61,6 +61,7 @@ import {
 } from "@/components/ui/pagination";
 import { Calendar as CalendarIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { BreadcrumbComponent } from "@/components/Breadcrumb";
 
 const headers = [
   { label: "Fee Paid Date", value: "fee_paid_date" },
@@ -222,6 +223,9 @@ const PaymentsPage = () => {
 
   return (
     <>
+      {/* PAth */}
+      <BreadcrumbComponent customItems={[{ label: "Payment" }]} />
+      {/* PAth */}
       <h1 className="uppercase text-2xl font-bold mb-4">PAYMENT</h1>
       <div>
         <div>
@@ -239,13 +243,27 @@ const PaymentsPage = () => {
           <Table className="relative">
             <TableHeader>
               <TableRow>
-                <TableHead className="text-center whitespace-nowrap">Pay</TableHead>
-                <TableHead className="text-center whitespace-nowrap">GRNO</TableHead>
-                <TableHead className="text-center whitespace-nowrap">FIRST NAME</TableHead>
-                <TableHead className="text-center whitespace-nowrap">MIDDLE NAME</TableHead>
-                <TableHead className="text-center whitespace-nowrap">LAST NAME</TableHead>
-                <TableHead className="text-center whitespace-nowrap">STANDARD</TableHead>
-                <TableHead className="text-center whitespace-nowrap">SECTION</TableHead>
+                <TableHead className="text-center whitespace-nowrap">
+                  Pay
+                </TableHead>
+                <TableHead className="text-center whitespace-nowrap">
+                  GRNO
+                </TableHead>
+                <TableHead className="text-center whitespace-nowrap">
+                  FIRST NAME
+                </TableHead>
+                <TableHead className="text-center whitespace-nowrap">
+                  MIDDLE NAME
+                </TableHead>
+                <TableHead className="text-center whitespace-nowrap">
+                  LAST NAME
+                </TableHead>
+                <TableHead className="text-center whitespace-nowrap">
+                  STANDARD
+                </TableHead>
+                <TableHead className="text-center whitespace-nowrap">
+                  SECTION
+                </TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -406,7 +424,9 @@ const PaymentsPage = () => {
           <TableHeader>
             <TableRow>
               {headers.map((header, index) => (
-                <TableHead key={index} className="whitespace-nowrap">{header.label}</TableHead>
+                <TableHead key={index} className="whitespace-nowrap">
+                  {header.label}
+                </TableHead>
               ))}
               <TableHead className="">Actions</TableHead>
             </TableRow>

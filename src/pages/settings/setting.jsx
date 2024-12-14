@@ -1,3 +1,4 @@
+import { BreadcrumbComponent } from "@/components/Breadcrumb";
 import CardItem from "@/components/home/card-item";
 import Spinner from "@/components/spinner/spinner";
 import { Button } from "@/components/ui/button";
@@ -100,6 +101,9 @@ const Setting = () => {
           },
         }}
       />
+      {/* PAth */}
+      <BreadcrumbComponent customItems={[{ label: "Settings" }]} />
+      {/* PAth */}
       <div className="w-full p-4">
         <div className="md:flex justify-between">
           <h1 className="text-2xl font-bold mb-6">SETTINGS</h1>

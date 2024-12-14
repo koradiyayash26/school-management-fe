@@ -25,6 +25,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
+import { BreadcrumbComponent } from "@/components/Breadcrumb";
 
 const PermissionsCheckboxes = ({ userPermitions, onSubmit, disabled }) => {
   const [selectedPermissions, setSelectedPermissions] = useState([]);
@@ -189,30 +190,19 @@ const UserDetailsPage = () => {
           },
         }}
       />
+      {/* PAth */}
+      <BreadcrumbComponent
+        customItems={[
+          { label: "Settings", path: "/setting" },
+          { label: "User detail" },
+        ]}
+      />
+      {/* PAth */}
       <div className="text-white min-h-screen">
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 sm:mb-8 space-y-4 sm:space-y-0">
           <h1 className="text-2xl sm:text-3xl font-bold dark:text-white text-black">
             Manage User - {user.username}
           </h1>
-          <Link to="/setting">
-            <Button>
-              <svg
-                className="w-4 h-4 mr-2"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth="2"
-                  d="M10 19l-7-7m0 0l7-7m-7 7h18"
-                ></path>
-              </svg>
-              Back to Settings
-            </Button>
-          </Link>
         </div>
         <Card className="mb-6 sm:mb-8 ">
           <CardHeader className="dark:bg-[#27272a66] rounded-t-lg border-b flex flex-col sm:flex-row justify-between items-start sm:items-center space-y-4 sm:space-y-0">

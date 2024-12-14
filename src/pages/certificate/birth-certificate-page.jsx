@@ -12,6 +12,7 @@ import {
 import { Printer } from "lucide-react";
 import { useCertificateGetData } from "@/hooks/use-certificate";
 import Spinner from "@/components/spinner/spinner";
+import { BreadcrumbComponent } from "@/components/Breadcrumb";
 
 const BirthCertificatePage = () => {
   const { id } = useParams();
@@ -49,6 +50,14 @@ const BirthCertificatePage = () => {
   }
   return (
     <>
+      {/* PAth */}
+      <BreadcrumbComponent
+        customItems={[
+          { label: "Certificate", path: "/certificate" },
+          { label: "Birth" },
+        ]}
+      />
+      {/* PAth */}
       <ContextMenu>
         <ContextMenuTrigger>
           <div className="border border-white-200 rounded-lg shadow-sm    ">

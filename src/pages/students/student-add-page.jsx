@@ -1,3 +1,4 @@
+import { BreadcrumbComponent } from "@/components/Breadcrumb";
 import Spinner from "@/components/spinner/spinner";
 import StudentForm from "@/components/student";
 import { studentDetail } from "@/constant";
@@ -89,6 +90,14 @@ const StudentAddPage = () => {
           },
         }}
       />
+      {/* PAth */}
+      <BreadcrumbComponent
+        customItems={[
+          { label: "General register", path: "/student" },
+          { label: "Add Student" },
+        ]}
+      />
+      {/* PAth */}
       <StudentForm
         academicYear={academicYear}
         defaultValues={studentDetail}

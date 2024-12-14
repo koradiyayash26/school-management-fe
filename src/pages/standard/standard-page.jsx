@@ -15,6 +15,7 @@ import { Progress } from "@/components/ui/progress";
 import { ClipboardList } from "lucide-react";
 import { useStandard } from "@/hooks/use-standard";
 import Spinner from "@/components/spinner/spinner";
+import { BreadcrumbComponent } from "@/components/Breadcrumb";
 
 const StandardPage = () => {
   const { data, isLoading, refetch } = useStandard();
@@ -92,12 +93,21 @@ const StandardPage = () => {
   }, [standardDataCount]);
 
   if (isLoading) {
-    return <><Spinner/></>;
+    return (
+      <>
+        <Spinner />
+      </>
+    );
   }
 
   return (
     <>
-      <h1 className="uppercase text-2xl font-bold mb-4">STANDARD'S INFORMATION</h1>
+      {/* PAth */}
+      <BreadcrumbComponent customItems={[{ label: "Standard" }]} />
+      {/* PAth */}
+      <h1 className="uppercase text-2xl font-bold mb-4">
+        STANDARD'S INFORMATION
+      </h1>
       {/* Total Student Count */}
       <Card className="">
         <CardHeader>

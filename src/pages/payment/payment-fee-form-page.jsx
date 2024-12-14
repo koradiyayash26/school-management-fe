@@ -1,3 +1,4 @@
+import { BreadcrumbComponent } from "@/components/Breadcrumb";
 import ActionsPopupPaymentFee from "@/components/payment/data-table-row-action";
 import Spinner from "@/components/spinner/spinner";
 import {
@@ -225,6 +226,14 @@ const PaymentFeeFormPage = () => {
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
+      {/* PAth */}
+      <BreadcrumbComponent
+        customItems={[
+          { label: "Payment", path: "/payment" },
+          { label: "Payment Detail" },
+        ]}
+      />
+      {/* PAth */}
       <ScrollArea className="rounded-md border mt-6 max-w-[1280px]">
         <Table className="relative">
           <TableHeader>

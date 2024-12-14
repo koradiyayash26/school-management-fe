@@ -70,6 +70,7 @@ import {
 import { Label } from "@/components/ui/label";
 import { cn } from "@/lib/utils";
 import { getSchoolType } from "@/hooks/use-school-type";
+import { BreadcrumbComponent } from "@/components/Breadcrumb";
 
 const headers = [
   { label: "ID", value: "id" },
@@ -555,6 +556,9 @@ function StudentsPage() {
             </AlertDialogFooter>
           </AlertDialogContent>
         </AlertDialog>
+        {/* PAth */}
+        <BreadcrumbComponent customItems={[{ label: "General register" }]} />
+        {/* PAth */}
         <h1 className="uppercase text-2xl font-bold mb-4">GENERAL REGISTER</h1>
         <div className="block md:flex md:justify-between gap-2 mb-4">
           <div className="w-full md:w-auto">

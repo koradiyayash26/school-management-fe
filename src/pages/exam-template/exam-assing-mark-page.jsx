@@ -16,6 +16,7 @@ import { Button } from "@/components/ui/button";
 import { useMutation } from "@tanstack/react-query";
 import { examTemplateStudentMarkAssingPost } from "@/services/exam-template-service";
 import Spinner from "@/components/spinner/spinner";
+import { BreadcrumbComponent } from "@/components/Breadcrumb";
 
 const headers = [
   { label: "ID", value: "id" },
@@ -120,7 +121,15 @@ function ExamAssingMarkPage() {
           },
         }}
       />
-      <h1>EXAM MARKS ASSING</h1>
+      {/* PAth */}
+      <BreadcrumbComponent
+        customItems={[
+          { label: "Test", path: "/exam-template" },
+          { label: "Assing Test mark" },
+        ]}
+      />
+      {/* PAth */}
+      <h1>TEST MARKS ASSING</h1>
       <div className="grid gap-2 md:gap-0 text-[14px]">
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-6 gap-4 items-center md:gap-2">
           <div>
@@ -162,7 +171,9 @@ function ExamAssingMarkPage() {
             <TableHeader>
               <TableRow>
                 {headers.map((header, index) => (
-                  <TableHead key={index} className="whitespace-nowrap">{header.label}</TableHead>
+                  <TableHead key={index} className="whitespace-nowrap">
+                    {header.label}
+                  </TableHead>
                 ))}
                 <TableHead className="no-print">Marks</TableHead>
               </TableRow>

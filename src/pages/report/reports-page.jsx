@@ -1,3 +1,4 @@
+import { BreadcrumbComponent } from "@/components/Breadcrumb";
 import ActionsPopupReport from "@/components/report/data-table-row-action";
 import Spinner from "@/components/spinner/spinner";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
@@ -80,7 +81,11 @@ const ReportsPage = () => {
   }, [standardDataCount, feeReportData]);
 
   if (isLoading || reportLoading) {
-    return <><Spinner/></>;
+    return (
+      <>
+        <Spinner />
+      </>
+    );
   }
 
   if (error || reportError) {
@@ -89,18 +94,33 @@ const ReportsPage = () => {
 
   return (
     <>
+      {/* PAth */}
+      <BreadcrumbComponent customItems={[{ label: "Report" }]} />
+      {/* PAth */}
       <h1 className="uppercase text-2xl font-bold mb-4">Report</h1>
       <div>
         <ScrollArea className="rounded-md border max-w-[1280px]">
           <Table className="relative text-center">
             <TableHeader>
               <TableRow>
-                <TableHead className="text-center whitespace-nowrap">Standard</TableHead>
-                <TableHead className="text-center whitespace-nowrap">No Of Students</TableHead>
-                <TableHead className="text-center whitespace-nowrap">Total</TableHead>
-                <TableHead className="text-center whitespace-nowrap">Paid</TableHead>
-                <TableHead className="text-center whitespace-nowrap">Pending</TableHead>
-                <TableHead className="text-center whitespace-nowrap">Waived</TableHead>
+                <TableHead className="text-center whitespace-nowrap">
+                  Standard
+                </TableHead>
+                <TableHead className="text-center whitespace-nowrap">
+                  No Of Students
+                </TableHead>
+                <TableHead className="text-center whitespace-nowrap">
+                  Total
+                </TableHead>
+                <TableHead className="text-center whitespace-nowrap">
+                  Paid
+                </TableHead>
+                <TableHead className="text-center whitespace-nowrap">
+                  Pending
+                </TableHead>
+                <TableHead className="text-center whitespace-nowrap">
+                  Waived
+                </TableHead>
                 <TableHead className="text-start">Actions</TableHead>
               </TableRow>
             </TableHeader>

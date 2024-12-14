@@ -11,6 +11,7 @@ import { useMutation } from "@tanstack/react-query";
 import ExamTemplateForm from "@/components/exam-template/exam-template-from";
 import { examTemplateIdAdd } from "@/services/exam-template-service";
 import Spinner from "@/components/spinner/spinner";
+import { BreadcrumbComponent } from "@/components/Breadcrumb";
 
 const ExamTemplateAddPage = () => {
   const defaultValues = {
@@ -37,14 +38,26 @@ const ExamTemplateAddPage = () => {
   var isLoading = false;
 
   if (isLoading) {
-    return <><Spinner/></>;
+    return (
+      <>
+        <Spinner />
+      </>
+    );
   }
 
   return (
     <>
+      {/* PAth */}
+      <BreadcrumbComponent
+        customItems={[
+          { label: "Test", path: "/exam-template" },
+          { label: "Add Test template" },
+        ]}
+      />
+      {/* PAth */}
       <Card className="">
         <CardHeader>
-          <CardTitle>EXAM TEMPLATE</CardTitle>
+          <CardTitle>TEST TEMPLATE</CardTitle>
           <CardDescription>
             All Fields Are Required in This Form.
           </CardDescription>

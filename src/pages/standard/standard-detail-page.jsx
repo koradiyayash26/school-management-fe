@@ -59,6 +59,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { BreadcrumbComponent } from "@/components/Breadcrumb";
 
 const headers = [
   { label: "ID", value: "id" },
@@ -218,6 +219,16 @@ const StandardDetailPage = () => {
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
+      {/* PAth */}
+      <BreadcrumbComponent
+        customItems={[
+          { label: "Standard", path: "/standard" },
+          {
+            label: `${id == "13" ? "Balvatika" : id}`,
+          },
+        ]}
+      />
+      {/* PAth */}
       <h1 className="uppercase mb-4 text-2xl font-bold">
         STUDENTS OF{" "}
         <span className="underline font-bold">

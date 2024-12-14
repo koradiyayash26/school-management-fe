@@ -16,6 +16,7 @@ import { Button } from "@/components/ui/button";
 import { examAssingMarkUpdatePatch } from "@/services/exam-template-service";
 import { useMutation } from "@tanstack/react-query";
 import Spinner from "@/components/spinner/spinner";
+import { BreadcrumbComponent } from "@/components/Breadcrumb";
 
 const headers = [
   { label: "Id", value: "ids" },
@@ -121,7 +122,15 @@ function ExamAssingMarkEditPage() {
           },
         }}
       />
-      <h1>EXAM MARKS LIST</h1>
+      {/* PAth */}
+      <BreadcrumbComponent
+        customItems={[
+          { label: "Test", path: "/exam-template" },
+          { label: "Update Test mark" },
+        ]}
+      />
+      {/* PAth */}
+      <h1>TEST MARKS LIST</h1>
       <div className="grid gap-2 md:gap-0 text-[14px]">
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-5 gap-4 items-center md:gap-2">
           <div>
@@ -158,7 +167,9 @@ function ExamAssingMarkEditPage() {
             <TableHeader>
               <TableRow>
                 {headers.map((header, index) => (
-                  <TableHead key={index} className="whitespace-nowrap">{header.label}</TableHead>
+                  <TableHead key={index} className="whitespace-nowrap">
+                    {header.label}
+                  </TableHead>
                 ))}
                 <TableHead className="no-print">Marks</TableHead>
                 <TableHead className="no-print">Update</TableHead>

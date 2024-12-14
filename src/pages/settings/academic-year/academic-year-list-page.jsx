@@ -15,6 +15,7 @@ import ActionsPopupSettings from "@/components/settings/data-table-row-action";
 import { useAcademicYear } from "@/hooks/use-academic-year";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Terminal } from "lucide-react";
+import { BreadcrumbComponent } from "@/components/Breadcrumb";
 
 const headers = [
   { label: "ID", value: "id" },
@@ -37,6 +38,14 @@ function AcademicYearList() {
 
   return (
     <>
+      {/* PAth */}
+      <BreadcrumbComponent
+        customItems={[
+          { label: "Settings", path: "/setting" },
+          { label: "Academic year" },
+        ]}
+      />
+      {/* PAth */}
       <h1 className="uppercase text-2xl font-bold mb-4">Academic Year List</h1>
       <Alert className="">
         <AlertTitle>Note :</AlertTitle>

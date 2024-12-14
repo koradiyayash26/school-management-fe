@@ -14,6 +14,7 @@ import { useForm } from "react-hook-form";
 import { Form } from "../ui/form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useParams } from "react-router-dom";
 
 const formSchema = z.object({
   student_img: z.any().optional(),
@@ -191,6 +192,8 @@ function StudentForm({ academicYear, defaultValues, onSubmit }) {
     onSubmit,
   });
 
+  let { id } = useParams();
+
   return (
     <>
       <Form {...form}>
@@ -219,7 +222,9 @@ function StudentForm({ academicYear, defaultValues, onSubmit }) {
                 <CardHeader>
                   <CardTitle>GR Details</CardTitle>
                   <CardDescription>
-                    Add student data here. Click save when you're done.
+                    {`${
+                      id ? "Edit" : "Add"
+                    } student data here. Click save when you're done.`}
                   </CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-2">

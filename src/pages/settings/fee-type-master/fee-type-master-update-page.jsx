@@ -6,6 +6,7 @@ import Spinner from "@/components/spinner/spinner";
 import FeeTypeMasterFormPage from "./fee-type-master-form-page";
 import { updateFeeTypeMaster } from "@/services/fee-type-master";
 import { useFeeTypeMasterGet } from "@/hooks/use-fee-type-master";
+import { BreadcrumbComponent } from "@/components/Breadcrumb";
 const FeeTypeMasterUpdate = () => {
   const navigate = useNavigate();
   const { id } = useParams();
@@ -46,7 +47,18 @@ const FeeTypeMasterUpdate = () => {
 
   return (
     <>
-      <h1 className="uppercase text-2xl font-bold mb-4">UPDATE FEE TYPE MASTER</h1>
+      {/* PAth */}
+      <BreadcrumbComponent
+        customItems={[
+          { label: "Settings", path: "/setting" },
+          { label: "Fee type master", path: "/setting/fee-type-master" },
+          { label: "Edit Fee type master" },
+        ]}
+      />
+      {/* PAth */}
+      <h1 className="uppercase text-2xl font-bold mb-4">
+        EDIT FEE TYPE MASTER
+      </h1>
       <Card className="">
         <FeeTypeMasterFormPage
           defaultValues={defaultValues}

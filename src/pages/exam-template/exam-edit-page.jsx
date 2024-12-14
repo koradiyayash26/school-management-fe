@@ -12,6 +12,7 @@ import ExamTemplateForm from "@/components/exam-template/exam-template-from";
 import { useExamTemplateIdGet } from "@/hooks/use-exam-template";
 import { examTemplateIdUpdate } from "@/services/exam-template-service";
 import Spinner from "@/components/spinner/spinner";
+import { BreadcrumbComponent } from "@/components/Breadcrumb";
 
 const ExamTemplateEditPage = () => {
   const { id } = useParams();
@@ -50,9 +51,17 @@ const ExamTemplateEditPage = () => {
 
   return (
     <>
+      {/* PAth */}
+      <BreadcrumbComponent
+        customItems={[
+          { label: "Test", path: "/exam-template" },
+          { label: "Update Test template" },
+        ]}
+      />
+      {/* PAth */}
       <Card className="">
         <CardHeader>
-          <CardTitle>UPDATE EXAM MARKS</CardTitle>
+          <CardTitle>UPDATE TEST MARKS</CardTitle>
           <CardDescription>
             All Fields Are Required in This Form.
           </CardDescription>

@@ -24,6 +24,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { postUser } from "@/services/settings-service";
 import toast, { Toaster } from "react-hot-toast";
+import { BreadcrumbComponent } from "@/components/Breadcrumb";
 const formSchema = z.object({
   username: z.string().min(1, { message: "Enter username" }),
   email: z.string().email({ message: "Enter valid email" }).optional(),
@@ -73,11 +74,14 @@ const UserAddPage = () => {
           },
         }}
       />
-      <div className="flex gap-2 md:m-0 mt-4">
-        <Link to="/setting">
-          <Button>Back Settings</Button>
-        </Link>
-      </div>
+      {/* PAth */}
+      <BreadcrumbComponent
+        customItems={[
+          { label: "Settings", path: "/setting" },
+          { label: "Add user" },
+        ]}
+      />
+      {/* PAth */}
       <Card className="">
         <Form {...form}>
           <form

@@ -45,6 +45,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { BreadcrumbComponent } from "@/components/Breadcrumb";
 
 const headers = [
   { label: "ID", value: "id" },
@@ -100,6 +101,9 @@ function CertificatePage() {
 
   return (
     <>
+      {/* PAth */}
+      <BreadcrumbComponent customItems={[{ label: "Certificate" }]} />
+      {/* PAth */}
       <h1 className="uppercase text-2xl font-bold mb-4">certificate</h1>
       <div className="flex flex-col md:flex-row items-center justify-between">
         <Input
@@ -113,7 +117,9 @@ function CertificatePage() {
           <TableHeader>
             <TableRow>
               {headers.map((header, index) => (
-                <TableHead key={index} className="whitespace-nowrap">{header.label}</TableHead>
+                <TableHead key={index} className="whitespace-nowrap">
+                  {header.label}
+                </TableHead>
               ))}
               <TableHead className="">Certificate</TableHead>
             </TableRow>

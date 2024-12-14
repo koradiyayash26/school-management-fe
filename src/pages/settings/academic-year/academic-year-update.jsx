@@ -6,6 +6,7 @@ import Spinner from "@/components/spinner/spinner";
 import AcademicYearFormPage from "./academic-year-form";
 import { useAcademicYearGetData } from "@/hooks/use-academic-year";
 import { updateAcademicYear } from "@/services/academic-year-service";
+import { BreadcrumbComponent } from "@/components/Breadcrumb";
 const AcademicYearUpdate = () => {
   const navigate = useNavigate();
   const { id } = useParams();
@@ -45,9 +46,16 @@ const AcademicYearUpdate = () => {
 
   return (
     <>
-      <h1 className="uppercase text-2xl font-bold mb-4">
-        UPDATE ACADEMIC YEAR
-      </h1>
+      {/* PAth */}
+      <BreadcrumbComponent
+        customItems={[
+          { label: "Settings", path: "/setting" },
+          { label: "Academic year", path: "/setting/academic-year" },
+          { label: "Edit Academic year" },
+        ]}
+      />
+      {/* PAth */}
+      <h1 className="uppercase text-2xl font-bold mb-4">EDIT ACADEMIC YEAR</h1>
       <Card className="">
         <AcademicYearFormPage
           defaultValues={defaultValues}

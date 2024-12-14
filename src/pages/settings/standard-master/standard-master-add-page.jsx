@@ -5,6 +5,7 @@ import { useMutation } from "@tanstack/react-query";
 import StandardMasterForm from "./standard-master-form-page";
 import { postStandardMaster } from "@/services/standard-master-service";
 import toast, { Toaster } from "react-hot-toast";
+import { BreadcrumbComponent } from "@/components/Breadcrumb";
 
 const StandardMasterAdd = () => {
   const defaultValues = {
@@ -55,6 +56,15 @@ const StandardMasterAdd = () => {
           },
         }}
       />
+      {/* PAth */}
+      <BreadcrumbComponent
+        customItems={[
+          { label: "Settings", path: "/setting" },
+          { label: "Standard master", path: "/setting/standard-master" },
+          { label: "Add Standard master" },
+        ]}
+      />
+      {/* PAth */}
       <h1 className="uppercase text-2xl font-bold mb-4">ADD STANDARD MASTER</h1>
       <Card className="">
         <StandardMasterForm defaultValues={defaultValues} onSubmit={onSubmit} />

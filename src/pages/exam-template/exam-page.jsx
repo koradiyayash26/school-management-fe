@@ -49,6 +49,7 @@ import {
   ChevronsLeft,
   ChevronsRight,
 } from "lucide-react";
+import { BreadcrumbComponent } from "@/components/Breadcrumb";
 
 const headers = [
   { label: "ID", value: "id" },
@@ -118,7 +119,28 @@ function ExamTemplatePage() {
 
   return (
     <>
-      <Toaster position="top-center" reverseOrder={false} />
+      <Toaster
+        position="top-center"
+        reverseOrder={false}
+        gutter={8}
+        containerClassName=""
+        containerStyle={{}}
+        toastOptions={{
+          className: "",
+          duration: 5000,
+          style: {
+            background: "#363636",
+            color: "#fff",
+          },
+          success: {
+            duration: 3000,
+            theme: {
+              primary: "green",
+              secondary: "black",
+            },
+          },
+        }}
+      />
       <AlertDialog open={openAlert} onOpenChange={setOpenAlert}>
         <AlertDialogContent>
           <AlertDialogHeader>
@@ -139,8 +161,11 @@ function ExamTemplatePage() {
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
+      {/* PAth */}
+      <BreadcrumbComponent customItems={[{ label: "Test" }]} />
+      {/* PAth */}
 
-      <h1 className="uppercase mb-4 text-2xl font-bold">EXAM TEMPLATE</h1>
+      <h1 className="uppercase mb-4 text-2xl font-bold">TEST</h1>
       <div className="space-y-4">
         <div className="flex flex-col sm:flex-row justify-between items-center space-y-2 sm:space-y-0 sm:space-x-2">
           <Input
@@ -159,7 +184,9 @@ function ExamTemplatePage() {
             <TableHeader>
               <TableRow>
                 {headers.map((header) => (
-                  <TableHead key={header.value} className="whitespace-nowrap">{header.label}</TableHead>
+                  <TableHead key={header.value} className="whitespace-nowrap">
+                    {header.label}
+                  </TableHead>
                 ))}
                 <TableHead>Actions</TableHead>
               </TableRow>

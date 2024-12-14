@@ -9,6 +9,7 @@ import { FeeTypeadd } from "@/services/fees-service";
 import Spinner from "@/components/spinner/spinner";
 import { useAcademicYear } from "@/hooks/use-academic-year";
 import toast, { Toaster } from "react-hot-toast";
+import { BreadcrumbComponent } from "@/components/Breadcrumb";
 
 const FeeTypesAddPage = () => {
   const defaultValues = {
@@ -105,6 +106,14 @@ const FeeTypesAddPage = () => {
           },
         }}
       />
+      {/* PAth */}
+      <BreadcrumbComponent
+        customItems={[
+          { label: "Fee Type", path: "/fee-type" },
+          { label: "Add Fee type" },
+        ]}
+      />
+      {/* PAth */}
       <Card className="">
         <FeeTypeForm
           academicYear={academicYear}

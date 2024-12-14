@@ -18,6 +18,7 @@ import {
 import { usePaymentReceiptDetailsBytid } from "@/hooks/use-payment";
 import numWords from "num-words";
 import Spinner from "@/components/spinner/spinner";
+import { BreadcrumbComponent } from "@/components/Breadcrumb";
 
 const PaymentReceiptPage = () => {
   const { id } = useParams();
@@ -45,6 +46,14 @@ const PaymentReceiptPage = () => {
 
   return (
     <>
+      {/* PAth */}
+      <BreadcrumbComponent
+        customItems={[
+          { label: "Payment", path: "/payment" },
+          { label: "Payment receipt" },
+        ]}
+      />
+      {/* PAth */}
       <div className="border border-white-200 rounded-lg shadow-sm text-center py-2">
         <h3>FEE PAYMENT RECEIPT</h3>
       </div>

@@ -8,6 +8,7 @@ import { useMutation } from "@tanstack/react-query";
 import { feeTypeUpdate } from "@/services/fees-service";
 import Spinner from "@/components/spinner/spinner";
 import { useAcademicYear } from "@/hooks/use-academic-year";
+import { BreadcrumbComponent } from "@/components/Breadcrumb";
 
 const FeetypeUpdatePage = () => {
   const navigate = useNavigate();
@@ -23,11 +24,11 @@ const FeetypeUpdatePage = () => {
   const academicYear = academicData || [];
 
   const feetypeData = data?.data;
-  
+
   let academicDefault = null;
   academicYear.forEach((year) => {
     if (year.id === feetypeData?.year) {
-      academicDefault = year.year;      
+      academicDefault = year.year;
     }
   });
   const defaultValues = {
@@ -77,7 +78,7 @@ const FeetypeUpdatePage = () => {
     });
     const formattedData = {
       ...data,
-      standard:stdData,
+      standard: stdData,
       year: academicYearId,
       fee_master: feeId,
     };
@@ -97,6 +98,14 @@ const FeetypeUpdatePage = () => {
 
   return (
     <>
+      {/* PAth */}
+      <BreadcrumbComponent
+        customItems={[
+          { label: "Fee Type", path: "/fee-type" },
+          { label: "Update Fee type" },
+        ]}
+      />
+      {/* PAth */}
       <Card className="">
         <FeeTypeForm
           academicYear={academicYear}

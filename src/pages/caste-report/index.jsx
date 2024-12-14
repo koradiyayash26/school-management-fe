@@ -97,7 +97,6 @@ export function CasteReport() {
             </ScrollArea>
           </CardContent>
         </Card>
-
         {/* Standard-wise Cards */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           {report_data?.map((standard) => (

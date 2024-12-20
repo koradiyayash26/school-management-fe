@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Receipt</title>
+    <link rel="shortcut icon" href="../src/assets/GM.png" type="image/x-icon" />
+    <script src="https://cdn.tailwindcss.com"></script>
+  </head>
+  <style>
+    @media print {
+      body {
+        background-color: white !important;
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+      }
+      .print-exact {
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+      }
+      @page {
+        margin: 0;
+        size: auto;
+      }
+    }
+    /* demosd */
+  </style>
+  <body>
+    <div
+      id="error-message"
+      class="hidden fixed top-0 left-0 right-0 bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded text-center"
+      role="alert"
+    >
+      <p>Receipt not found. Please check the receipt ID.</p>
+    </div>
+    <div class="min-h-screen bg-gray-50 py-8 px-4 sm:px-6 lg:px-8">
+      <div
+        class="max-w-3xl mx-auto bg-white shadow-lg rounded-lg overflow-hidden print:shadow-none"
+      >
+        <div class="bg-indigo-700 p-6 text-white">
+          <div class="flex items-center justify-between">
+            <div class="flex items-center space-x-4">
+              <!-- Company Logo -->
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 256 256"
+                class="w-16 h-16 rounded-full object-cover p-2"
+              >
+                <rect width="256" height="256" fill="none"></rect>
+                <line
+                  x1="208"
+                  y1="128"
+                  x2="128"
+                  y2="208"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="32"
+                ></line>
+                <line
+                  x1="192"
+                  y1="40"
+                  x2="40"
+                  y2="192"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="32"
+                ></line>
+              </svg>
+              <div>
+                <h1 class="text-2xl font-bold">THINKERS PVT LTD</h1>
+                <p class="text-lg">Legal Services Receipt</p>
+              </div>
+            </div>
+            <!-- User Icon -->
+            <!-- <svg
+              class="w-8 h-8 hidden sm:block"
+              fill="currentColor"
+              viewBox="0 0 20 20"
+            >
+              <path
+                fill-rule="evenodd"
+                d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z"
+                clip-rule="evenodd"
+              ></path>
+            </svg> -->
+          </div>
+        </div>
+        <!-- Client Information Section -->
+        <div class="p-6 border-b">
+          <h2 class="text-xl font-semibold mb-4">Student Information</h2>
+          <div class="space-y-3">
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+              <div>
+                <p class="text-gray-600 text-sm">Student Name</p>
+                <p class="font-medium" id="studentname">John Smith Martin</p>
+              </div>
+              <div>
+                <p class="text-gray-600 text-sm">Grno</p>
+                <p class="font-medium" id="grno">CLT2024001</p>
+              </div>
+              <div>
+                <p class="text-gray-600 text-sm">Fee Type</p>
+                <p class="font-medium" id="feetype">Bus Fee</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- Payment Details Section -->
+        <div class="p-6 border-b">
+          <h2 class="text-xl font-semibold mb-4">Payment Details</h2>
+          <div class="space-y-4">
+            <div class="flex items-center justify-between py-2 border-b">
+              <div class="flex items-center space-x-2">
+                <svg
+                  stroke="currentColor"
+                  fill="currentColor"
+                  stroke-width="0"
+                  viewBox="0 0 640 512"
+                  class="text-blue-500"
+                  height="1em"
+                  width="1em"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M621.16 54.46C582.37 38.19 543.55 32 504.75 32c-123.17-.01-246.33 62.34-369.5 62.34-30.89 0-61.76-3.92-92.65-13.72-3.47-1.1-6.95-1.62-10.35-1.62C15.04 79 0 92.32 0 110.81v317.26c0 12.63 7.23 24.6 18.84 29.46C57.63 473.81 96.45 480 135.25 480c123.17 0 246.34-62.35 369.51-62.35 30.89 0 61.76 3.92 92.65 13.72 3.47 1.1 6.95 1.62 10.35 1.62 17.21 0 32.25-13.32 32.25-31.81V83.93c-.01-12.64-7.24-24.6-18.85-29.47zM48 132.22c20.12 5.04 41.12 7.57 62.72 8.93C104.84 170.54 79 192.69 48 192.69v-60.47zm0 285v-47.78c34.37 0 62.18 27.27 63.71 61.4-22.53-1.81-43.59-6.31-63.71-13.62zM320 352c-44.19 0-80-42.99-80-96 0-53.02 35.82-96 80-96s80 42.98 80 96c0 53.03-35.83 96-80 96zm272 27.78c-17.52-4.39-35.71-6.85-54.32-8.44 5.87-26.08 27.5-45.88 54.32-49.28v57.72zm0-236.11c-30.89-3.91-54.86-29.7-55.81-61.55 19.54 2.17 38.09 6.23 55.81 12.66v48.89z"
+                  ></path>
+                </svg>
+                <span class="text-gray-600">Total Amount</span>
+              </div>
+              <span
+                class="font-semibold text-lg text-gray-600"
+                id="total_amount"
+                >₹50,000.00</span
+              >
+            </div>
+            <div class="flex items-center justify-between py-2 border-b">
+              <div class="flex items-center space-x-2">
+                <svg
+                  stroke="currentColor"
+                  fill="currentColor"
+                  stroke-width="0"
+                  viewBox="0 0 640 512"
+                  class="text-green-500"
+                  height="1em"
+                  width="1em"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M621.16 54.46C582.37 38.19 543.55 32 504.75 32c-123.17-.01-246.33 62.34-369.5 62.34-30.89 0-61.76-3.92-92.65-13.72-3.47-1.1-6.95-1.62-10.35-1.62C15.04 79 0 92.32 0 110.81v317.26c0 12.63 7.23 24.6 18.84 29.46C57.63 473.81 96.45 480 135.25 480c123.17 0 246.34-62.35 369.51-62.35 30.89 0 61.76 3.92 92.65 13.72 3.47 1.1 6.95 1.62 10.35 1.62 17.21 0 32.25-13.32 32.25-31.81V83.93c-.01-12.64-7.24-24.6-18.85-29.47zM48 132.22c20.12 5.04 41.12 7.57 62.72 8.93C104.84 170.54 79 192.69 48 192.69v-60.47zm0 285v-47.78c34.37 0 62.18 27.27 63.71 61.4-22.53-1.81-43.59-6.31-63.71-13.62zM320 352c-44.19 0-80-42.99-80-96 0-53.02 35.82-96 80-96s80 42.98 80 96c0 53.03-35.83 96-80 96zm272 27.78c-17.52-4.39-35.71-6.85-54.32-8.44 5.87-26.08 27.5-45.88 54.32-49.28v57.72zm0-236.11c-30.89-3.91-54.86-29.7-55.81-61.55 19.54 2.17 38.09 6.23 55.81 12.66v48.89z"
+                  ></path>
+                </svg>
+                <span class="text-gray-600">Paid Amount</span>
+              </div>
+              <span class="font-semibold text-lg text-gray-600" id="amount"
+                >₹50,000.00</span
+              >
+            </div>
+            <div class="flex items-center justify-between py-2 border-b">
+              <div class="flex items-center space-x-2">
+                <svg
+                  stroke="currentColor"
+                  fill="currentColor"
+                  stroke-width="0"
+                  viewBox="0 0 640 512"
+                  class="text-orange-500"
+                  height="1em"
+                  width="1em"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M621.16 54.46C582.37 38.19 543.55 32 504.75 32c-123.17-.01-246.33 62.34-369.5 62.34-30.89 0-61.76-3.92-92.65-13.72-3.47-1.1-6.95-1.62-10.35-1.62C15.04 79 0 92.32 0 110.81v317.26c0 12.63 7.23 24.6 18.84 29.46C57.63 473.81 96.45 480 135.25 480c123.17 0 246.34-62.35 369.51-62.35 30.89 0 61.76 3.92 92.65 13.72 3.47 1.1 6.95 1.62 10.35 1.62 17.21 0 32.25-13.32 32.25-31.81V83.93c-.01-12.64-7.24-24.6-18.85-29.47zM48 132.22c20.12 5.04 41.12 7.57 62.72 8.93C104.84 170.54 79 192.69 48 192.69v-60.47zm0 285v-47.78c34.37 0 62.18 27.27 63.71 61.4-22.53-1.81-43.59-6.31-63.71-13.62zM320 352c-44.19 0-80-42.99-80-96 0-53.02 35.82-96 80-96s80 42.98 80 96c0 53.03-35.83 96-80 96zm272 27.78c-17.52-4.39-35.71-6.85-54.32-8.44 5.87-26.08 27.5-45.88 54.32-49.28v57.72zm0-236.11c-30.89-3.91-54.86-29.7-55.81-61.55 19.54 2.17 38.09 6.23 55.81 12.66v48.89z"
+                  ></path>
+                </svg>
+                <span class="text-gray-600">Waived Amount</span>
+              </div>
+              <span
+                class="font-semibold text-lg text-gray-600"
+                id="waived_amount"
+                >₹50,000.00</span
+              >
+            </div>
+            <div class="flex items-center justify-between py-2 border-b">
+              <div class="flex items-center space-x-2">
+                <svg
+                  stroke="currentColor"
+                  fill="currentColor"
+                  stroke-width="0"
+                  viewBox="0 0 576 512"
+                  class="text-blue-500"
+                  height="1em"
+                  width="1em"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M0 432c0 26.5 21.5 48 48 48h480c26.5 0 48-21.5 48-48V256H0v176zm192-68c0-6.6 5.4-12 12-12h136c6.6 0 12 5.4 12 12v40c0 6.6-5.4 12-12 12H204c-6.6 0-12-5.4-12-12v-40zm-128 0c0-6.6 5.4-12 12-12h72c6.6 0 12 5.4 12 12v40c0 6.6-5.4 12-12 12H76c-6.6 0-12-5.4-12-12v-40zM576 80v48H0V80c0-26.5 21.5-48 48-48h480c26.5 0 48 21.5 48 48z"
+                  ></path>
+                </svg>
+                <span class="text-gray-600">Payment Method</span>
+              </div>
+              <span>Cash</span>
+            </div>
+            <div class="flex items-center justify-between py-2 border-b">
+              <div class="flex items-center space-x-2">
+                <svg
+                  stroke="currentColor"
+                  fill="currentColor"
+                  stroke-width="0"
+                  viewBox="0 0 448 512"
+                  class="text-purple-500"
+                  height="1em"
+                  width="1em"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M0 464c0 26.5 21.5 48 48 48h352c26.5 0 48-21.5 48-48V192H0v272zm320-196c0-6.6 5.4-12 12-12h40c6.6 0 12 5.4 12 12v40c0 6.6-5.4 12-12 12h-40c-6.6 0-12-5.4-12-12v-40zm0 128c0-6.6 5.4-12 12-12h40c6.6 0 12 5.4 12 12v40c0 6.6-5.4 12-12 12h-40c-6.6 0-12-5.4-12-12v-40zM192 268c0-6.6 5.4-12 12-12h40c6.6 0 12 5.4 12 12v40c0 6.6-5.4 12-12 12h-40c-6.6 0-12-5.4-12-12v-40zm0 128c0-6.6 5.4-12 12-12h40c6.6 0 12 5.4 12 12v40c0 6.6-5.4 12-12 12h-40c-6.6 0-12-5.4-12-12v-40zM64 268c0-6.6 5.4-12 12-12h40c6.6 0 12 5.4 12 12v40c0 6.6-5.4 12-12 12H76c-6.6 0-12-5.4-12-12v-40zm0 128c0-6.6 5.4-12 12-12h40c6.6 0 12 5.4 12 12v40c0 6.6-5.4 12-12 12H76c-6.6 0-12-5.4-12-12v-40zM400 64h-48V16c0-8.8-7.2-16-16-16h-32c-8.8 0-16 7.2-16 16v48H160V16c0-8.8-7.2-16-16-16h-32c-8.8 0-16 7.2-16 16v48H48C21.5 64 0 85.5 0 112v48h448v-48c0-26.5-21.5-48-48-48z"
+                  ></path>
+                </svg>
+                <span class="text-gray-600">Transaction Date</span>
+              </div>
+              <span id="date">December 19, 2024</span>
+            </div>
+            <div class="flex items-center justify-between py-2">
+              <div class="flex items-center space-x-2">
+                <svg
+                  stroke="currentColor"
+                  fill="currentColor"
+                  stroke-width="0"
+                  viewBox="0 0 448 512"
+                  class="text-gray-500"
+                  height="1em"
+                  width="1em"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M440.667 182.109l7.143-40c1.313-7.355-4.342-14.109-11.813-14.109h-74.81l14.623-81.891C377.123 38.754 371.468 32 363.997 32h-40.632a12 12 0 0 0-11.813 9.891L296.175 128H197.54l14.623-81.891C213.477 38.754 207.822 32 200.35 32h-40.632a12 12 0 0 0-11.813 9.891L132.528 128H53.432a12 12 0 0 0-11.813 9.891l-7.143 40C33.163 185.246 38.818 192 46.289 192h74.81L98.242 320H19.146a12 12 0 0 0-11.813 9.891l-7.143 40C-1.123 377.246 4.532 384 12.003 384h74.81L72.19 465.891C70.877 473.246 76.532 480 84.003 480h40.632a12 12 0 0 0 11.813-9.891L151.826 384h98.634l-14.623 81.891C234.523 473.246 240.178 480 247.65 480h40.632a12 12 0 0 0 11.813-9.891L315.472 384h79.096a12 12 0 0 0 11.813-9.891l7.143-40c1.313-7.355-4.342-14.109-11.813-14.109h-74.81l22.857-128h79.096a12 12 0 0 0 11.813-9.891zM261.889 320h-98.634l22.857-128h98.634l-22.857 128z"
+                  ></path>
+                </svg>
+                <span class="text-gray-600">Transaction ID</span>
+              </div>
+              <span class="font-mono"
+                >TXN-<span id="receipt-id">458445</span></span
+              >
+            </div>
+          </div>
+        </div>
+        <!-- Footer Section -->
+        <div class="p-6 bg-gray-50 print:bg-white print-exact">
+          <div class="text-center mb-4">
+            <p class="text-lg font-medium text-gray-700">
+              Thank you for choosing our legal services!
+            </p>
+            <p class="text-sm text-gray-500">
+              This receipt serves as proof of payment for legal services
+              rendered.
+            </p>
+          </div>
+          <div
+            class="flex flex-col sm:flex-row items-center justify-center space-y-2 sm:space-y-0 sm:space-x-6 text-gray-600"
+          >
+            <div class="flex items-center space-x-2">
+              <svg
+                stroke="currentColor"
+                fill="currentColor"
+                stroke-width="0"
+                viewBox="0 0 512 512"
+                class="text-indigo-500"
+                height="1em"
+                width="1em"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M493.4 24.6l-104-24c-11.3-2.6-22.9 3.3-27.5 13.9l-48 112c-4.2 9.8-1.4 21.3 6.9 28l60.6 49.6c-36 76.7-98.9 140.5-177.2 177.2l-49.6-60.6c-6.8-8.3-18.2-11.1-28-6.9l-112 48C3.9 366.5-2 378.1.6 389.4l24 104C27.1 504.2 36.7 512 48 512c256.1 0 464-207.5 464-464 0-11.2-7.7-20.9-18.6-23.4z"
+                ></path>
+              </svg>
+              <span>+91 98986 57545</span>
+            </div>
+            <div class="flex items-center space-x-2">
+              <svg
+                stroke="currentColor"
+                fill="currentColor"
+                stroke-width="0"
+                viewBox="0 0 512 512"
+                class="text-indigo-500"
+                height="1em"
+                width="1em"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M502.3 190.8c3.9-3.1 9.7-.2 9.7 4.7V400c0 26.5-21.5 48-48 48H48c-26.5 0-48-21.5-48-48V195.6c0-5 5.7-7.8 9.7-4.7 22.4 17.4 52.1 39.5 154.1 113.6 21.1 15.4 56.7 47.8 92.2 47.6 35.7.3 72-32.8 92.3-47.6 102-74.1 131.6-96.3 154-113.7zM256 320c23.2.4 56.6-29.2 73.4-41.4 132.7-96.3 142.8-104.7 173.4-128.7 5.8-4.5 9.2-11.5 9.2-18.9v-19c0-26.5-21.5-48-48-48H48C21.5 64 0 85.5 0 112v19c0 7.4 3.4 14.3 9.2 18.9 30.6 23.9 40.7 32.4 173.4 128.7 16.8 12.2 50.2 41.8 73.4 41.4z"
+                ></path>
+              </svg>
+              <span class="hover:underline cursor-pointer"
+                >thinkerspvtltd@gmail.com</span
+              >
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+  <script>
+    // Function to get URL parameters
+    function showError(message) {
+      const errorDiv = document.getElementById("error-message");
+      errorDiv.textContent = message;
+      errorDiv.classList.remove("hidden");
+      // Hide main content
+      document.querySelector(".max-w-3xl").classList.add("hidden");
+    }
+    function getUrlParameter(name) {
+      name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
+      var regex = new RegExp("[\\?&]" + name + "=([^&#]*)");
+      var results = regex.exec(location.search);
+      return results === null
+        ? ""
+        : decodeURIComponent(results[1].replace(/\+/g, " "));
+    }
+    // Function to format date
+    function formatDate(dateString) {
+      const date = new Date(dateString);
+      return date.toLocaleDateString("en-US", {
+        month: "long",
+        day: "numeric",
+        year: "numeric",
+      });
+    }
+    // Function to format currency
+    function formatCurrency(amount) {
+      return new Intl.NumberFormat("en-IN", {
+        style: "currency",
+        currency: "INR",
+        minimumFractionDigits: 2,
+      }).format(amount);
+    }
+    // Function to fetch receipt data
+    async function fetchReceiptData() {
+      try {
+        const id = getUrlParameter("id");
+        if (!id) {
+          console.error("No ID provided in URL");
+          return;
+        }
+        const tokenData = JSON.parse(localStorage.getItem("jwt_token"));
+        const accessToken = tokenData.access;
+
+        const response = await fetch(
+          `http://127.0.0.1:8000/payments/${id}/receipt/details/`,
+          {
+            headers: {
+              Authorization: `Bearer ${accessToken}`,
+            },
+          }
+        );
+        const data = await response.json();
+
+        const receiptData = data.data;
+        const student = receiptData.receipt.student;
+        const feeType = receiptData.fee_type;
+
+        document.getElementById(
+          "studentname"
+        ).innerHTML = `${student.first_name} ${student.middle_name} ${student.last_name}`;
+        document.getElementById("grno").innerHTML = student.grno;
+        document.getElementById("feetype").innerHTML = feeType.fee_master.name;
+        document.getElementById("amount").innerHTML = formatCurrency(
+          receiptData.amount_paid
+        );
+        document.getElementById("waived_amount").innerHTML = formatCurrency(
+          receiptData.amount_waived
+        );
+        document.getElementById("total_amount").innerHTML = formatCurrency(
+          receiptData.total_fee
+        );
+        document.getElementById("date").innerHTML = formatDate(
+          receiptData.receipt.fee_paid_date
+        );
+        document.getElementById("receipt-id").innerHTML =
+          receiptData.receipt.id;
+        return data;
+      } catch (error) {
+        console.error("Error fetching receipt data:", error);
+        showError("Error loading receipt. Please try again later.");
+      }
+    }
+    document.addEventListener("DOMContentLoaded", fetchReceiptData);
+  </script>
+</html>

@@ -33,7 +33,7 @@ const PaymentReceiptPage = () => {
   };
 
   const handleDownloadPdf = () => {
-    alert("PDF Downloaded");
+    window.open(`/payment-receipt.html?id=${id}`, "_blank");
   };
 
   if (isLoading) {

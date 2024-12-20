@@ -102,7 +102,7 @@ const ReportsPage = () => {
         <ScrollArea className="rounded-md border max-w-[1280px]">
           <Table className="relative text-center">
             <TableHeader>
-              <TableRow>
+              <TableRow className="bg-muted/50">
                 <TableHead className="text-center whitespace-nowrap">
                   Standard
                 </TableHead>

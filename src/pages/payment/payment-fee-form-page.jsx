@@ -59,6 +59,7 @@ const headers = [
   { label: "Certificate No", value: "id" },
   { label: "Standard", value: "student__standard" },
   { label: "Paid", value: "paid" },
+  { label: "Waived", value: "waived" },
   { label: "Note", value: "note" },
 ];
 
@@ -506,17 +507,13 @@ const PaymentFeeFormPage = () => {
                     key={header.value}
                     className="text-center border whitespace-nowrap"
                   >
-                    {header.value === "standard" ? (
-                      student.standard || "None"
-                    ) : header.value === "paid" ? (
-                      <>{student.paid + student.waived}</>
-                    ) : header.value === "fee_paid_date" ? (
-                      format(new Date(student.fee_paid_date), "dd-MM-yyyy")
-                    ) : student[header.value] == 13 ? (
-                      "Balvatika"
-                    ) : (
-                      student[header.value] || "None"
-                    )}
+                    {header.value === "standard"
+                      ? student[header.value] == 13
+                        ? "Balvatika"
+                        : student[header.value] || "None"
+                      : header.value === "fee_paid_date"
+                      ? format(new Date(student.fee_paid_date), "dd-MM-yyyy")
+                      : student[header.value] || "-"}
                   </TableCell>
                 ))}
                 <TableCell className="text-center border">

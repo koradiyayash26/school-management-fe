@@ -73,6 +73,7 @@ const headers = [
   { label: "GR No", value: "student__grno" },
   { label: "Note", value: "note" },
   { label: "Amount", value: "paid" },
+  { label: "Waivad", value: "waived" },
 ];
 
 const years = [
@@ -449,12 +450,10 @@ const PaymentsPage = () => {
                       key={header.value}
                       className="capitalize whitespace-nowrap"
                     >
-                      {header.value === "standard"
-                        ? payment.standard || "None"
-                        : header.value === "paid"
-                        ? (payment.paid || 0) + (payment.waived || 0)
-                        : payment[header.value] == 13
-                        ? "Balvatika"
+                      {header.value === "student__standard"
+                        ? payment[header.value] == 13
+                          ? "Balvatika"
+                          : payment[header.value] || "-"
                         : payment[header.value] || "-"}
                     </TableCell>
                   ))}

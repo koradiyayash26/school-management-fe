@@ -51,6 +51,7 @@ import {
   ChevronRight,
   ChevronsLeft,
   ChevronsRight,
+  Filter,
 } from "lucide-react";
 import {
   Select,
@@ -61,6 +62,38 @@ import {
 } from "@/components/ui/select";
 import { BreadcrumbComponent } from "@/components/Breadcrumb";
 
+const GENDER_CHOICES = [
+  { label: "કુમાર", value: "કુમાર" },
+  { label: "કન્યા", value: "કન્યા" },
+];
+
+const SECTION_CHOICES = [
+  { label: "A", value: "A" },
+  { label: "B", value: "B" },
+  { label: "C", value: "C" },
+  { label: "D", value: "D" },
+];
+
+const STATUS_CHOICES = [
+  { label: "ચાલુ", value: "ચાલુ" },
+  { label: "કમી", value: "કમી" },
+];
+
+const RELIGION_CHOICES = [
+  { label: "હિન્દુ", value: "હિન્દુ" },
+  { label: "જૈન", value: "જૈન" },
+  { label: "મુસ્લિમ", value: "મુસ્લિમ" },
+  { label: "શિખ", value: "શિખ" },
+  { label: "ખ્રિસ્તી", value: "ખ્રિસ્તી" },
+];
+
+const CATEGORY_CHOICES = [
+  { label: "જનરલ", value: "જનરલ" },
+  { label: "ઓ.બી.સી.", value: "ઓ.બી.સી." },
+  { label: "એસસી/એસટી", value: "એસસી/એસટી" },
+  { label: "ઇ.ડબ્લ્યુ.એસ.", value: "ઇ.ડબ્લ્યુ.એસ." },
+];
+
 const headers = [
   { label: "ID", value: "id" },
   { label: "GR Number", value: "grno" },
@@ -68,7 +101,7 @@ const headers = [
   { label: "First Name", value: "first_name" },
   { label: "Middle Name", value: "middle_name" },
   { label: "Mother Name", value: "mother_name" },
-  { label: "Gender", value: "gender" },
+  { label: "Gender", value: "gender", filterOptions: GENDER_CHOICES },
   { label: "Birth Date", value: "birth_date" },
   { label: "Birth Place", value: "birth_place" },
   { label: "Mobile Number", value: "mobile_no" },
@@ -76,14 +109,14 @@ const headers = [
   { label: "City", value: "city" },
   { label: "District", value: "district" },
   { label: "Standard", value: "standard" },
-  { label: "Section", value: "section" },
+  { label: "Section", value: "section", filterOptions: SECTION_CHOICES },
   { label: "Last School", value: "last_school" },
   { label: "Admission Standard", value: "admission_std" },
   { label: "Admission Date", value: "admission_date" },
   { label: "Left School Standard", value: "left_school_std" },
   { label: "Left School Date", value: "left_school_date" },
-  { label: "Religion", value: "religion" },
-  { label: "Category", value: "category" },
+  { label: "Religion", value: "religion", filterOptions: RELIGION_CHOICES },
+  { label: "Category", value: "category", filterOptions: CATEGORY_CHOICES },
   { label: "Caste", value: "caste" },
   { label: "UDISE Number", value: "udise_no" },
   { label: "Aadhar Number", value: "aadhar_no" },
@@ -96,8 +129,84 @@ const headers = [
   { label: "Note", value: "note" },
   { label: "Assessment", value: "assessment" },
   { label: "Progress", value: "progress" },
-  { label: "Status", value: "status" },
+  { label: "Status", value: "status", filterOptions: STATUS_CHOICES },
 ];
+
+const TableHeaderCell = ({
+  header,
+  visibleColumns,
+  filters,
+  handleFilterChange,
+}) => {
+  const [isOpen, setIsOpen] = useState(false);
+
+  const hasActiveFilters = filters[header.value]?.length > 0;
+
+  return (
+    <TableHead>
+      <div
+        className="flex items-center gap-2 select-none whitespace-nowrap"
+        // onClick={() => header.filterOptions && setIsOpen(true)}
+      >
+        <div className="flex items-center gap-1">
+          {header.label}
+          {hasActiveFilters && (
+            <Filter
+              className="h-3 w-3 text-primary fill-primary"
+              aria-label="Active filter"
+            />
+          )}
+        </div>
+        {header.filterOptions && visibleColumns.includes(header.value) && (
+          <DropdownMenu open={isOpen} onOpenChange={setIsOpen}>
+            <DropdownMenuTrigger asChild>
+              <Button
+                variant="ghost"
+                size="sm"
+                className={hasActiveFilters ? "bg-primary/10" : ""}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setIsOpen(true);
+                }}
+              >
+                <ChevronDown className="h-4 w-4" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent
+              align="start"
+              className="w-[200px]"
+              onClick={(e) => e.stopPropagation()}
+            >
+              {header.filterOptions.map((option) => (
+                <DropdownMenuCheckboxItem
+                  key={option.value}
+                  checked={(filters[header.value] || []).includes(option.value)}
+                  onCheckedChange={(checked) => {
+                    const currentValues = filters[header.value] || [];
+                    const newValues = checked
+                      ? [...currentValues, option.value]
+                      : currentValues.filter((v) => v !== option.value);
+                    handleFilterChange(header.value, newValues);
+                  }}
+                >
+                  {option.label}
+                </DropdownMenuCheckboxItem>
+              ))}
+              {hasActiveFilters && (
+                <DropdownMenuItem
+                  className="justify-center text-red-500 focus:text-red-500"
+                  onClick={() => handleFilterChange(header.value, [])}
+                >
+                  Clear Filter
+                </DropdownMenuItem>
+              )}
+            </DropdownMenuContent>
+          </DropdownMenu>
+        )}
+      </div>
+    </TableHead>
+  );
+};
 
 const StandardDetailPage = () => {
   const { id } = useParams();
@@ -109,16 +218,25 @@ const StandardDetailPage = () => {
   const [visibleColumns, setVisibleColumns] = useState(
     headers.slice(0, 7).map((h) => h.value)
   );
+  const [filters, setFilters] = useState({});
 
   const { data, isLoading, error, refetch } = useGetStandard(id);
   const students = data?.data || [];
 
   const filteredStudents = students.filter((student) => {
-    return search.toLowerCase() === ""
-      ? student
-      : student.first_name.toLowerCase().includes(search) ||
+    const matchesSearch =
+      search.toLowerCase() === ""
+        ? true
+        : student.first_name.toLowerCase().includes(search) ||
           student.last_name.toLowerCase().includes(search) ||
           student.middle_name.toLowerCase().includes(search);
+
+    const matchesFilters = Object.entries(filters).every(([key, values]) => {
+      if (!values || values.length === 0) return true;
+      return values.includes(student[key]);
+    });
+
+    return matchesSearch && matchesFilters;
   });
 
   const totalPages = Math.ceil(filteredStudents.length / pageSize);
@@ -157,6 +275,13 @@ const StandardDetailPage = () => {
 
   const handleDeleteStudent = async (studentId) => {
     mutation.mutate(studentId);
+  };
+
+  const handleFilterChange = (column, values) => {
+    setFilters((prev) => ({
+      ...prev,
+      [column]: values,
+    }));
   };
 
   if (isLoading) {
@@ -272,11 +397,17 @@ const StandardDetailPage = () => {
           <ScrollArea className="rounded-md mb-6 border w-full h-[calc(80vh-180px)]">
             <Table className="relative">
               <TableHeader>
-                <TableRow>
+                <TableRow className="bg-muted/50">
                   {headers
                     .filter((header) => visibleColumns.includes(header.value))
-                    .map((header, index) => (
-                      <TableHead key={index}>{header.label}</TableHead>
+                    .map((header) => (
+                      <TableHeaderCell
+                        key={header.value}
+                        header={header}
+                        visibleColumns={visibleColumns}
+                        filters={filters}
+                        handleFilterChange={handleFilterChange}
+                      />
                     ))}
                   <TableHead className="">Actions</TableHead>
                 </TableRow>
@@ -413,7 +544,70 @@ const StandardDetailPage = () => {
           </div>
         </div>
       ) : (
-        "No Data Found"
+        <div className="w-full">
+          <div className="flex flex-col md:flex-row items-center justify-between mb-4 gap-2">
+            <Input
+              className="w-full md:max-w-sm"
+              placeholder="Search By Name"
+              onChange={(e) => setSearch(e.target.value)}
+            />
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="outline">Columns</Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent className="w-56">
+                <ScrollArea className="h-[300px] overflow-y-auto">
+                  <div className="p-2">
+                    <h4 className="mb-2 font-semibold">Toggle Columns</h4>
+                    {headers.map((header) => (
+                      <DropdownMenuCheckboxItem
+                        key={header.value}
+                        className="capitalize"
+                        checked={visibleColumns.includes(header.value)}
+                        onCheckedChange={() =>
+                          toggleColumnVisibility(header.value)
+                        }
+                      >
+                        {header.label}
+                      </DropdownMenuCheckboxItem>
+                    ))}
+                  </div>
+                </ScrollArea>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </div>
+          <ScrollArea className="rounded-md mb-6 border w-full h-[calc(80vh-180px)]">
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  {headers
+                    .filter((header) => visibleColumns.includes(header.value))
+                    .map((header) => (
+                      <TableHeaderCell
+                        key={header.value}
+                        header={header}
+                        visibleColumns={visibleColumns}
+                        filters={filters}
+                        handleFilterChange={handleFilterChange}
+                      />
+                    ))}
+                  <TableHead>Actions</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                <TableRow>
+                  <TableCell
+                    colSpan={visibleColumns.length + 1}
+                    className="text-center align-middle text-muted-foreground"
+                  >
+                    No Data Found
+                  </TableCell>
+                </TableRow>
+              </TableBody>
+            </Table>
+            <ScrollBar orientation="horizontal" />
+          </ScrollArea>
+        </div>
       )}
     </>
   );

@@ -115,7 +115,7 @@ function CertificatePage() {
       <ScrollArea className="rounded-md border w-full h-[calc(80vh-120px)]">
         <Table className="relative">
           <TableHeader>
-            <TableRow>
+            <TableRow className="bg-muted/50">
               {headers.map((header, index) => (
                 <TableHead key={index} className="whitespace-nowrap">
                   {header.label}

@@ -165,7 +165,7 @@ function ExamAssingMarkEditPage() {
         <div>
           <Table className="relative" id="print-excel">
             <TableHeader>
-              <TableRow>
+              <TableRow className="bg-muted/50">
                 {headers.map((header, index) => (
                   <TableHead key={index} className="whitespace-nowrap">
                     {header.label}

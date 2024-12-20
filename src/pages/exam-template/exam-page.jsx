@@ -182,7 +182,7 @@ function ExamTemplatePage() {
         <ScrollArea className="h-[calc(100vh-250px)] rounded-md border">
           <Table>
             <TableHeader>
-              <TableRow>
+              <TableRow className="bg-muted/50">
                 {headers.map((header) => (
                   <TableHead key={header.value} className="whitespace-nowrap">
                     {header.label}

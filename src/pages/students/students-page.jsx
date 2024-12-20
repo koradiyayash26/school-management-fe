@@ -677,7 +677,7 @@ function StudentsPage() {
             <h1 className="hidden title-table">THINKERS GENERAL REGISTER</h1>
             <Table className="relative" id="print-excel">
               <TableHeader>
-                <TableRow>
+                <TableRow className="bg-muted/50">
                   {headers.map(
                     (header, index) =>
                       columnVisibility[header.value] && (

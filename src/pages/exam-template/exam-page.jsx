@@ -181,7 +181,7 @@ function ExamTemplatePage() {
 
         <ScrollArea className="h-[calc(100vh-250px)] rounded-md border">
           <Table>
-            <TableHeader>
+            <TableHeader className="z-50 sticky top-0 backdrop-blur supports-[backdrop-filter]:bg-background/60">
               <TableRow className="bg-muted/50">
                 {headers.map((header) => (
                   <TableHead key={header.value} className="whitespace-nowrap">

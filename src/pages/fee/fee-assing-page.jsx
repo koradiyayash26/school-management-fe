@@ -177,8 +177,8 @@ function FeesAssingPage() {
       </div>
       <ScrollArea className="rounded-md border w-full h-[calc(80vh-120px)]">
         <Table className="relative">
-          <TableHeader>
-            <TableRow>
+          <TableHeader className="z-50 sticky top-0 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+            <TableRow className="bg-muted/50">
               <TableHead className="text-start">
                 {selectedAssignedStudents.length === assigned_students.length &&
                 selectedAssignedStudents.length !== 0 ? (
@@ -252,8 +252,8 @@ function FeesAssingPage() {
       </div>
       <ScrollArea className="rounded-md border w-full h-[calc(80vh-120px)]">
         <Table className="relative">
-          <TableHeader>
-            <TableRow>
+          <TableHeader className="z-50 sticky top-0 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+            <TableRow className="bg-muted/50">
               <TableHead className="text-start">
                 {selectedNotAssignedStudents.length ===
                   not_assigned_students.length &&

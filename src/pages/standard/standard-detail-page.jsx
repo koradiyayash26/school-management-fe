@@ -94,7 +94,6 @@ const CATEGORY_CHOICES = [
   { label: "ઇ.ડબ્લ્યુ.એસ.", value: "ઇ.ડબ્લ્યુ.એસ." },
 ];
 
-
 const headers = [
   { label: "ID", value: "id" },
   { label: "GR Number", value: "grno" },
@@ -397,7 +396,7 @@ const StandardDetailPage = () => {
           </div>
           <ScrollArea className="rounded-md mb-6 border w-full h-[calc(80vh-180px)]">
             <Table className="relative">
-              <TableHeader>
+              <TableHeader className="z-50 sticky top-0 backdrop-blur supports-[backdrop-filter]:bg-background/60">
                 <TableRow className="bg-muted/50">
                   {headers
                     .filter((header) => visibleColumns.includes(header.value))

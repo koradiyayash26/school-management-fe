@@ -676,7 +676,7 @@ function StudentsPage() {
           <div ref={componentPDF} style={{ width: "100%" }}>
             <h1 className="hidden title-table">THINKERS GENERAL REGISTER</h1>
             <Table className="relative" id="print-excel">
-              <TableHeader>
+              <TableHeader className="z-50 sticky top-0 backdrop-blur supports-[backdrop-filter]:bg-background/60">
                 <TableRow className="bg-muted/50">
                   {headers.map(
                     (header, index) =>

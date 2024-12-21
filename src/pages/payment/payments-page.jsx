@@ -371,13 +371,13 @@ const PaymentsPage = () => {
       </AlertDialog>
       <h1 className="uppercase text-2xl font-bold">FEE HISTORY</h1>
       <div className="space-y-4">
+        <Input
+          className="w-full md:max-w-sm"
+          placeholder="Search by Name, Date, Certificate No, etc"
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+        />
         <div className="flex flex-col md:flex-row gap-4">
-          <Input
-            className="w-full md:w-1/3"
-            placeholder="Search"
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-          />
           <Popover>
             <PopoverTrigger asChild>
               <Button

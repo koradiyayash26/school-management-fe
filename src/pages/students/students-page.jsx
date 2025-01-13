@@ -124,6 +124,11 @@ const defaultVisibleColumns = [
   "standard",
 ];
 
+const getMediaUrl = (path) => {
+  const baseURL = apiClient.defaults.baseURL.replace(/\/$/, '');
+  return path ? `${baseURL}/media/${path}` : null;
+};
+
 function StudentDetailsDialog({ student, open, onOpenChange }) {
   const { data, isLoading, error, refetch } =
     useStudentUpdateAcademicYearHistory(student.id);
@@ -258,7 +263,7 @@ function StudentDetailsDialog({ student, open, onOpenChange }) {
                           item.value ? (
                             <div className="flex justify-center">
                               <img
-                                src={`http://127.0.0.1:8000/media/${item.value}`}
+                                src={getMediaUrl(item.value)}
                                 alt="Student"
                                 className="h-48 w-auto object-contain rounded-md"
                               />

@@ -25,6 +25,7 @@ import { useState } from "react";
 import { format } from "date-fns";
 import { Calendar } from "../ui/calendar";
 import { Avatar, AvatarImage } from "@/components/ui/avatar";
+import apiClient from "@/lib/api-client";
 
 export const GrDetails = ({ academicYear, form, categories }) => {
   const [loading, setLoading] = useState(false);
@@ -106,6 +107,11 @@ export const GrDetails = ({ academicYear, form, categories }) => {
     { _id: "કુમાર", name: "કુમાર" },
     { _id: "કન્યા", name: "કન્યા" },
   ];
+
+  const getMediaUrl = (path) => {
+    const baseURL = apiClient.defaults.baseURL.replace(/\/$/, ''); // Remove trailing slash if present
+    return path?.startsWith("/media") ? `${baseURL}${path}` : path;
+  };
 
   return (
     <>
@@ -787,12 +793,7 @@ export const GrDetails = ({ academicYear, form, categories }) => {
                   <div className="relative">
                     <Avatar className="sm:h-40 h-48 w-full sm:w-80 rounded-sm overflow-hidden">
                       <AvatarImage
-                        src={
-                          imagePreview ||
-                          (value?.startsWith("/media")
-                            ? `http://127.0.0.1:8000${value}`
-                            : value)
-                        }
+                        src={imagePreview || getMediaUrl(value)}
                         alt="Student image"
                         className="object-contain rounded-sm h-full w-full"
                       />

@@ -1,5 +1,10 @@
 import { getToken } from "@/utils/token";
 
+const isLocalDevelopment = window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1";
+const WS_BASE_URL = isLocalDevelopment 
+  ? "ws://127.0.0.1:8000"
+  : "wss://school-management-be-2.onrender.com";
+
 class SocketService {
   constructor() {
     this.socket = null;
@@ -12,7 +17,7 @@ class SocketService {
 
     const token = getToken();
     this.socket = new WebSocket(
-      `ws://127.0.0.1:8000/ws/socket-server/?token=${token}`
+      `${WS_BASE_URL}/ws/socket-server/?token=${token}`
     );
 
     this.socket.onopen = () => {

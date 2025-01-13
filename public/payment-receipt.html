@@ -348,7 +348,7 @@
         const accessToken = tokenData.access;
 
         const response = await fetch(
-          `http://127.0.0.1:8000/payments/${id}/receipt/details/`,
+          `https://school-management-be-2.onrender.com/payments/${id}/receipt/details/`,
           {
             headers: {
               Authorization: `Bearer ${accessToken}`,

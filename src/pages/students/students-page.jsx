@@ -435,7 +435,20 @@ function StudentsPage() {
       setIsPassLoading(false);
       setIsOpen(false);
       refetch();
-      setImportMessage(res.data.message);
+      // setImportMessage(res.data.message);
+      toast.success(res.data.message, {
+        duration: 8000,
+        position: "top-center",
+        style: {
+          background: "#333",
+          color: "#fff",
+          maxWidth: "610px", // Set maximum width
+          whiteSpace: "pre-wrap", // Allow text to wrap
+          wordBreak: "break-word", // Break long words if needed
+          padding: "12px 20px", // Add some padding
+          lineHeight: "1.5", // Improve readability
+        },
+      });
       console.log(res);
       setTimeout(() => {
         toast.success("Bulk Import Successfully");

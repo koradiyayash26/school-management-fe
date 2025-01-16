@@ -346,9 +346,13 @@
         }
         const tokenData = JSON.parse(localStorage.getItem("jwt_token"));
         const accessToken = tokenData.access;
+        const baseUrl =
+          window.location.hostname === "localhost"
+            ? "http://127.0.0.1:8000"
+            : "https://school-management-be-2.onrender.com";
 
         const response = await fetch(
-          `https://school-management-be-2.onrender.com/payments/${id}/receipt/details/`,
+          `${baseUrl}/payments/${id}/receipt/details/`,
           {
             headers: {
               Authorization: `Bearer ${accessToken}`,

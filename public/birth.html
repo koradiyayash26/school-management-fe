@@ -132,7 +132,10 @@
   <script>
     const urlParams = new URLSearchParams(window.location.search);
     const id = urlParams.get("id");
-    const baseUrl = "https://school-management-be-2.onrender.com";
+    const baseUrl =
+      window.location.hostname === "localhost"
+        ? "http://127.0.0.1:8000"
+        : "https://school-management-be-2.onrender.com";
     function convertToGujaratiWords(date) {
       const gujaratiNumbers = {
         1: "એક",

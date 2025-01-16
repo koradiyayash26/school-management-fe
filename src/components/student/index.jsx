@@ -104,11 +104,21 @@ const formSchema = z.object({
     .optional(),
   udise_no: z
     .string()
-    .max(50, { message: "Udise Number must not exceed 50 characters" })
+    .refine((value) => !value || /^\d+$/.test(value), {
+      message: "Udise Number must contain only digits",
+    })
+    .refine((value) => !value || value.length <= 50, {
+      message: "Udise Number must not exceed 50 digits",
+    })
     .optional(),
   aadhar_no: z
     .string()
-    .max(16, { message: "Aadhar Number must not exceed 16 characters" })
+    .refine((value) => !value || /^\d+$/.test(value), {
+      message: "Aadhar number must contain only digits",
+    })
+    .refine((value) => !value || value.length === 12, {
+      message: "Aadhar number must be exactly 12 digits",
+    })
     .optional(),
   assesment: z.coerce
     .number()
@@ -133,11 +143,27 @@ const formSchema = z.object({
     .optional(),
   account_no: z
     .string()
-    .max(50, { message: "Account No Must not exceed 50 characters" })
+    .refine((value) => !value || /^\d+$/.test(value), {
+      message: "Account number must contain only digits",
+    })
+    .refine((value) => !value || (value.length >= 9 && value.length <= 18), {
+      message: "Account number must be between 9 and 18 digits",
+    })
     .optional(),
   name_on_passbook: z
     .string()
     .max(100, { message: "Name of PassBook Must not exceed 100 characters" })
+    .optional(),
+  roll_no: z
+    .string()
+    .refine(
+      (value) =>
+        !value ||
+        (/^\d+$/.test(value) && parseInt(value) >= 1 && parseInt(value) <= 100),
+      {
+        message: "Roll number must be between 1 and 100",
+      }
+    )
     .optional(),
   bank_name: z
     .string()
@@ -145,7 +171,9 @@ const formSchema = z.object({
     .optional(),
   ifsc_code: z
     .string()
-    .max(50, { message: "IFSC CODE Must not exceed 50 characters" })
+    .refine((value) => !value || /^\d{11}$/.test(value), {
+      message: "IFSC code must be exactly 11 digits",
+    })
     .optional(),
   bank_address: z
     .string()
@@ -160,6 +188,7 @@ function StudentForm({ academicYear, defaultValues, onSubmit }) {
       ...defaultValues,
       student_img: defaultValues.student_img || null,
       grno: defaultValues.grno || 0,
+      roll_no: defaultValues.roll_no || "",
       first_name: defaultValues.first_name || "",
       middle_name: defaultValues.middle_name || "",
       last_name: defaultValues.last_name || "",

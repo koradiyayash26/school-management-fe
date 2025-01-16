@@ -109,7 +109,7 @@ export const GrDetails = ({ academicYear, form, categories }) => {
   ];
 
   const getMediaUrl = (path) => {
-    const baseURL = apiClient.defaults.baseURL.replace(/\/$/, ''); // Remove trailing slash if present
+    const baseURL = apiClient.defaults.baseURL.replace(/\/$/, ""); // Remove trailing slash if present
     return path?.startsWith("/media") ? `${baseURL}${path}` : path;
   };
 
@@ -436,6 +436,25 @@ export const GrDetails = ({ academicYear, form, categories }) => {
                   ))}
                 </SelectContent>
               </Select>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="roll_no"
+          render={({ field }) => (
+            <FormItem
+              className={`${
+                form.formState.errors.roll_no ? "h-[110px]" : "h-[90px]"
+              }`}
+            >
+              <FormLabel className="dark:text-white text-dark">
+                Roll No
+              </FormLabel>
+              <FormControl>
+                <Input disabled={loading} placeholder="Roll No" {...field} />
+              </FormControl>
               <FormMessage />
             </FormItem>
           )}

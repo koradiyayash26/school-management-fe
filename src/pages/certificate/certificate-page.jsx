@@ -57,6 +57,7 @@ const headers = [
   { label: "Birth Date", value: "birth_date" },
   { label: "Standard", value: "standard" },
   { label: "Section", value: "section" },
+  { label: "Roll No", value: "roll_no" },
   { label: "Status", value: "status" },
 ];
 
@@ -143,7 +144,7 @@ function CertificatePage() {
                         header.value === "admission_std") &&
                       student[header.value] == 13
                         ? "Balvatika"
-                        : student[header.value] || "None"}
+                        : student[header.value] || "-"}
                     </TableCell>
                   ))}
                   <TableCell className="">

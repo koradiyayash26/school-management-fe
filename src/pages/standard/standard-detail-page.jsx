@@ -101,6 +101,7 @@ const headers = [
   { label: "First Name", value: "first_name" },
   { label: "Middle Name", value: "middle_name" },
   { label: "Mother Name", value: "mother_name" },
+  { label: "Roll No", value: "roll_no" },
   { label: "Gender", value: "gender", filterOptions: GENDER_CHOICES },
   { label: "Birth Date", value: "birth_date" },
   { label: "Birth Place", value: "birth_place" },
@@ -216,7 +217,7 @@ const StandardDetailPage = () => {
   const [studentId, setStudentId] = useState();
   const [openAlert, setOpenAlert] = useState(false);
   const [visibleColumns, setVisibleColumns] = useState(
-    headers.slice(0, 7).map((h) => h.value)
+    headers.slice(0, 8).map((h) => h.value)
   );
   const [filters, setFilters] = useState({});
 
@@ -431,7 +432,8 @@ const StandardDetailPage = () => {
                             key={header.value}
                             className="whitespace-nowrap"
                           >
-                            {student[header.value] == 13
+                            {header.value === "standard" &&
+                            student[header.value] == 13
                               ? "Balvatika"
                               : student[header.value] || "-"}
                           </TableCell>

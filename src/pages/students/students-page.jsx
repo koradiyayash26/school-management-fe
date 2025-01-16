@@ -79,6 +79,7 @@ const headers = [
   { label: "First Name", value: "first_name" },
   { label: "Middle Name", value: "middle_name" },
   { label: "Mother Name", value: "mother_name" },
+  { label: "Roll No", value: "roll_no" },
   { label: "Gender", value: "gender" },
   { label: "Birth Date", value: "birth_date" },
   { label: "Birth Place", value: "birth_place" },
@@ -117,15 +118,17 @@ const defaultVisibleColumns = [
   "last_name",
   "first_name",
   "middle_name",
-  "birth_place",
+  "gender",
   "mobile_no",
   "city",
   "district",
   "standard",
+  "section",
+  "roll_no",
 ];
 
 const getMediaUrl = (path) => {
-  const baseURL = apiClient.defaults.baseURL.replace(/\/$/, '');
+  const baseURL = apiClient.defaults.baseURL.replace(/\/$/, "");
   return path ? `${baseURL}/media/${path}` : null;
 };
 
@@ -153,6 +156,8 @@ function StudentDetailsDialog({ student, open, onOpenChange }) {
         { label: "Gender", value: student.gender },
         { label: "Birth Date", value: student.birth_date },
         { label: "Birth Place", value: student.birth_place },
+        { label: "City", value: student.city },
+        { label: "District", value: student.district },
         { label: "Mobile", value: student.mobile_no },
       ],
     },
@@ -164,6 +169,7 @@ function StudentDetailsDialog({ student, open, onOpenChange }) {
           value: student.standard === "13" ? "Balvatika" : student.standard,
         },
         { label: "Section", value: student.section },
+        { label: "Roll No", value: student.roll_no },
         { label: "Academic Year", value: student.academic_year__year },
         { label: "Status", value: student.status },
         { label: "UDISE Number", value: student.udise_no },

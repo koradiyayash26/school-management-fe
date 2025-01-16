@@ -119,6 +119,7 @@ export const studentDetail = {
   last_name: "",
   middle_name: "",
   mother_name: "",
+  roll_no: "",
   birth_date: "",
   birth_place: "",
   religion: "હિન્દુ",

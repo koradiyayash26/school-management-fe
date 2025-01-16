@@ -24,6 +24,7 @@ const headers = [
   { label: "Middle Name", value: "middle_name" },
   { label: "Last Name", value: "last_name" },
   { label: "Gender", value: "gender" },
+  { label: "Roll No", value: "roll_no" },
 ];
 
 function ExamAssingMarkEditPage() {
@@ -190,7 +191,7 @@ function ExamAssingMarkEditPage() {
                   <TableRow key={student.id}>
                     {headers.map((header) => (
                       <TableCell key={header.value} className="capitalize">
-                        {student[header.value] || "None"}
+                        {student[header.value] || "-"}
                       </TableCell>
                     ))}
                     <TableCell>

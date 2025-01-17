@@ -272,6 +272,12 @@ const StandardDetailPage = () => {
       setOpenAlert(false);
       toast.success("Student Delete Successfully");
     },
+    onError: (error) => {
+      if (error.response.data.detail) {
+        toast.error(error.response.data.detail);
+      }
+      console.log(error.response);
+    },
   });
 
   const handleDeleteStudent = async (studentId) => {

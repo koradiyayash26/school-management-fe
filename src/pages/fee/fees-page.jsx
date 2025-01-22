@@ -103,9 +103,10 @@ function FeesTypePage() {
   });
 
   const filteredStudents = students.filter((fee) => {
-    return search.toLowerCase() === ""
-      ? fee
-      : fee.year.toLowerCase().includes(search);
+    const searchTerm = search.toString().toLowerCase().trim();
+    if (searchTerm === "") return true;
+
+    return fee.fee_master__name?.toString().toLowerCase().includes(searchTerm);
   });
 
   const visibleStudents = filteredStudents.slice(startIndex, endIndex);
@@ -204,7 +205,7 @@ function FeesTypePage() {
         <div className="w-full">
           <Input
             className="w-full md:max-w-sm mb-2 md:mb-0  md:mr-2"
-            placeholder="Search By Year"
+            placeholder="Search By Fee Type"
             onChange={(e) => setSearch(e.target.value)}
           />
         </div>

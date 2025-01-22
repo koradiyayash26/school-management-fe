@@ -170,7 +170,7 @@ function ExamTemplatePage() {
         <div className="flex flex-col sm:flex-row justify-between items-center space-y-2 sm:space-y-0 sm:space-x-2">
           <Input
             className="w-full sm:w-64"
-            placeholder="Search By Exam"
+            placeholder="Search By Exam, Date, Standard"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
           />

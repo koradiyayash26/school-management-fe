@@ -71,9 +71,19 @@ function CertificatePage() {
 
   const startIndex = (page - 1) * pageSize;
   const endIndex = startIndex + pageSize;
-  const visibleStudents = students.slice(startIndex, endIndex);
+  const filteredStudents = students.filter((student) => {
+    const searchTerm = search.toString().toLowerCase().trim();
+    if (searchTerm === "") return true;
 
-  const totalPages = Math.ceil(students.length / pageSize);
+    return (
+      student.first_name?.toString().toLowerCase().includes(searchTerm) ||
+      student.last_name?.toString().toLowerCase().includes(searchTerm) ||
+      student.middle_name?.toString().toLowerCase().includes(searchTerm)
+    );
+  });
+  const visibleStudents = filteredStudents.slice(startIndex, endIndex);
+
+  const totalPages = Math.ceil(filteredStudents.length / pageSize);
 
   const handlePageChange = (newPage) => {
     setPage(newPage);
@@ -91,14 +101,6 @@ function CertificatePage() {
   if (error) {
     return <div>Error: {error.message}</div>;
   }
-
-  const filteredStudents = students.filter((student) => {
-    return search.toLocaleLowerCase() === ""
-      ? student
-      : student.first_name.toLocaleLowerCase().includes(search) ||
-          student.last_name.toLocaleLowerCase().includes(search) ||
-          student.middle_name.toLocaleLowerCase().includes(search);
-  });
 
   return (
     <>

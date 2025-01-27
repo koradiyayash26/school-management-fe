@@ -15,7 +15,7 @@ export const LoginForm = ({ onSubmit }) => {
     <form action="" onSubmit={handleSubmit}>
       <div className="grid gap-4">
         <div className="grid gap-2">
-          <Label htmlFor="email">Email</Label>
+          <Label htmlFor="email">username</Label>
           <Input
             id="email"
             autoCapitalize="none"

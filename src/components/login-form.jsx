@@ -7,9 +7,11 @@ import { Label } from "./ui/label";
 export const LoginForm = ({ onSubmit }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [errors, setErrors] = useState({});
+  
   const handleSubmit = (e) => {
     e.preventDefault();
-    onSubmit({ email, password });
+    onSubmit({ email, password }, setErrors);
   };
   return (
     <form action="" onSubmit={handleSubmit}>
@@ -25,7 +27,14 @@ export const LoginForm = ({ onSubmit }) => {
             onChange={(e) => setEmail(e.target.value)}
             placeholder="m@example.com"
             required
+            className={errors.username ? "border-red-500" : ""}
           />
+          {errors.username && (
+            <p className="text-sm text-red-500">{errors.username}</p>
+          )}
+          {errors.error && (
+            <p className="text-sm text-red-500">Username Required</p>
+          )}
         </div>
         <div className="grid gap-2">
           <div className="flex items-center">
@@ -42,7 +51,14 @@ export const LoginForm = ({ onSubmit }) => {
             onChange={(e) => setPassword(e.target.value)}
             type="password"
             required
+            className={errors.password ? "border-red-500" : ""}
           />
+          {errors.password && (
+            <p className="text-sm text-red-500">{errors.password}</p>
+          )}
+          {errors.error && (
+            <p className="text-sm text-red-500">Password Required</p>
+          )}
         </div>
         <Button type="submit" onClick={handleSubmit} className="w-full">
           Login

@@ -13,7 +13,7 @@ import { json, useNavigate } from "react-router-dom";
 export default function LoginPage() {
   // const navigate = useNavigate();
 
-  const loginUser = ({ email, password }) => {
+  const loginUser = ({ email, password }, setErrors) => {
     apiClient
       .post("/api-token-auth/", {
         username: email,
@@ -28,6 +28,9 @@ export default function LoginPage() {
       })
       .catch((error) => {
         console.log(error);
+        if (error.response) {
+          setErrors(error.response.data);
+        }
       });
   };
   return (

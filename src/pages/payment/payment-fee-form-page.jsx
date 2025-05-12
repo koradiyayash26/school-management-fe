@@ -507,8 +507,8 @@ const PaymentFeeFormPage = () => {
                     key={header.value}
                     className="text-center border whitespace-nowrap"
                   >
-                    {header.value === "standard"
-                      ? student[header.value] == 13
+                    {header.value === "student__standard"
+                      ? student[header.value] === "13"
                         ? "Balvatika"
                         : student[header.value] || "None"
                       : header.value === "fee_paid_date"

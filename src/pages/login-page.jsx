@@ -37,9 +37,12 @@ export default function LoginPage() {
     <div className="flex justify-center items-center h-screen">
       <Card className="max-w-sm">
         <CardHeader>
-          <CardTitle className="text-2xl">Login</CardTitle>
+          <CardTitle className="text-2xl">
+            {/* Login */}
+            </CardTitle>
           <CardDescription>
-            Enter your username below to login to your account
+          This is a login page, but since I'm sharing the live project link, I designed it this way. So, don't judge it based on this page alone.
+            {/* Enter your username below to login to your account */}
           </CardDescription>
         </CardHeader>
         <CardContent>

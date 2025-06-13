@@ -41,8 +41,10 @@ export default function LoginPage() {
             {/* Login */}
             </CardTitle>
           <CardDescription>
+
           This is a login page, but since I'm sharing the live project link, I designed it this way. So, don't judge it based on this page alone.
             {/* Enter your username below to login to your account */}
+
           </CardDescription>
         </CardHeader>
         <CardContent>

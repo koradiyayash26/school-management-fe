@@ -11,13 +11,15 @@ export const LoginForm = ({ onSubmit }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    onSubmit({ email, password });
+    onSubmit({ email, password }, setErrors);
   };
   return (
     <form action="" onSubmit={handleSubmit}>
       <div className="grid gap-4">
         <div className="grid gap-2">
+
           {/* <Label htmlFor="email">username</Label>
+
           <Input
             id="email"
             autoCapitalize="none"
@@ -34,7 +36,9 @@ export const LoginForm = ({ onSubmit }) => {
           )}
           {errors.error && (
             <p className="text-sm text-red-500">Username Required</p>
+
           )} */}
+
         </div>
         <div className="grid gap-2">
           {/* <div className="flex items-center"> */}
@@ -52,13 +56,16 @@ export const LoginForm = ({ onSubmit }) => {
             type="password"
             required
             className={errors.password ? "border-red-500" : ""}
-          /> */}
+
           {/* {errors.password && (
+
             <p className="text-sm text-red-500">{errors.password}</p>
           )}
           {errors.error && (
             <p className="text-sm text-red-500">Password Required</p>
+
           )} */}
+
         </div>
         <Button type="submit" onClick={handleSubmit} className="w-full">
           Go Home Page
